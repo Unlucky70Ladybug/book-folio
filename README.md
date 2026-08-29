@@ -399,3 +399,6 @@ Issueを機能単位で細かく分割し、それぞれについて「最低限
 
 ## 10. 画面遷移図
 https://www.figma.com/board/vgt3vtNEsohZz00WpewgMN/BookFolio?node-id=0-1&p=f&t=fDt9qMCygPZvC53r-0
+
+## 11. ER図
+https://gyazo.com/ae26123089cc8e41572c4569f3b2afac
