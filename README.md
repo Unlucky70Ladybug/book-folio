@@ -401,4 +401,4 @@ Issueを機能単位で細かく分割し、それぞれについて「最低限
 https://www.figma.com/board/vgt3vtNEsohZz00WpewgMN/BookFolio?node-id=0-1&p=f&t=fDt9qMCygPZvC53r-0
 
 ## 11. ER図
-https://gyazo.com/08688e862a63df2c0f8a9a78ed3ad497
+https://gyazo.com/1e76b9e21e53ebea67b7b99e73ac1be5
