@@ -1,0 +1,64 @@
+# ============================================================
+# 共通 (OS / エディタ / ログ / 環境変数)
+# ============================================================
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*.sw?
+*~
+
+*.log
+logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# backend (Rails)
+# ============================================================
+/backend/.bundle
+
+# ログ・一時ファイル (ディレクトリは残す)
+/backend/log/*
+!/backend/log/.keep
+/backend/tmp/*
+!/backend/tmp/.keep
+
+# pid ファイル (ディレクトリは残す)
+!/backend/tmp/pids/
+/backend/tmp/pids/*
+!/backend/tmp/pids/.keep
+
+# Active Storage / SQLite (アップロードファイルやローカルDB)
+/backend/storage/*
+!/backend/storage/.keep
+!/backend/tmp/storage/
+/backend/tmp/storage/*
+!/backend/tmp/storage/.keep
+
+# プリコンパイル済みアセット
+/backend/public/assets
+
+# credentials の復号鍵 (絶対にコミットしない)
+/backend/config/master.key
+
+# コンテナ内で bundle install する場合のインストール先
+/backend/vendor/bundle
+
+# ============================================================
+# frontend (Vite)
+# ============================================================
+/frontend/node_modules
+/frontend/dist
+/frontend/dist-ssr
+/frontend/**/*.local
