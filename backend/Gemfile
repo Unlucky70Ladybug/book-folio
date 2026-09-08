@@ -16,9 +16,9 @@ gem "puma", ">= 5.0"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"
-gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -42,8 +42,11 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
-  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false  # パフォーマンス関連
+  gem 'rubocop-rails', require: false        # Railsのベストプラクティスを教えてくれるとか
   gem "rubocop-rails-omakase", require: false
+  gem 'rubocop-rubycw', require: false       # Rubyの文法チェックなど
 
   # .env ファイルから環境変数を読み込むためのGem
   gem 'dotenv-rails'
