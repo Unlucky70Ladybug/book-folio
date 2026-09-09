@@ -12,5 +12,6 @@ test:
   <<: *default
 
 production:
-  database: cache
+  # primary DB に相乗りさせるためコメントアウト（専用 cache DB は使わない）
+  # database: cache
   <<: *default
