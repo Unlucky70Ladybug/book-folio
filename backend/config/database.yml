@@ -16,4 +16,5 @@ test:
 
 production:
   <<: *default
-  database: myapp_production
+  database: book-folio-db
+  url: <%= ENV["DATABASE_URL"] %>
