@@ -69,8 +69,8 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.action_mailer.default_options = { from: ENV['EMAIL_ADDRESS'] }
-  # hostにはデフォルトでlocalhost3000になっているので、Railsのポート番号である3001に変更する。
-  config.action_mailer.default_url_options = { host: 'localhost:3001' }
+
+  #　メール送信設定
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',

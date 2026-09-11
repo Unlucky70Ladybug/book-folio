@@ -15,7 +15,9 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: build
     working_dir: /app
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0"
     volumes:
@@ -28,6 +30,8 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: password
       RAILS_ENV: development
+      BUNDLE_WITHOUT: ""
+      BUNDLE_DEPLOYMENT: "false"
     depends_on:
       db:
         condition: service_healthy
