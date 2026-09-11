@@ -6,7 +6,7 @@ const LoggedOutHeader = () => {
       <div className="flex-1">
         <Link
           to="/"
-          className="rounded-full bg-primary/10 px-4 py-1.5 text-lg font-medium tracking-wide text-primary"
+          className="rounded-full px-4 py-1.5 text-lg font-medium tracking-wide text-primary"
         >
           BookFolio
         </Link>
