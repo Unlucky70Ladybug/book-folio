@@ -1,5 +1,33 @@
 @import 'tailwindcss';
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: bookfolio --default;
+}
+
+/* オレンジで温かみのあるカスタムテーマ */
+@plugin "daisyui/theme" {
+  name: "bookfolio";
+  default: true;
+  color-scheme: light;
+  --color-base-100: oklch(99% 0.012 75);
+  --color-base-200: oklch(96% 0.025 70);
+  --color-base-300: oklch(92% 0.04 65);
+  --color-base-content: oklch(30% 0.04 55);
+  --color-primary: oklch(70% 0.17 48);
+  --color-primary-content: oklch(99% 0.01 75);
+  --color-secondary: oklch(78% 0.13 65);
+  --color-secondary-content: oklch(30% 0.05 55);
+  --color-accent: oklch(72% 0.15 35);
+  --color-accent-content: oklch(99% 0.01 75);
+  --color-neutral: oklch(38% 0.03 55);
+  --color-neutral-content: oklch(97% 0.01 75);
+  --color-info: oklch(72% 0.12 230);
+  --color-success: oklch(70% 0.14 150);
+  --color-warning: oklch(80% 0.15 80);
+  --color-error: oklch(65% 0.2 25);
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+}
 
 :root {
   --text: #6b6375;
