@@ -54,3 +54,7 @@ group :development, :test do
   # .env ファイルから環境変数を読み込むためのGem
   gem 'dotenv-rails'
 end
+
+group :development do
+  gem 'letter_opener_web'
+end
