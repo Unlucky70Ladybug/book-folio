@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css";
 import Home from "./pages/home/home";
+import SignUpPage from "./pages/auth/signup/signup";
 import Header from "./pages/components/layouts/header/header";
 import Footer from "./pages/components/layouts/footer/footer";
 
@@ -12,6 +13,7 @@ createRoot(document.getElementById("root")!).render(
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignUpPage />} />
         { /* <Route path="/login" element={<Login />} /> */}
       </Routes>
       <Footer />
