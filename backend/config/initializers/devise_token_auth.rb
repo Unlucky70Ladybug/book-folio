@@ -63,4 +63,8 @@ DeviseTokenAuth.setup do |config|
   # devise confirmable module. If you want to use devise confirmable module and
   # send email, set it to true. (This is a setting for compatibility)
   config.send_confirmation_email = true
+
+  # confirm_success_url / redirect_url として許可するURLのホワイトリスト。
+  # 未設定だとオープンリダイレクトの脆弱性になるため必ず設定する。
+  config.redirect_whitelist = [ENV.fetch('FRONTEND_URL')]
 end

@@ -18,6 +18,6 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   if Rails.env.development?
-    mount LetterOpenerWeb::Engine, at: "/smtp"
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 end
