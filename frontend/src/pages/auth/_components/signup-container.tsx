@@ -27,7 +27,11 @@ export default function SignUpContainer() {
       await signUp(formData)
     } catch (err) {
       console.error('Request failed', err)
-      setError(err.message)
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("予期しないエラーが発生しました")
+      }
     }
   }
 
