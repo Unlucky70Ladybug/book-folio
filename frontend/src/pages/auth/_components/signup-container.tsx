@@ -25,8 +25,6 @@ export default function SignUpContainer() {
     e.preventDefault()
     try {
       await signUp(formData)
-      // これはいらない
-      // navigate('/memories')
     } catch (err) {
       console.error('Request failed', err)
       setError(err.message)

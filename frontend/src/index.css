@@ -134,3 +134,18 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+@keyframes toast-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast-slide-in-right {
+  animation: toast-slide-in-right 0.2s ease-out;
+}

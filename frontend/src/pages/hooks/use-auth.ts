@@ -1,9 +1,11 @@
 import { useCallback, useContext } from 'react'
 import * as authService from '../providers/services/auth'
 import { AuthContext } from '../providers/auth-provides'
+import { NotificationContext } from '../providers/notification-provider'
 
 export const useAuth = () => {
   const { isLogin, currentUser, updateAuthStatus } = useContext(AuthContext)
+  const { notify } = useContext(NotificationContext)
 
   const signUp = useCallback(
     async (data: {
@@ -12,10 +14,16 @@ export const useAuth = () => {
       password: string
       passwordConfirmation: string
     }) => {
-      await authService.signup(data)
-      await updateAuthStatus()
+      try {
+        await authService.signup(data)
+        await updateAuthStatus()
+        notify('メール通知を送りました', 'success')
+      } catch (err) {
+        notify(err instanceof Error ? err.message : '新規登録に失敗しました', 'error')
+        throw err
+      }
     },
-    [updateAuthStatus],
+    [updateAuthStatus, notify],
   )
 
   // ログイン（仮）
