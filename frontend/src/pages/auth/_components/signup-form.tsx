@@ -20,12 +20,6 @@ export default function SignUpForm({
       className="card my-8 w-full border border-base-300 bg-base-100 shadow-lg"
     >
       <div className="card-body gap-4">
-        {error && (
-          <p className="rounded-md bg-error/10 px-4 py-3 text-sm font-medium text-error">
-            {error}
-          </p>
-        )}
-
         <fieldset className="fieldset">
           <legend className="fieldset-legend">名前</legend>
           <input

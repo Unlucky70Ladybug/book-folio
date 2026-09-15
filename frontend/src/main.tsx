@@ -6,17 +6,25 @@ import Home from "./pages/home/home";
 import SignUpPage from "./pages/auth/signup/signup";
 import Header from "./pages/components/layouts/header/header";
 import Footer from "./pages/components/layouts/footer/footer";
+import { AuthProvider } from "./pages/providers/auth-provides"
+import NotificationBar from "./pages/components/notification-bar";
+import { NotificationProvider } from "./pages/providers/notification-provider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        { /* <Route path="/login" element={<Login />} /> */}
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <NotificationProvider>
+        <Router>
+          <Header />
+          <NotificationBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            { /* <Route path="/login" element={<Login />} /> */}
+          </Routes>
+          <Footer />
+        </Router>
+      </NotificationProvider>
+    </AuthProvider>
   </StrictMode>,
 );

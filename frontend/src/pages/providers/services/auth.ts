@@ -1,7 +1,3 @@
-const getCSRFToken = () =>
-  document.querySelector("meta[name='csrf-token']")?.getAttribute('content') ||
-  ''
-
 /* sinupメソッド */
 export const signup = async (data: {
   name: string
@@ -22,23 +18,12 @@ export const signup = async (data: {
     }),
   })
 
-  const text = await res.text();
-
-  console.log("status:", res.status);
-  console.log("body:", text);
-
+  const json = await res.json()
   if (!res.ok) {
-    throw new Error(text);
+    throw new Error(json?.error || '新規登録に失敗しました')
   }
 
-  return text ? JSON.parse(text) : null;
-
-  // const json = await res.json()
-  // if (!res.ok) {
-  //   throw new Error(json?.error || '新規登録に失敗しました')
-  // }
-
-  // return json
+  return json
 }
 
 export const login = async (data: { email: string; password: string }) => {
@@ -46,7 +31,6 @@ export const login = async (data: { email: string; password: string }) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-Token': getCSRFToken(),
     },
     credentials: 'include',
     body: JSON.stringify(data),
@@ -62,7 +46,6 @@ export const logout = async () => {
   await fetch('/api/v1/sessions', {
     method: 'DELETE',
     headers: {
-      'X-CSRF-Token': getCSRFToken(),
     },
     credentials: 'include',
   })
