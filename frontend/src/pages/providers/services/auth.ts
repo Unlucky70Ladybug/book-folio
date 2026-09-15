@@ -18,6 +18,10 @@ export const signup = async (data: {
     }),
   })
 
+  console.log(res.status)
+  console.log(res.headers.get("content-type"))
+  console.log(await res.text())
+
   const json = await res.json()
   if (!res.ok) {
     throw new Error(json?.error || '新規登録に失敗しました')
