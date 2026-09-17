@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
+  # Resendに登録済みのドメイン使用するまた、devise.rbに揃える
+  default from: "noreply@bookfolio.jp"
   layout "mailer"
 end
