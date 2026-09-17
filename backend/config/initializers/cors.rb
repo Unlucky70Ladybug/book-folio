@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:5173', 'https://bookfolio-oxkt.onrender.com'
+    origins 'localhost:5173', ENV['FRONTEND_URL']
 
     resource '*',
       headers: :any,
