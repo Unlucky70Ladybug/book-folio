@@ -6,22 +6,22 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
   if Rails.env.production?
-    config.storage = :fog
+    storage :fog
 
-    config.fog_credentials = {
+    fog_credentials(
       provider: 'AWS',
       aws_access_key_id: ENV['S3_ACCESS_KEY_ID'],
       aws_secret_access_key: ENV['S3_SECRET_ACCESS_KEY'],
       region: ENV['S3_REGION']
-    }
+    )
 
-    config.fog_directory = ENV['S3_BUCKET_NAME']
+    fog_directory ENV['S3_BUCKET_NAME']
 
-    config.fog_public = false
+    fog_public false
   else
-    config.storage = :file
+    storage :file
 
-    config.enable_processing = false if Rails.env.test?
+    enable_processing false if Rails.env.test?
   end
 
 
