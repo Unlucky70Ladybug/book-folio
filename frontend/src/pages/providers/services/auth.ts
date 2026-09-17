@@ -13,7 +13,7 @@ export const signup = async (data: {
     /* json型にする */
     /* confirm_success_urlはユーザー入力ではなく自オリジンから固定で組み立てる(オープンリダイレクト対策) */
     body: JSON.stringify({
-      data,
+      ...data,
       confirm_success_url: `${import.meta.env.VITE_FRONTEND_URL}`
     }),
   })
