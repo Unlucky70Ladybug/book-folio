@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
   include DeviseTokenAuth::Concerns::User
-  
+
+  # Userモデルにアップローダーをマウント
+  mount_uploader :avatar_image, AvatarImageUploader # 追記
+
   validates :name, presence: true
 end
