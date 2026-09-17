@@ -24,6 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
+  # Resendに登録済みのドメイン使用する
   config.mailer_sender = "noreply@bookfolio.jp"
 
   # Configure the class responsible to send e-mails.
