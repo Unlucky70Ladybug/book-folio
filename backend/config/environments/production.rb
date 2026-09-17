@@ -59,15 +59,16 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch("API_HOST"), protocol: "https" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
+  # https://resend.com/rails?utm_source=chatgpt.com 公式から参照
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    user_name: "apikey",
-    password: ENV.fetch("SENDGRID_API_KEY"),
-    address: "smtp.sendgrid.net",
-    port: 587,
-    authentication: :plain,
-    enable_starttls_auto: true
+    :address   => 'smtp.resend.com',
+    :port      => 465,
+    :user_name => 'resend',
+    :password  => ENV['RESEND_API_KEY'],
+    :tls       => true
   }
-  
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
