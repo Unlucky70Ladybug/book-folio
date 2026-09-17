@@ -2,7 +2,7 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
   # Include RMagick, MiniMagick, or Vips support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
-  # include CarrierWave::Vips
+  include CarrierWave::Vips
 
   # Choose what kind of storage to use for this uploader:
   if Rails.env.production?
@@ -40,11 +40,8 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
   # end
 
   # Process files as they are uploaded:
-  # process scale: [200, 300]
-  #
-  # def scale(width, height)
-  #   # do something
-  # end
+  # 画像の大きさの制限を設定
+  process resize_to_limit: [400, 400]
 
   # Create different versions of your uploaded files:
   # version :thumb do
