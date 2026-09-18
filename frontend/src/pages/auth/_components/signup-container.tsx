@@ -10,6 +10,7 @@ export default function SignUpContainer() {
     email: '',
     password: '',
     passwordConfirmation: '',
+    avatar_image: { url : null}
   })
 
   const [error, setError] = useState('')
