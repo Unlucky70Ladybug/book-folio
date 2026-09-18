@@ -17,6 +17,7 @@ export const useAuth = () => {
       try {
         await authService.signup(data)
         await updateAuthStatus()
+        notify('メールを送りました', 'success')
       } catch (err) {
         notify(err instanceof Error ? err.message : '新規登録に失敗しました', 'error')
         throw err

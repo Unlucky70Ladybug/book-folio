@@ -5,14 +5,12 @@ type SignUpFormProps = {
   formData: User
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  error?: string
 }
 
 export default function SignUpForm({
   formData,
   onChange,
-  onSubmit,
-  error,
+  onSubmit
 }: SignUpFormProps) {
   return (
     <form
@@ -60,7 +58,7 @@ export default function SignUpForm({
             required
             className="input input-accent w-full"
           />
-          {error && formData.password.length < 8 && (
+          { formData.password.length < 8 && (
             <p className="fieldset-label text-error">
               ※8文字以上で入力してください
             </p>
