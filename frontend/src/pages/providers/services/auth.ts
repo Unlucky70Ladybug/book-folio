@@ -27,17 +27,17 @@ export const signup = async (data: {
 }
 
 export const login = async (data: { email: string; password: string }) => {
-  const res = await fetch('/api/v1/sessions', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sign_in`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
 
   const json = await res.json()
-  if (!res.ok) throw new Error(json?.error || 'ログイン失敗')
+  if (!res.ok) throw new Error(json?.error || 'ログインに失敗しました')
 
   return json
 }

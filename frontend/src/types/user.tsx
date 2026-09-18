@@ -4,4 +4,5 @@ export type User = {
   name: string
   password: string
   passwordConfirmation: string
+  avatar_image: { url? : string | null}
 }
