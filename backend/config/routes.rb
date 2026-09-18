@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # ログイン機能のルーティング
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-    registrations: 'auth/registrations'
+    registrations: 'auth/registrations',
+    confirmations: 'auth/confirmations'
   }
   # ログインユーザー取得のルーティング
   namespace :auth do
