@@ -17,7 +17,6 @@ export const useAuth = () => {
       try {
         await authService.signup(data)
         await updateAuthStatus()
-        notify('メール通知を送りました', 'success')
       } catch (err) {
         notify(err instanceof Error ? err.message : '新規登録に失敗しました', 'error')
         throw err
@@ -28,11 +27,20 @@ export const useAuth = () => {
 
   // ログイン（仮）
   const login = useCallback(
-    async (data: { email: string; password: string }) => {
-      await authService.login(data)
-      await updateAuthStatus()
+    async (data: {
+      email: string
+      password: string
+    }) => {
+      try {
+        await authService.login(data)
+        await updateAuthStatus()
+        notify('ログインに成功しました', 'success')
+      } catch (err){
+        notify(err instanceof Error ? err.message : 'ログインに失敗しました', 'error')
+        throw err
+      }
     },
-    [updateAuthStatus],
+    [updateAuthStatus, notify],
   )
 
   const logout = useCallback(async () => {
