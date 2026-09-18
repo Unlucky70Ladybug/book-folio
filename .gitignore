@@ -54,6 +54,9 @@ pnpm-debug.log*
 # コンテナ内で bundle install する場合のインストール先
 /backend/vendor/bundle
 
+# ユーザー画像
+/backend/public/uploads/user/avatar_image
+
 # ============================================================
 # frontend (Vite)
 # ============================================================
