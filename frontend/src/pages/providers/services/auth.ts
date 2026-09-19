@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 /* sinupメソッド */
 export const signup = async (data: {
   name: string
@@ -43,6 +45,10 @@ export const login = async (data: { email: string; password: string }) => {
   const json = await res.json()
   if (!res.ok) throw new Error(json?.error || 'ログインに失敗しました')
 
+  Cookies.set('_access_token', res.headers.get('access-token') ?? '')
+  Cookies.set('_client', res.headers.get('client') ?? '')
+  Cookies.set('_uid', res.headers.get('uid') ?? '')
+  
   return json
 }
 
@@ -56,17 +62,27 @@ export const logout = async () => {
 }
 
 export const fetchCurrentUser = async () => {
-  const res = await fetch(`/api/v1/me`, {
+
+  if (
+    !Cookies.get("_access_token") ||
+    !Cookies.get("_client") ||
+    !Cookies.get("_uid")
+  ) {
+    return;
+  }
+  
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sessions`, {
     headers: {
-      Accept: 'application/json',
+      "access-token": Cookies.get("_access_token"),
+      client: Cookies.get("_client"),
+      uid: Cookies.get("_uid"),
     },
-    credentials: 'include',
-  })
+  });
 
   if (!res.ok) {
     return null
   }
 
   const data = await res.json()
-  return data.user || null
+  return data.user ?? null
 }

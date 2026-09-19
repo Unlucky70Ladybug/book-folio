@@ -6,3 +6,9 @@ export type User = {
   passwordConfirmation: string
   avatarImage: File | null
 }
+
+export type CuurentUser = {
+  id: number
+  name: string
+  avatarImage: string | null
+}

@@ -1,6 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/use-auth";
+import defaultUserImage from "../../../../assets/default_user_image.png";
 
 const LoggedInHeader = () => {
+  const { logout, currentUser } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await logout()
+    navigate("/")
+  }
+
   return (
     <header className="navbar bg-base-100 border-b border-base-300 px-4 sm:px-8">
       <div className="flex-1">
@@ -17,10 +27,10 @@ const LoggedInHeader = () => {
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost btn-circle avatar placeholder"
+            className="btn btn-ghost btn-circle avatar"
             >
-              <div className="bg-primary text-primary-content rounded-full w-10">
-                <span>U</span>
+              <div className="rounded-full w-10">
+                <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
               </div>
             </div>
             <ul
@@ -31,7 +41,7 @@ const LoggedInHeader = () => {
                 <Link to="/mypage">マイページ</Link>
               </li>
               <li>
-                <Link to="/logout">ログアウト</Link>
+                <button type="button" onClick={handleLogout}>ログアウト</button>
               </li>
             </ul>
           </div>
