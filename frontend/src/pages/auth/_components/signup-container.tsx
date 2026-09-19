@@ -10,13 +10,20 @@ export default function SignUpContainer() {
     email: '',
     password: '',
     passwordConfirmation: '',
-    avatar_image: { url : null}
+    avatarImage: null as File | null
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleAvatarChange = (file: File | null) => {
+    setFormData({
+      ...formData,
+      avatarImage: file,
     })
   }
 
@@ -35,6 +42,7 @@ export default function SignUpContainer() {
       <SignUpForm
         formData={formData}
         onChange={handleChange}
+        onAvatarChange={handleAvatarChange}
         onSubmit={handleSubmit}
       />
       <div className="mt-4">

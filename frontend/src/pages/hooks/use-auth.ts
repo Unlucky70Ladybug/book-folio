@@ -13,6 +13,7 @@ export const useAuth = () => {
       email: string
       password: string
       passwordConfirmation: string
+      avatarImage: File | null
     }) => {
       try {
         await authService.signup(data)

@@ -4,18 +4,22 @@ export const signup = async (data: {
   email: string
   password: string
   passwordConfirmation: string
+  avatarImage: File | null
 }) => {
+  /* confirm_success_urlはユーザー入力ではなく自オリジンから固定で組み立てる(オープンリダイレクト対策) */
+  const formData = new FormData()
+  formData.append('name', data.name)
+  formData.append('email', data.email)
+  formData.append('password', data.password)
+  formData.append('password_confirmation', data.passwordConfirmation)
+  formData.append('confirm_success_url', import.meta.env.VITE_FRONTEND_URL)
+  if (data.avatarImage) {
+    formData.append('avatar_image', data.avatarImage)
+  }
+
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    /* json型にする */
-    /* confirm_success_urlはユーザー入力ではなく自オリジンから固定で組み立てる(オープンリダイレクト対策) */
-    body: JSON.stringify({
-      ...data,
-      confirm_success_url: `${import.meta.env.VITE_FRONTEND_URL}`
-    }),
+    body: formData,
   })
 
   const json = await res.json()
