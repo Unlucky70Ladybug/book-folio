@@ -43,12 +43,12 @@ DeviseTokenAuth.setup do |config|
 
   # Makes it possible to change the headers names
   config.headers_names = {
-    :'access-token' => 'access-token',
-    :'client' => 'client',
-    :'expiry' => 'expiry',
-    :'uid' => 'uid',
-    :'token-type' => 'token-type',
-    :'authorization' => 'Authorization'
+    'access-token': "access-token",
+    'client': "client",
+    'expiry': "expiry",
+    'uid': "uid",
+    'token-type': "token-type",
+    'authorization': "Authorization"
   }
 
   # Makes it possible to use custom uid column
@@ -66,5 +66,5 @@ DeviseTokenAuth.setup do |config|
 
   # confirm_success_url / redirect_url として許可するURLのホワイトリスト。
   # 未設定だとオープンリダイレクトの脆弱性になるため必ず設定する。
-  config.redirect_whitelist = [ENV.fetch('FRONTEND_URL')]
+  config.redirect_whitelist = [ ENV.fetch("FRONTEND_URL") ]
 end

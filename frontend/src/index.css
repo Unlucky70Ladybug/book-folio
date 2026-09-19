@@ -5,7 +5,7 @@
 
 /* オレンジで温かみのあるカスタムテーマ */
 @plugin "daisyui/theme" {
-  name: "bookfolio";
+  name: 'bookfolio';
   default: true;
   color-scheme: light;
   --color-base-100: oklch(99% 0.012 75);

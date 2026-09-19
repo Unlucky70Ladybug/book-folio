@@ -6,11 +6,7 @@ type LoginFormProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
-export default function LoginForm({
-  formData,
-  onChange,
-  onSubmit,
-}: LoginFormProps) {
+export default function LoginForm({ formData, onChange, onSubmit }: LoginFormProps) {
   return (
     <form
       onSubmit={onSubmit}

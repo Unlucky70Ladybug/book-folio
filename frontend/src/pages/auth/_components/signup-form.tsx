@@ -13,7 +13,7 @@ export default function SignUpForm({
   formData,
   onChange,
   onAvatarChange,
-  onSubmit
+  onSubmit,
 }: SignUpFormProps) {
   const [avatarImage, setAvatarImage] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string>(defaultUserImage)
@@ -100,10 +100,8 @@ export default function SignUpForm({
             required
             className="input input-accent w-full"
           />
-          { formData.password.length < 8 && (
-            <p className="fieldset-label text-error">
-              ※8文字以上で入力してください
-            </p>
+          {formData.password.length < 8 && (
+            <p className="fieldset-label text-error">※8文字以上で入力してください</p>
           )}
         </fieldset>
 

@@ -9,13 +9,13 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
     storage :fog
 
     fog_credentials(
-      provider: 'AWS',
-      aws_access_key_id: ENV['S3_ACCESS_KEY_ID'],
-      aws_secret_access_key: ENV['S3_SECRET_ACCESS_KEY'],
-      region: ENV['S3_REGION']
+      provider: "AWS",
+      aws_access_key_id: ENV["S3_ACCESS_KEY_ID"],
+      aws_secret_access_key: ENV["S3_SECRET_ACCESS_KEY"],
+      region: ENV["S3_REGION"]
     )
 
-    fog_directory ENV['S3_BUCKET_NAME']
+    fog_directory ENV["S3_BUCKET_NAME"]
 
     fog_public true
   else
@@ -41,7 +41,7 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
 
   # Process files as they are uploaded:
   # 画像の大きさの制限を設定
-  process resize_to_limit: [400, 400]
+  process resize_to_limit: [ 400, 400 ]
 
   # Create different versions of your uploaded files:
   # version :thumb do
@@ -51,7 +51,7 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w(jpg jpeg gif png)
+    %w[jpg jpeg gif png]
   end
 
   # Add a content_type_allowlist to restrict uploads by MIME type.

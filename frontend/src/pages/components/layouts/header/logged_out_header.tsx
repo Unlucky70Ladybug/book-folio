@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 const LoggedOutHeader = () => {
   return (
@@ -12,20 +12,17 @@ const LoggedOutHeader = () => {
         </Link>
       </div>
       <div className="flex-none">
-          <div className="flex gap-2">
-            <Link to="/signup" className="btn btn-primary btn-sm sm:btn-md">
-              新規登録
-            </Link>
-            <Link
-              to="/login"
-              className="btn btn-outline btn-primary btn-sm sm:btn-md"
-            >
-              ログイン
-            </Link>
-          </div>
+        <div className="flex gap-2">
+          <Link to="/signup" className="btn btn-primary btn-sm sm:btn-md">
+            新規登録
+          </Link>
+          <Link to="/login" className="btn btn-outline btn-primary btn-sm sm:btn-md">
+            ログイン
+          </Link>
+        </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default LoggedOutHeader;
+export default LoggedOutHeader

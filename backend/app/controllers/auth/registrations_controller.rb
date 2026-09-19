@@ -1,6 +1,5 @@
 # Auth::RegistrationsControllerクラスはDeviseTokenAuth::RegistrationsControllerを継承する
 class Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
-
   private
 
   def sign_up_params
