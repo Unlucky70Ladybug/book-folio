@@ -62,11 +62,11 @@ Rails.application.configure do
   # https://resend.com/rails?utm_source=chatgpt.com 公式から参照
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address   => 'smtp.resend.com',
-    :port      => 465,
-    :user_name => 'resend',
-    :password  => ENV['RESEND_API_KEY'],
-    :tls       => true
+    address: "smtp.resend.com",
+    port: 465,
+    user_name: "resend",
+    password: ENV["RESEND_API_KEY"],
+    tls: true
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

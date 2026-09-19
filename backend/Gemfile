@@ -38,13 +38,13 @@ gem "thruster", require: false
 gem "rack-cors"
 
 # Devise
-gem 'devise'
-gem 'devise_token_auth'
+gem "devise"
+gem "devise_token_auth"
 
 # ユーザーのイメージ画像用
-gem 'carrierwave'
-gem 'fog-aws'
-gem 'ruby-vips'
+gem "carrierwave"
+gem "fog-aws"
+gem "ruby-vips"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,9 +57,9 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # .env ファイルから環境変数を読み込むためのGem
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
 end
 
 group :development do
-  gem 'letter_opener_web'
+  gem "letter_opener_web"
 end
