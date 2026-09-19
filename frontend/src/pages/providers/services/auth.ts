@@ -73,9 +73,9 @@ export const fetchCurrentUser = async () => {
   
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sessions`, {
     headers: {
-      "access-token": Cookies.get("_access_token"),
-      client: Cookies.get("_client"),
-      uid: Cookies.get("_uid"),
+      "access-token": Cookies.get("_access_token") ?? "",
+      client: Cookies.get("_client") ?? "",
+      uid: Cookies.get("_uid") ?? "",
     },
   });
 
