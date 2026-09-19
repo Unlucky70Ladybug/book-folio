@@ -1,6 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks/use-auth";
-import defaultUserImage from "../../../../assets/default_user_image.png";
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../hooks/use-auth'
+import defaultUserImage from '../../../../assets/default_user_image.png'
 
 const LoggedInHeader = () => {
   const { logout, currentUser } = useAuth()
@@ -8,7 +8,7 @@ const LoggedInHeader = () => {
 
   const handleLogout = async () => {
     await logout()
-    navigate("/")
+    navigate('/')
   }
 
   return (
@@ -24,30 +24,28 @@ const LoggedInHeader = () => {
 
       <div className="flex-none">
         <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="rounded-full w-10">
-                <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
-              </div>
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+            <div className="rounded-full w-10">
+              <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
             </div>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-48 p-2 shadow"
-            >
-              <li>
-                <Link to="/mypage">マイページ</Link>
-              </li>
-              <li>
-                <button type="button" onClick={handleLogout}>ログアウト</button>
-              </li>
-            </ul>
           </div>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-48 p-2 shadow"
+          >
+            <li>
+              <Link to="/mypage">マイページ</Link>
+            </li>
+            <li>
+              <button type="button" onClick={handleLogout}>
+                ログアウト
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default LoggedInHeader;
+export default LoggedInHeader

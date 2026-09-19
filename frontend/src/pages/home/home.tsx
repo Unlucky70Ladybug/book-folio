@@ -1,43 +1,43 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 const features = [
   {
-    icon: "📚",
-    title: "読んだ本を記録",
+    icon: '📚',
+    title: '読んだ本を記録',
     description:
-      "ISBNやキーワードで本を検索し、「読み終わった」「読書中」「気になる本」として自分の本棚に蓄積できます。",
+      'ISBNやキーワードで本を検索し、「読み終わった」「読書中」「気になる本」として自分の本棚に蓄積できます。',
   },
   {
-    icon: "🍩",
-    title: "ジャンルを可視化",
+    icon: '🍩',
+    title: 'ジャンルを可視化',
     description:
-      "本棚の本をジャンルごとに集計して円グラフで表示。自分がどんなジャンルを好んで読んでいるか一目で分かります。",
+      '本棚の本をジャンルごとに集計して円グラフで表示。自分がどんなジャンルを好んで読んでいるか一目で分かります。',
   },
   {
-    icon: "✍️",
-    title: "著者を分析",
+    icon: '✍️',
+    title: '著者を分析',
     description:
-      "著者ごとの読書傾向をグラフで確認。グラフから著者を選ぶと、その著者の作品をまとめて振り返れます。",
+      '著者ごとの読書傾向をグラフで確認。グラフから著者を選ぶと、その著者の作品をまとめて振り返れます。',
   },
   {
-    icon: "🧭",
-    title: "好みを診断",
+    icon: '🧭',
+    title: '好みを診断',
     description:
-      "読んだ本を「お気に入り・面白い・普通・合わなかった」で評価し、自分の好みをより明確にしていけます。",
+      '読んだ本を「お気に入り・面白い・普通・合わなかった」で評価し、自分の好みをより明確にしていけます。',
   },
   {
-    icon: "🤝",
-    title: "他ユーザーと比較",
+    icon: '🤝',
+    title: '他ユーザーと比較',
     description:
-      "ジャンル構成を他のユーザーと比較し、読書傾向が似ている人・異なる人を発見。次の一冊のヒントになります。",
+      'ジャンル構成を他のユーザーと比較し、読書傾向が似ている人・異なる人を発見。次の一冊のヒントになります。',
   },
   {
-    icon: "🌱",
-    title: "新しい本との出会い",
+    icon: '🌱',
+    title: '新しい本との出会い',
     description:
-      "自分では選ばなかったような本にも出会える。安心して選べる本と、興味を広げる本の両方を見つけられます。",
+      '自分では選ばなかったような本にも出会える。安心して選べる本と、興味を広げる本の両方を見つけられます。',
   },
-];
+]
 
 const Home = () => {
   return (
@@ -70,9 +70,7 @@ const Home = () => {
 
       {/* 機能紹介 */}
       <section className="max-w-5xl mx-auto py-16 px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
-          BookFolio でできること
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">BookFolio でできること</h2>
         <p className="text-center opacity-75 mb-10">
           記録するだけで終わらせない。読書を振り返り、次につなげる。
         </p>
@@ -96,9 +94,7 @@ const Home = () => {
       {/* 締めのCTA */}
       <section className="bg-primary/10 py-16 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">
-            自分だけの本棚を作りはじめよう
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">自分だけの本棚を作りはじめよう</h2>
           <p className="opacity-80 mb-8">
             読んだ本を記録するほど、あなたの読書傾向がはっきりしていきます。
           </p>
@@ -113,7 +109,7 @@ const Home = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

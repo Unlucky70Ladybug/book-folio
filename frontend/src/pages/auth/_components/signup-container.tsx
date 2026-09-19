@@ -10,7 +10,7 @@ export default function SignUpContainer() {
     email: '',
     password: '',
     passwordConfirmation: '',
-    avatarImage: null as File | null
+    avatarImage: null as File | null,
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

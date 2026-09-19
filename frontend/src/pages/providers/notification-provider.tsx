@@ -28,11 +28,13 @@ export const NotificationProvider = ({ children }: Props) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id))
   }, [])
 
-  const notify = useCallback((message: string, type: NotificationType = 'info') => {
+  const notify = useCallback(
+    (message: string, type: NotificationType = 'info') => {
       const id = nextId.current++
       setNotifications((prev) => [...prev, { id, message, type }])
       setTimeout(() => dismiss(id), DISPLAY_DURATION)
-    }, [dismiss],
+    },
+    [dismiss],
   )
 
   return (

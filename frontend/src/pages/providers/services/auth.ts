@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie'
 
 /* sinupメソッド */
 export const signup = async (data: {
@@ -39,7 +39,7 @@ export const login = async (data: { email: string; password: string }) => {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   })
 
   const json = await res.json()
@@ -48,36 +48,30 @@ export const login = async (data: { email: string; password: string }) => {
   Cookies.set('_access_token', res.headers.get('access-token') ?? '')
   Cookies.set('_client', res.headers.get('client') ?? '')
   Cookies.set('_uid', res.headers.get('uid') ?? '')
-  
+
   return json
 }
 
 export const logout = async () => {
   await fetch('/api/v1/sessions', {
     method: 'DELETE',
-    headers: {
-    },
+    headers: {},
     credentials: 'include',
   })
 }
 
 export const fetchCurrentUser = async () => {
-
-  if (
-    !Cookies.get("_access_token") ||
-    !Cookies.get("_client") ||
-    !Cookies.get("_uid")
-  ) {
-    return;
+  if (!Cookies.get('_access_token') || !Cookies.get('_client') || !Cookies.get('_uid')) {
+    return
   }
-  
+
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sessions`, {
     headers: {
-      "access-token": Cookies.get("_access_token") ?? "",
-      client: Cookies.get("_client") ?? "",
-      uid: Cookies.get("_uid") ?? "",
+      'access-token': Cookies.get('_access_token') ?? '',
+      client: Cookies.get('_client') ?? '',
+      uid: Cookies.get('_uid') ?? '',
     },
-  });
+  })
 
   if (!res.ok) {
     return null

@@ -18,7 +18,7 @@ export const AuthContext = createContext<{
   updateAuthStatus: async () => {},
 })
 
-export const AuthProvider = ({ children } : Props ) => {
+export const AuthProvider = ({ children }: Props) => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null)
   const [currentUser, setCurrentUser] = useState<CuurentUser | null>(null)
 

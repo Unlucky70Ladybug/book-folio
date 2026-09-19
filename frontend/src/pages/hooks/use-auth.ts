@@ -29,15 +29,12 @@ export const useAuth = () => {
 
   // ログイン（仮）
   const login = useCallback(
-    async (data: {
-      email: string
-      password: string
-    }) => {
+    async (data: { email: string; password: string }) => {
       try {
         await authService.login(data)
         await updateAuthStatus()
         notify('ログインに成功しました', 'success')
-      } catch (err){
+      } catch (err) {
         notify(err instanceof Error ? err.message : 'ログインに失敗しました', 'error')
         throw err
       }
