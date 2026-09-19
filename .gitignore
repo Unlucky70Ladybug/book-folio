@@ -55,7 +55,7 @@ pnpm-debug.log*
 /backend/vendor/bundle
 
 # ユーザー画像
-/backend/public/uploads/user/avatar_image
+/backend/public/uploads/*
 
 # ============================================================
 # frontend (Vite)

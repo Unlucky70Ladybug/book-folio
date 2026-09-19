@@ -4,5 +4,11 @@ export type User = {
   name: string
   password: string
   passwordConfirmation: string
-  avatar_image: { url? : string | null}
+  avatarImage: File | null
+}
+
+export type CuurentUser = {
+  id: number
+  name: string
+  avatarImage: string | null
 }

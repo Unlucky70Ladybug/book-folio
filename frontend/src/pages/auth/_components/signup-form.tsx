@@ -1,25 +1,65 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { type User } from '../../../types/user'
+import defaultUserImage from '../../../assets/default_user_image.png'
 
 type SignUpFormProps = {
   formData: User
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onAvatarChange: (file: File | null) => void
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  error?: string
 }
 
 export default function SignUpForm({
   formData,
   onChange,
-  onSubmit,
-  error,
+  onAvatarChange,
+  onSubmit
 }: SignUpFormProps) {
+  const [avatarImage, setAvatarImage] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string>(defaultUserImage)
+
+  useEffect(() => {
+    if (!avatarImage) {
+      setAvatarPreview(defaultUserImage)
+      return
+    }
+    const objectUrl = URL.createObjectURL(avatarImage)
+    setAvatarPreview(objectUrl)
+
+    // useEffect終了後 URL.revokeObjectURL(objectUrl)を実行
+    // URL.revokeObjectURL(objectUrl)を使用して、
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [avatarImage])
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null
+    setAvatarImage(file)
+    onAvatarChange(file)
+  }
+
   return (
     <form
       onSubmit={onSubmit}
       className="card my-8 w-full border border-base-300 bg-base-100 shadow-lg"
     >
       <div className="card-body gap-4">
+        <fieldset className="fieldset items-center">
+          <legend className="fieldset-legend">ユーザーアイコン</legend>
+          <div className="avatar">
+            <div className="w-24 rounded-full">
+              <img src={avatarPreview} alt="ユーザーアイコンのプレビュー" />
+            </div>
+          </div>
+          <input
+            id="avatar_image"
+            type="file"
+            name="avatar_image"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="file-input file-input-primary mt-2 w-full"
+          />
+        </fieldset>
+
         <fieldset className="fieldset">
           <legend className="fieldset-legend">名前</legend>
           <input
@@ -60,7 +100,7 @@ export default function SignUpForm({
             required
             className="input input-accent w-full"
           />
-          {error && formData.password.length < 8 && (
+          { formData.password.length < 8 && (
             <p className="fieldset-label text-error">
               ※8文字以上で入力してください
             </p>

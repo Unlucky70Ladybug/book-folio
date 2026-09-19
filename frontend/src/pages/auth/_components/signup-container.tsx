@@ -10,15 +10,20 @@ export default function SignUpContainer() {
     email: '',
     password: '',
     passwordConfirmation: '',
-    avatar_image: { url : null}
+    avatarImage: null as File | null
   })
-
-  const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleAvatarChange = (file: File | null) => {
+    setFormData({
+      ...formData,
+      avatarImage: file,
     })
   }
 
@@ -28,11 +33,6 @@ export default function SignUpContainer() {
       await signUp(formData)
     } catch (err) {
       console.error('Request failed', err)
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError("予期しないエラーが発生しました")
-      }
     }
   }
 
@@ -42,8 +42,8 @@ export default function SignUpContainer() {
       <SignUpForm
         formData={formData}
         onChange={handleChange}
+        onAvatarChange={handleAvatarChange}
         onSubmit={handleSubmit}
-        error={error}
       />
       <div className="mt-4">
         <Link to="/" className="btn btn-neutral">

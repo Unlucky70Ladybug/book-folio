@@ -17,7 +17,7 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
 
     fog_directory ENV['S3_BUCKET_NAME']
 
-    fog_public false
+    fog_public true
   else
     storage :file
 
