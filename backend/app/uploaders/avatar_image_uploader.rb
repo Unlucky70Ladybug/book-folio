@@ -51,7 +51,12 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w[jpg jpeg gif png]
+    %w[jpg jpeg png]
+  end
+
+  # アップロードできるファイルサイズの上限を10MBに制限する
+  def size_range
+    0..10.megabytes
   end
 
   # Add a content_type_allowlist to restrict uploads by MIME type.

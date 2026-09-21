@@ -1,0 +1,28 @@
+ja:
+  activerecord:
+    attributes:
+      user:
+        name: "名前"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        avatar_image: "ユーザーアイコン"
+
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "を入力してください"
+            email:
+              blank: "を入力してください"
+            password:
+              blank: "を入力してください"
+            password_confirmation:
+              blank: "を入力してください"
+
+  errors:
+    messages:
+      max_size_error: "ファイルサイズは%{max_size}以下にしてください"
+      extension_allowlist_error: "%{extension}は許可されていないファイル形式です。許可されている形式: %{allowed_types}"
+      carrierwave_integrity_error: "は許可されていないファイル形式です"

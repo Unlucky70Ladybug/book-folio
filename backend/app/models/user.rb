@@ -11,4 +11,5 @@ class User < ActiveRecord::Base
   mount_uploader :avatar_image, AvatarImageUploader # 追記
 
   validates :name, presence: true
+  validates_integrity_of :avatar_image
 end
