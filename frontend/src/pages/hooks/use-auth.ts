@@ -43,8 +43,13 @@ export const useAuth = () => {
   )
 
   const logout = useCallback(async () => {
-    await authService.logout()
-    await updateAuthStatus()
+    try {
+      await authService.logout()
+      await updateAuthStatus()
+      notify('ログアウトに成功しました', 'info')
+    } catch(err) {
+      notify(err instanceof Error ? err.message : 'ログアウトに失敗しました', 'error')
+    }
   }, [updateAuthStatus])
 
   return {
