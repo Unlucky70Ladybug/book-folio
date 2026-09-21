@@ -1,1 +1,3 @@
 --require spec_helper
+--format documentation
+#format documentationを入れると、RSpecで表示の出力を綺麗にすることができる
