@@ -53,11 +53,24 @@ export const login = async (data: { email: string; password: string }) => {
 }
 
 export const logout = async () => {
-  await fetch('/api/v1/sessions', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sign_out`, {
     method: 'DELETE',
-    headers: {},
+    headers: {
+      'access-token': Cookies.get('_access_token'),
+      client: Cookies.get('_client'),
+      uid: Cookies.get('_uid'),
+    },
     credentials: 'include',
   })
+
+  const json = await res.json()
+  if (!res.ok) throw new Error(json?.errors?.[0] || 'ログアウトに失敗しました')
+
+  Cookies.remove('_access_token')
+  Cookies.remove('_client')
+  Cookies.remove('_uid')
+
+  return json
 }
 
 export const fetchCurrentUser = async () => {

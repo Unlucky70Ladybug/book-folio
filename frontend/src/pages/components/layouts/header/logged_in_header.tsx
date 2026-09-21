@@ -9,6 +9,7 @@ const LoggedInHeader = () => {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isSecondRowVisible, setIsSecondRowVisible] = useState(true)
 
+  // ヘッダーの動き設定
   useEffect(() => {
     const SCROLL_THRESHOLD = 10
     let lastScrollY = window.scrollY
