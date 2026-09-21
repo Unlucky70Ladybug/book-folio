@@ -51,7 +51,7 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w[jpg jpeg gif png]
+    %w[jpg jpeg png]
   end
 
   # Add a content_type_allowlist to restrict uploads by MIME type.
