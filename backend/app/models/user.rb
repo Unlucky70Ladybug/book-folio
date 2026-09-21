@@ -11,5 +11,5 @@ class User < ActiveRecord::Base
   mount_uploader :avatar_image, AvatarImageUploader # 追記
 
   validates :name, presence: true
-  validates :avatar_image, file_size: { less_than_or_equal_to: 10.megabytes }
+  validates_integrity_of :avatar_image
 end

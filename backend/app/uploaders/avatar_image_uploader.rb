@@ -54,6 +54,11 @@ class AvatarImageUploader < CarrierWave::Uploader::Base
     %w[jpg jpeg png]
   end
 
+  # アップロードできるファイルサイズの上限を10MBに制限する
+  def size_range
+    0..10.megabytes
+  end
+
   # Add a content_type_allowlist to restrict uploads by MIME type.
   # Without it, a user could upload a harmful file
   # with a safe extension (content-type spoofing).

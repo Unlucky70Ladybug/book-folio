@@ -26,7 +26,7 @@ export const signup = async (data: {
 
   const json = await res.json()
   if (!res.ok) {
-    throw new Error(json?.error || '新規登録に失敗しました')
+    throw new Error(json?.errors?.full_messages?.[0] || '新規登録に失敗しました')
   }
 
   return json
@@ -43,7 +43,7 @@ export const login = async (data: { email: string; password: string }) => {
   })
 
   const json = await res.json()
-  if (!res.ok) throw new Error(json?.error || 'ログインに失敗しました')
+  if (!res.ok) throw new Error(json?.errors?.[0] || 'ログインに失敗しました')
 
   Cookies.set('_access_token', res.headers.get('access-token') ?? '')
   Cookies.set('_client', res.headers.get('client') ?? '')
