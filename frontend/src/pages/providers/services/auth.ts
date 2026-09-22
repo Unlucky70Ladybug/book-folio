@@ -53,12 +53,18 @@ export const login = async (data: { email: string; password: string }) => {
 }
 
 export const logout = async () => {
+  const accessToken = Cookies.get('_access_token')
+  const client = Cookies.get('_client')
+  const uid = Cookies.get('_uid')
+
+  if (!accessToken || !client || !uid) throw new Error('認証情報がありません')
+
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/sign_out`, {
     method: 'DELETE',
     headers: {
-      'access-token': Cookies.get('_access_token'),
-      client: Cookies.get('_client'),
-      uid: Cookies.get('_uid'),
+      'access-token': accessToken,
+      client: client,
+      uid: uid,
     },
     credentials: 'include',
   })
