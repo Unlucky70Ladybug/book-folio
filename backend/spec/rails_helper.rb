@@ -34,6 +34,10 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
+
+# capybara等ファイルの読み込み設定
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -47,6 +51,8 @@ RSpec.configure do |config|
 
   # FactoryBotを使用する
   config.include FactoryBot::Syntax::Methods
+  # spec/support/ 配下のモジュールを読み込む
+  config.include LoginMacros
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
