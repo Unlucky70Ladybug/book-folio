@@ -53,6 +53,7 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/myapp_test
+      FRONTEND_URL: http://localhost:3000
 
     steps:
       - uses: actions/checkout@v4
