@@ -20,6 +20,7 @@ export default function SignUpForm({
 
   useEffect(() => {
     if (!avatarImage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAvatarPreview(defaultUserImage)
       return
     }
