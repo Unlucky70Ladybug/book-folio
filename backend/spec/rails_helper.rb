@@ -51,6 +51,8 @@ RSpec.configure do |config|
 
   # FactoryBotを使用する
   config.include FactoryBot::Syntax::Methods
+  # spec/support/ 配下のモジュールを読み込む
+  config.include LoginMacros
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
@@ -76,13 +78,4 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-
-  # system specでテストを動かすブラウザの設定
-  config.before(:each, type: :system) do
-    driven_by :remote_chrome
-    Capybara.server_host = IPSocket.getaddress(Socket.gethostname)
-    Capybara.server_port = 4444
-    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-    Capybara.ignore_hidden_elements = false
-  end
 end
