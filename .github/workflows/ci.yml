@@ -19,7 +19,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: backend/.ruby-version
+          ruby-version: 'backend/.ruby-version'
           bundler-cache: true
           working-directory: backend
 
@@ -57,7 +57,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: backend/.ruby-version
+          ruby-version: 'backend/.ruby-version'
           bundler-cache: true
           working-directory: backend
 
