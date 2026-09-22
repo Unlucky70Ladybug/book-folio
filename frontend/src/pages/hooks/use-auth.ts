@@ -47,7 +47,7 @@ export const useAuth = () => {
       await authService.logout()
       await updateAuthStatus()
       notify('ログアウトに成功しました', 'info')
-    } catch(err) {
+    } catch (err) {
       notify(err instanceof Error ? err.message : 'ログアウトに失敗しました', 'error')
     }
   }, [updateAuthStatus])

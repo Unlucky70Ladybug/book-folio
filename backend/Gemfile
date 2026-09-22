@@ -47,8 +47,8 @@ gem "fog-aws"
 gem "ruby-vips"
 
 # エラーメッセージを設定
-gem 'rails-i18n'
-gem 'devise-i18n-views'
+gem "rails-i18n"
+gem "devise-i18n-views"
 
 
 group :development, :test do
@@ -65,9 +65,8 @@ group :development, :test do
   gem "dotenv-rails"
 
   # テスト作成のため
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
-
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 group :development do

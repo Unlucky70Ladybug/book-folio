@@ -5,7 +5,6 @@ RSpec.describe User, type: :model do
     let(:valid_user) { { name: "テストユーザー", email: "test@example.com", password: "password", password_confirmation: "password" } }
 
     context "有効な場合" do
-
       it "ユーザーアイコンなし" do
         user = User.new(valid_user)
         expect(user).to be_valid

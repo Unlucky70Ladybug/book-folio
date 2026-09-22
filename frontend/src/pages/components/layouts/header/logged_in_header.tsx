@@ -72,14 +72,7 @@ const LoggedInHeader = () => {
                 stroke="currentColor"
               >
                 <circle cx="11" cy="11" r="8" strokeWidth="2" />
-                <line
-                  x1="21"
-                  y1="21"
-                  x2="16.65"
-                  y2="16.65"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" strokeWidth="2" strokeLinecap="round" />
               </svg>
 
               <input
@@ -96,16 +89,9 @@ const LoggedInHeader = () => {
           </Link>
 
           <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img
-                  src={currentUser?.avatarImage ?? defaultUserImage}
-                  alt="ユーザーアイコン"
-                />
+                <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
               </div>
             </div>
 
@@ -133,9 +119,7 @@ const LoggedInHeader = () => {
       >
         <div
           className={`flex h-12 items-center gap-2 px-4 sm:px-8 transition-transform duration-300 ease-out ${
-            isSecondRowVisible
-              ? 'translate-y-0'
-              : '-translate-y-full'
+            isSecondRowVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
         >
           <Link to="/reading-analysis" className="btn btn-ghost btn-sm">

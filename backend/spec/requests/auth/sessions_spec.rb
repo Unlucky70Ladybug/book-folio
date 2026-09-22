@@ -36,7 +36,7 @@ RSpec.describe 'Auth::Sessions', type: :request do
 
   describe 'DELETE /auth/sign_out' do
     let(:user) { create(:user) }
-    let(:headers) {sign_in(user)}
+    let(:headers) { sign_in(user) }
 
     it "ログアウトできる" do
       delete "/auth/sign_out", headers: headers
