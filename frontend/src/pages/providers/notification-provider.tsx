@@ -9,6 +9,7 @@ type Props = {
 const DISPLAY_DURATION = 3000
 
 // コンテキストで通知バーを作成
+// eslint-disable-next-line react-refresh/only-export-components
 export const NotificationContext = createContext<{
   notifications: Notification[]
   notify: (message: string, type?: NotificationType) => void

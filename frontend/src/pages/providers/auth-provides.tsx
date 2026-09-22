@@ -8,6 +8,7 @@ type Props = {
 
 // AuthContextはAuthProviderが呼び出されると、最後に.
 // AuthContext.Providerとして自動で呼ばれる.
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<{
   isLogin: boolean | null
   currentUser: CuurentUser | null
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: Props) => {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateAuthStatus()
   }, [updateAuthStatus])
 
