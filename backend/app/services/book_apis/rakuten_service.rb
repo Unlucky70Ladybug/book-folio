@@ -4,7 +4,6 @@ module BookApis
   #   BookApis::RakutenService.search(keyword: "ハリー・ポッター", type: "title", page: 1)
   #   # => [{ isbn: "...", title: "...", author: "...", ... }, ...]
   class RakutenService
-
     # `rescue BookApis::RakutenService::Error` と書くだけで「楽天API由来のエラー」だけを捕まえられる
     class Error < StandardError; end
 
@@ -66,7 +65,6 @@ module BookApis
 
       # API呼び出し
       def fetch(params)
-
         uri = URI.parse(ENDPOINT)
         uri.query = URI.encode_www_form(auth_params.merge(params)) # ?key=value&... の形に変換
 
