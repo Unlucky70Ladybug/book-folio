@@ -30,7 +30,7 @@ export default function BookSearchForm({
       notify('検索内容を入れてください', 'warning')
       return 
     }
-    navigate(`/search?keyword=${encodeURIComponent(searchKeyword.trim())}&type=${searchType}`)
+    navigate(`/search_book?type=${searchType}&keyword=${encodeURIComponent(searchKeyword.trim())}`)
   }
 
   return (
