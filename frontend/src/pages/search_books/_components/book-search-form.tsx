@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { type SearchBookData, type SearchType } from '../../../types/book'
+import { NotificationContext } from '../../providers/notification-provider'
 
 type BookSearchFormProps = {
   formData?: SearchBookData
@@ -20,11 +21,15 @@ export default function BookSearchForm({
 
   const [searchKeyword, setSearchKeyword] = useState(formData.keyword)
   const [searchType, setSearchType] = useState<SearchType>(formData.type)
+  const { notify } = useContext(NotificationContext)
   const navigate = useNavigate()
 
   const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!searchKeyword.trim()) return
+    if (!searchKeyword.trim()) {
+      notify('検索内容を入れてください', 'warning')
+      return 
+    }
     navigate(`/search?keyword=${encodeURIComponent(searchKeyword.trim())}&type=${searchType}`)
   }
 
