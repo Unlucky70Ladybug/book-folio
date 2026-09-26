@@ -9,7 +9,7 @@ module BookApis
 
     ENDPOINT = "https://openapi.rakuten.co.jp/services/api/BooksBook/Search/20170404"
     SEARCH_TYPES = %w[title author isbn].freeze
-    BOOKS_GENRE_ID = "001004008"
+    BOOKS_GENRE_ID = "001"
     HITS_PER_PAGE = 20
 
     class << self
@@ -17,7 +17,23 @@ module BookApis
       def search(keyword:, type: "title", page: 1)
         params = build_search_params(keyword, type, page)
         response_body = fetch(params)
-        response_body.fetch("Items").map { |item| to_book(item) }
+        books = response_body.fetch("Items").map do |item|
+          result = to_book(item)
+
+          # OpenBDで補完できなかった場合は楽天のデータをそのまま使う
+          if !complete?(result) && result[:isbn].present?
+            OpenBdService.search(result[:isbn], result) || result
+          else
+            result
+          end
+        end
+
+        # 楽天に無いISBNはOpenBDで直接引く（OpenBDはISBN検索のみ対応）
+        if books.empty? && type == "isbn"
+          book = OpenBdService.search(normalize_isbn(keyword))
+          books << book if book
+        end
+        books
       end
 
       private
@@ -89,6 +105,12 @@ module BookApis
           review_count: item["reviewCount"],
           review_average: item["reviewAverage"]
         }
+      end
+
+      def complete?(data)
+        data[:title].present? &&
+        data[:author].present? &&
+        data[:publisher].present?
       end
 
       # APIキー
