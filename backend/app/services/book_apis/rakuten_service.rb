@@ -83,8 +83,11 @@ module BookApis
           author: item["author"],
           publisher: item["publisherName"],
           sales_date: item["salesDate"],
+          size: item["size"],
           image_url: item["largeImageUrl"],
-          item_url: item["itemUrl"]
+          item_url: item["itemUrl"],
+          review_count: item["reviewCount"],
+          review_average: item["reviewAverage"]
         }
       end
 

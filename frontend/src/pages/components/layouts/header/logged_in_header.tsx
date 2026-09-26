@@ -1,12 +1,12 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../hooks/use-auth'
+import BookSearchForm from '../../../search_books/_components/book-search-form'
 import defaultUserImage from '../../../../assets/default_user_image.png'
 
 const LoggedInHeader = () => {
   const { logout, currentUser } = useAuth()
   const navigate = useNavigate()
-  const [searchKeyword, setSearchKeyword] = useState('')
   const [isSecondRowVisible, setIsSecondRowVisible] = useState(true)
 
   // ヘッダーの動き設定
@@ -43,12 +43,6 @@ const LoggedInHeader = () => {
     navigate('/')
   }
 
-  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!searchKeyword.trim()) return
-    navigate(`/search?keyword=${encodeURIComponent(searchKeyword.trim())}`)
-  }
-
   return (
     <header className="sticky top-0 z-50 border-b border-base-300 bg-base-100">
       <div className="navbar px-4 sm:px-8">
@@ -62,27 +56,7 @@ const LoggedInHeader = () => {
         </div>
 
         <div className="flex flex-none items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="hidden max-w-xs sm:flex">
-            <label className="input input-sm">
-              <svg
-                className="h-4 w-4 opacity-50"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <circle cx="11" cy="11" r="8" strokeWidth="2" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-
-              <input
-                type="search"
-                placeholder="本を検索"
-                value={searchKeyword}
-                onChange={(event) => setSearchKeyword(event.target.value)}
-              />
-            </label>
-          </form>
+          <BookSearchForm />
 
           <Link to="/bookshelf" className="btn btn-ghost btn-sm">
             本棚

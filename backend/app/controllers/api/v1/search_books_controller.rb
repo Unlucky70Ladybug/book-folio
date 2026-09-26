@@ -8,7 +8,7 @@ class Api::V1::SearchBooksController < ApplicationController
     keyword = params[:keyword].to_s.strip
     type = params[:type].presence_in(BookApis::RakutenService::SEARCH_TYPES) || "title"
 
-    return render json: { error: "キーワードを入力してください" }, status: :bad_request if keyword.blank?
+    return render json: { error: "検索内容を入れてください" }, status: :bad_request if keyword.blank?
 
     books = BookApis::RakutenService.search(keyword: keyword, type: type, page: params.fetch(:page, 1).to_i)
     render json: { books: books }
