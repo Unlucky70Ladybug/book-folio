@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { searchBooks } from './_hooks/use-search-books'
 import { NotificationContext } from '../providers/notification-provider';
 import { type Book } from '../../types/book'
+import Spinner from '../components/layouts/ui/spinner'
+import BookCard from './_components/book-card'
 
 const SearchBook = () => {
   const [searchParams] = useSearchParams();
@@ -10,27 +12,48 @@ const SearchBook = () => {
   const keyword = searchParams.get("keyword") ?? '';
   const { notify } = useContext(NotificationContext)
   const [books, setBooks] = useState<Book[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // クエリ(type / keyword)が変わるたびに検索を実行する
   useEffect(() => {
     if (!keyword && !type) return
 
+    let ignore = false
+    setIsLoading(true)
+
     searchBooks(type, keyword)
       .then((result) => {
-        setBooks(result)
+        if (!ignore) setBooks(result)
       })
       .catch((err) => {
-        notify(err instanceof Error ? err.message : '書籍検索に失敗しました', 'error')
+        if (!ignore) notify(err instanceof Error ? err.message : '書籍検索に失敗しました', 'error')
       })
-      
+      .finally(() => {
+        if (!ignore) setIsLoading(false)
+      })
+
+    // クリーンアップをし古いリクエストの結果は表示しない
+    return () => {
+      ignore = true
+    }
   }, [type, keyword, notify])
 
-  console.log('books：', books)
+  if (isLoading) return <Spinner message="検索中..." />
+
+  if (books.length === 0) {
+    return <p className="py-10 text-center text-base-content/70">検索結果がありませんでした</p>
+  }
 
   return (
-    <div>
-      {type} / {keyword}
-      <p>{books.length}件</p>
+    <div className="flex flex-col gap-4">
+      <p className="text-sm text-base-content/70">
+        「{keyword}」の検索結果：{books.length}件
+      </p>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {books.map((book) => (
+          <BookCard key={book.isbn} book={book} />
+        ))}
+      </div>
     </div>
   )
 }
