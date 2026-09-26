@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom'
 import { searchBooks } from './_hooks/use-search-books'
-import { NotificationContext } from '../providers/notification-provider';
+import { NotificationContext } from '../providers/notification-provider'
 import { type Book } from '../../types/book'
 import Spinner from '../components/layouts/ui/spinner'
 import BookCard from './_components/book-card'
 
 const SearchBook = () => {
-  const [searchParams] = useSearchParams();
-  const type = searchParams.get("type") ?? '';
-  const keyword = searchParams.get("keyword") ?? '';
+  const [searchParams] = useSearchParams()
+  const type = searchParams.get('type') ?? ''
+  const keyword = searchParams.get('keyword') ?? ''
   const { notify } = useContext(NotificationContext)
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -48,7 +48,9 @@ const SearchBook = () => {
 
   // 検索条件がない場合は検索自体が走らないため、スピナーより先に判定する
   if (!keyword && !type) {
-    return <p className="py-10 text-center text-base-content/70">検索キーワードを入力してください</p>
+    return (
+      <p className="py-10 text-center text-base-content/70">検索キーワードを入力してください</p>
+    )
   }
 
   if (isLoading) return <Spinner message="検索中..." />

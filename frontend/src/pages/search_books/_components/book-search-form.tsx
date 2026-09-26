@@ -15,10 +15,7 @@ const SEARCH_TYPE_OPTIONS: { value: SearchType; label: string }[] = [
   { value: 'isbn', label: 'ISBN' },
 ]
 
-export default function BookSearchForm({
-  formData = DEFAULT_FORM_DATA,
-}: BookSearchFormProps){
-
+export default function BookSearchForm({ formData = DEFAULT_FORM_DATA }: BookSearchFormProps) {
   const [searchKeyword, setSearchKeyword] = useState(formData.keyword)
   const [searchType, setSearchType] = useState<SearchType>(formData.type)
   const { notify } = useContext(NotificationContext)
@@ -28,16 +25,13 @@ export default function BookSearchForm({
     e.preventDefault()
     if (!searchKeyword.trim()) {
       notify('検索内容を入れてください', 'warning')
-      return 
+      return
     }
     navigate(`/search_book?type=${searchType}&keyword=${encodeURIComponent(searchKeyword.trim())}`)
   }
 
   return (
-    <form
-      onSubmit={handleSearchSubmit}
-      className="hidden items-center gap-2 sm:flex"
-    >
+    <form onSubmit={handleSearchSubmit} className="hidden items-center gap-2 sm:flex">
       <div className="join w-full">
         <select
           className="select select-sm join-item w-24 border-base-content/30 focus:outline-none focus-within:outline-none open:outline-none"

@@ -1,4 +1,4 @@
-import { type Book } from "../../../types/book"
+import { type Book } from '../../../types/book'
 import Cookies from 'js-cookie'
 
 export const searchBooks = async (type: string, keyword: string): Promise<Book[]> => {
