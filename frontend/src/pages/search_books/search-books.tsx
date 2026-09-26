@@ -14,12 +14,20 @@ const SearchBook = () => {
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
+  // 検索条件が変わったらレンダー中にローディング状態へ戻す
+  // (effect内で同期的にsetStateすると再レンダーが連鎖するため)
+  const query = `${type}:${keyword}`
+  const [prevQuery, setPrevQuery] = useState(query)
+  if (query !== prevQuery) {
+    setPrevQuery(query)
+    setIsLoading(true)
+  }
+
   // クエリ(type / keyword)が変わるたびに検索を実行する
   useEffect(() => {
     if (!keyword && !type) return
 
     let ignore = false
-    setIsLoading(true)
 
     searchBooks(type, keyword)
       .then((result) => {
@@ -37,6 +45,11 @@ const SearchBook = () => {
       ignore = true
     }
   }, [type, keyword, notify])
+
+  // 検索条件がない場合は検索自体が走らないため、スピナーより先に判定する
+  if (!keyword && !type) {
+    return <p className="py-10 text-center text-base-content/70">検索キーワードを入力してください</p>
+  }
 
   if (isLoading) return <Spinner message="検索中..." />
 
