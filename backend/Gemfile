@@ -67,6 +67,9 @@ group :development, :test do
   # テスト作成のため
   gem "rspec-rails"
   gem "factory_bot_rails"
+
+  # デバック用
+  gem "pry-rails"
 end
 
 group :development do

@@ -32,22 +32,29 @@ export default function BookCard({ book }: BookCardProps) {
         </div>
 
         {/* 右側：書影と楽天リンク */}
-        <div className="flex w-28 shrink-0 flex-col items-center gap-2">
-          <figure className="flex w-full items-center justify-center bg-base-200 p-2">
+        <div
+          className={`flex shrink-0 flex-col items-center gap-2 ${book.image_url ? 'w-28' : 'w-[150px]'}`}
+        >
+          {/* 書影がない場合は200×200のプレースホルダーを表示 */}
+          <figure
+            className={`flex w-full items-center justify-center bg-base-200 p-2 ${book.image_url ? '' : 'h-[200px]'}`}
+          >
             {book.image_url ? (
               <img src={book.image_url} alt={book.title} className="h-auto w-full object-contain" />
             ) : (
               <span className="text-xs text-base-content/50">No Image</span>
             )}
           </figure>
-          <a
-            href={book.item_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-sm w-full"
-          >
-            楽天で見る
-          </a>
+          {book.item_url && (
+            <a
+              href={book.item_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-sm w-full"
+            >
+              楽天で見る
+            </a>
+          )}
         </div>
       </div>
     </div>
