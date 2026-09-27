@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::SearchBooks", type: :request do
   describe "Get /api/v1/search" do
-
     let(:user) { create(:user) }
     let(:headers) { sign_in(user) }
 
@@ -20,7 +19,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'タイトルで検索し、正常に検索結果が返ってくる場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: 'こころ', type: 'title'}
+        get '/api/v1/search', headers: headers, params: { keyword: 'こころ', type: 'title' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -38,7 +37,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'タイトルで検索し、検索結果がない場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: '1234567890', type: 'title'}
+        get '/api/v1/search', headers: headers, params: { keyword: '1234567890', type: 'title' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -54,7 +53,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it '著者で検索し、正常に検索結果が返ってくる場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: '伊坂幸太郎', type: 'author'}
+        get '/api/v1/search', headers: headers, params: { keyword: '伊坂幸太郎', type: 'author' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -72,7 +71,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'タイトルで検索し、検索結果がない場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: 'hogehogehoge', type: 'author'}
+        get '/api/v1/search', headers: headers, params: { keyword: 'hogehogehoge', type: 'author' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -88,7 +87,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'ISBNで検索し、正常に検索結果が返ってくる場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: '9784757506206', type: 'isbn'}
+        get '/api/v1/search', headers: headers, params: { keyword: '9784757506206', type: 'isbn' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -106,7 +105,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'ISBNで検索し、検索結果がない場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: 'hogehogehoge', type: 'isbn'}
+        get '/api/v1/search', headers: headers, params: { keyword: 'hogehogehoge', type: 'isbn' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -116,7 +115,7 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
 
       it 'ISBNで検索し、楽天ブックスAPIでは該当せず、OpenBDでのみ検索できる場合' do
         sleep 1
-        get '/api/v1/search', headers: headers, params: { keyword: '9784063584882', type: 'isbn'}
+        get '/api/v1/search', headers: headers, params: { keyword: '9784063584882', type: 'isbn' }
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
         books = json['books']
@@ -126,7 +125,6 @@ RSpec.describe "Api::V1::SearchBooks", type: :request do
         expect(books.first['author']).to be_present
         expect(books.first['publisher']).to be_present
       end
-
     end
   end
 end
