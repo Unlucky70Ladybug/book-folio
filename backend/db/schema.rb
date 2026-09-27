@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_27_123801) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_27_131032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_27_123801) do
     t.string "large_image_url"
     t.datetime "fetched_at", null: false
     t.index ["isbn"], name: "index_books_on_isbn", unique: true
+  end
+
+  create_table "bookshelves", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "book_id", null: false
+    t.integer "reading_status", null: false
+    t.integer "preference_rating", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_bookshelves_on_book_id"
+    t.index ["user_id", "book_id"], name: "index_bookshelves_on_user_id_and_book_id", unique: true
+    t.index ["user_id"], name: "index_bookshelves_on_user_id"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -249,6 +261,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_27_123801) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bookshelves", "books"
+  add_foreign_key "bookshelves", "users"
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
