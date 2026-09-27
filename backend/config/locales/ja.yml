@@ -1,5 +1,10 @@
 ja:
   activerecord:
+    models:
+      user: "ユーザー"
+      book: "書籍"
+      bookshelf: "本棚"
+
     attributes:
       user:
         name: "名前"
@@ -7,6 +12,20 @@ ja:
         password: "パスワード"
         password_confirmation: "パスワード（確認）"
         avatar_image: "ユーザーアイコン"
+      book:
+        isbn: "ISBN"
+        title: "タイトル"
+        author: "著者"
+        item_url: "商品URL"
+        large_image_url: "書影画像URL"
+        fetched_at: "取得日時"
+      bookshelf:
+        user: "ユーザー"
+        book: "書籍"
+        user_id: "ユーザー"
+        book_id: "書籍"
+        reading_status: "読書状況"
+        preference_rating: "好み"
 
     errors:
       models:
@@ -20,6 +39,43 @@ ja:
               blank: "を入力してください"
             password_confirmation:
               blank: "を入力してください"
+        book:
+          attributes:
+            isbn:
+              blank: "を入力してください"
+              taken: "はすでに登録されています"
+            title:
+              blank: "を入力してください"
+            author:
+              blank: "を入力してください"
+            fetched_at:
+              blank: "を入力してください"
+        bookshelf:
+          attributes:
+            user:
+              required: "を入力してください"
+            book:
+              required: "を入力してください"
+            book_id:
+              taken: "はすでに本棚に登録されています"
+            reading_status:
+              blank: "を選択してください"
+            preference_rating:
+              blank: "を選択してください"
+
+  enums:
+    bookshelf:
+      reading_status:
+        undefined: "未設定"
+        finished: "読了"
+        reading: "読書中"
+        interested: "気になる"
+      preference_rating:
+        undefined: "未設定"
+        not_for_me: "合わなかった"
+        normal: "普通"
+        interesting: "面白い"
+        favorite: "お気に入り"
 
   errors:
     messages:
