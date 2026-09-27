@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_17_123827) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_27_123801) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_17_123827) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.string "isbn", null: false
+    t.string "title", null: false
+    t.string "author", null: false
+    t.string "item_url"
+    t.string "large_image_url"
+    t.datetime "fetched_at", null: false
+    t.index ["isbn"], name: "index_books_on_isbn", unique: true
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
