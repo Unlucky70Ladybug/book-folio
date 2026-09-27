@@ -54,6 +54,8 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/myapp_test
       FRONTEND_URL: http://localhost:3000
+      RAKUTEN_BOOKS_APP_ID: ${{ secrets.RAKUTEN_BOOKS_APP_ID }}
+      RAKUTEN_BOOKS_ACCESS_KEY: ${{ secrets.RAKUTEN_BOOKS_ACCESS_KEY }}
 
     steps:
       - uses: actions/checkout@v4
