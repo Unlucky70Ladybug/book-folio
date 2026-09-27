@@ -1,6 +1,6 @@
 class Book < ApplicationRecord
   # Bookshelfと紐づけ
-  has_many :bookshelfs
+  has_many :bookshelves
 
   validates :isbn, presence: true, uniqueness: true
   validates :title, presence: true
