@@ -7,7 +7,6 @@ class CreateBooks < ActiveRecord::Migration[8.0]
       t.string :item_url
       t.string :large_image_url
       t.datetime :fetched_at, null: false
-
     end
     add_index :books, :isbn, unique: true
   end

@@ -3,7 +3,7 @@ class Bookshelf < ApplicationRecord
   belongs_to :book
 
   enum :reading_status, { undefined: 0, finished: 1, reading: 2, interested: 3 }
-  enum :preference_rating, { undefined: 0,not_for_me: 1, normal: 2, interesting: 3, favorite: 4 }
+  enum :preference_rating, { undefined: 0, not_for_me: 1, normal: 2, interesting: 3, favorite: 4 }
 
   validates :book_id, uniqueness: { scope: :user_id }
   validates :reading_status, presence: true
