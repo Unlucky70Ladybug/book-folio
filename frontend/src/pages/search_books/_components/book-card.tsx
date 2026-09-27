@@ -36,7 +36,11 @@ export default function BookCard({ book }: BookCardProps) {
           {/* 書影の有無にかかわらず150×200の枠で表示 */}
           <figure className="flex h-[200px] w-[150px] items-center justify-center bg-base-200">
             {book.image_url ? (
-              <img src={book.image_url} alt={book.title} className="h-full w-full object-contain p-2" />
+              <img
+                src={book.image_url}
+                alt={book.title}
+                className="h-full w-full object-contain p-2"
+              />
             ) : (
               <span className="flex h-[200px] w-[150px] items-center justify-center text-xs text-base-content/50">
                 No Image
