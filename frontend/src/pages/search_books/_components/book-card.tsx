@@ -1,7 +1,7 @@
-import { type Book } from '../../../types/book'
+import { type ApiBook } from '../../../types/book'
 
 type BookCardProps = {
-  book: Book
+  book: ApiBook
 }
 
 // 検索結果1件分の書籍カード

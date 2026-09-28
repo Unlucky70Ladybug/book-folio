@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { searchBooks } from './_hooks/use-search-books'
 import { NotificationContext } from '../providers/notification-provider'
-import { type Book } from '../../types/book'
+import { type ApiBook } from '../../types/book'
 import Spinner from '../components/layouts/ui/spinner'
 import BookCard from './_components/book-card'
 
@@ -11,7 +11,7 @@ const SearchBook = () => {
   const type = searchParams.get('type') ?? ''
   const keyword = searchParams.get('keyword') ?? ''
   const { notify } = useContext(NotificationContext)
-  const [books, setBooks] = useState<Book[]>([])
+  const [books, setBooks] = useState<ApiBook[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // 検索条件が変わったらレンダー中にローディング状態へ戻す
