@@ -12,6 +12,7 @@ import { AuthProvider } from './pages/providers/auth-provides'
 import NotificationBar from './pages/components/notification-bar'
 import { NotificationProvider } from './pages/providers/notification-provider'
 import SearchBook from './pages/search_books/search-books'
+import BookshelfPage from './pages/bookshelf/page'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')!).render(
 
             <Route element={<PrivateRoute />}>
               <Route path="/search_book" element={<SearchBook />} />
+              <Route path="/bookshelf" element={<BookshelfPage />} />
             </Route>
           </Routes>
           <Footer />

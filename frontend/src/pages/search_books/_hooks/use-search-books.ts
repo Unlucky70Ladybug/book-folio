@@ -1,7 +1,7 @@
-import { type Book } from '../../../types/book'
+import { type ApiBook } from '../../../types/book'
 import Cookies from 'js-cookie'
 
-export const searchBooks = async (type: string, keyword: string): Promise<Book[]> => {
+export const searchBooks = async (type: string, keyword: string): Promise<ApiBook[]> => {
   // URLのクエリ文字列を作成
   const params = new URLSearchParams({
     type: type,
