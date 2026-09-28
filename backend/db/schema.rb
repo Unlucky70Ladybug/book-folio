@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_27_133211) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,7 +55,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_27_133211) do
   create_table "bookshelves", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "book_id", null: false
-    t.integer "reading_status", default: 0, null: false
+    t.integer "reading_status", null: false
     t.integer "preference_rating", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
