@@ -23,7 +23,7 @@ export default function LoginContainer() {
     e.preventDefault()
     try {
       await login(formData)
-      navigate('/')
+      navigate('/bookshelf')
     } catch (err) {
       console.error('Request failed', err)
     }
