@@ -7,15 +7,14 @@ export type Bookshelf = {
   book: DisplayBook
 }
 
-export type ReadingStatus = 'unread' | 'finished' | 'reading' | 'interested'
+export type ReadingStatus = 'interested' | 'reading' | 'finished'
 
 export type PreferenceRating = 'unrated' | 'not_for_me' | 'normal' | 'interesting' | 'favorite'
 
 export const READING_STATUS_LABELS: Record<ReadingStatus, string> = {
-  unread: '未定義',
-  finished: '読み終わった',
-  reading: '読書中',
   interested: '気になる本',
+  reading: '読書中',
+  finished: '読み終わった',
 }
 
 export const PREFERENCE_RATING_LABELS: Record<PreferenceRating, string> = {
