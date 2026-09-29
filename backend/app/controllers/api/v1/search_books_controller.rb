@@ -2,7 +2,7 @@ class Api::V1::SearchBooksController < ApplicationController
   before_action :authenticate_user!
 
   # 外部書誌APIへのプロキシなので、未認証の連打で外部APIのquotaを食い潰されないようにする
-  rate_limit to: 1, within: 1.second
+  rate_limit to: 2, within: 2.second
 
   def search
     keyword = params[:keyword].to_s.strip
