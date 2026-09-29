@@ -20,7 +20,7 @@ const READING_STATUS_COLORS: Record<ReadingStatus, string> = {
 type SelectableRating = Exclude<PreferenceRating, 'unrated'>
 
 // テーマに灰色・ピンクが無いため、daisyUIのボタン色変数を直接上書きする
-const PREFERENCE_RATING_OPTIONS: { value: SelectableRating; color: string; }[] = [
+const PREFERENCE_RATING_OPTIONS: { value: SelectableRating; color: string }[] = [
   { value: 'not_for_me', color: '[--btn-color:var(--color-gray-400)] [--btn-fg:white]' },
   { value: 'normal', color: 'btn-success' },
   { value: 'interesting', color: 'btn-warning' },

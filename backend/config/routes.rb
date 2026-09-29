@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "/search", to: "search_books#search"
 
-      resources :bookshelves, only: [:index, :create]
+      resources :bookshelves, only: [ :index, :create ]
     end
   end
 

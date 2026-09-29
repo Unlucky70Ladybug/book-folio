@@ -20,7 +20,7 @@ class Api::V1::BookshelvesController < ApplicationController
       return render json: { error: "既に登録されています" }, status: :unprocessable_entity
     end
 
-    bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating] )
+    bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating])
 
     if bookshelf.save
       render json: { book: book }, status: :created
