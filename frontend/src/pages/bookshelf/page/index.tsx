@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, type CSSProperties } from 'react'
-import { getBookshelves } from '../_hooks/getBookshelves'
+import { getBookshelves } from '../_hooks/get-bookshelves'
 import { useAuth } from '../../hooks/use-auth'
 import { NotificationContext } from '../../providers/notification-provider'
 import { type Bookshelf, READING_STATUS_LABELS } from '../../../types/bookshelf'

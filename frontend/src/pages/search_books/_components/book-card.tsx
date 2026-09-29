@@ -1,4 +1,5 @@
 import { type ApiBook } from '../../../types/book'
+import AddToBookshelfButton from '../../components/bookshelf/add-to-bookshelf-button'
 
 type BookCardProps = {
   book: ApiBook
@@ -57,6 +58,7 @@ export default function BookCard({ book }: BookCardProps) {
               楽天で見る
             </a>
           )}
+          <AddToBookshelfButton book={book} />
         </div>
       </div>
     </div>
