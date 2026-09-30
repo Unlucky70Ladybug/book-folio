@@ -20,7 +20,12 @@ type BookshelfBookProps = {
 }
 
 // 棚に並ぶ1冊分(表紙 + 棚板上の評価)
-export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight, onUpdated }: BookshelfBookProps) => {
+export const BookshelfBook = ({
+  bookshelf,
+  rowHeight,
+  boardHeight,
+  onUpdated,
+}: BookshelfBookProps) => {
   const { book, preference_rating } = bookshelf
   const stars = RATING_STARS[preference_rating]
   const dialogRef = useRef<HTMLDialogElement>(null)

@@ -41,7 +41,11 @@ type ShowBookshelfModalProps = {
 }
 
 // 読書状況・好み評価を選んで本棚に登録するモーダル
-export default function ShowBookshelfModal({ bookshelf, dialogRef, onUpdated }: ShowBookshelfModalProps) {
+export default function ShowBookshelfModal({
+  bookshelf,
+  dialogRef,
+  onUpdated,
+}: ShowBookshelfModalProps) {
   const { id, book, reading_status, preference_rating } = bookshelf
   const { notify } = useNotification()
   // 読書状況は必須のため、未選択(null)の間は登録できない
@@ -71,7 +75,11 @@ export default function ShowBookshelfModal({ bookshelf, dialogRef, onUpdated }: 
     try {
       await updateBookshelf(id, readingStatus, preferenceRating)
       // 送信した値で親の state を更新する
-      onUpdated({ ...bookshelf, reading_status: readingStatus, preference_rating: preferenceRating })
+      onUpdated({
+        ...bookshelf,
+        reading_status: readingStatus,
+        preference_rating: preferenceRating,
+      })
       notify(`「${bookshelf.book.title}」を本棚に登録しました`, 'success')
       close()
     } catch (err) {
