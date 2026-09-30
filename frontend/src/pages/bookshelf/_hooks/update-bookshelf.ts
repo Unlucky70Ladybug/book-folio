@@ -1,15 +1,14 @@
-import { type ApiBook } from '../../../types/book'
 import { type PreferenceRating, type ReadingStatus } from '../../../types/bookshelf'
 import Cookies from 'js-cookie'
 
 // 検索結果の本を読書状況・好み評価つきで自分の本棚に登録する
-export const createBookshelf = async (
-  book: ApiBook,
+export const updateBookshelf = async (
+  id: number,
   readingStatus: ReadingStatus,
   preferenceRating: PreferenceRating,
 ): Promise<void> => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/bookshelves`, {
-    method: 'POST',
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/bookshelves/${id}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'access-token': Cookies.get('_access_token') ?? '',
@@ -18,15 +17,9 @@ export const createBookshelf = async (
     },
     body: JSON.stringify({
       bookshelf: {
+        id: id,
         reading_status: readingStatus,
         preference_rating: preferenceRating,
-        book: {
-          isbn: book.isbn,
-          title: book.title,
-          author: book.author,
-          item_url: book.item_url,
-          large_image_url: book.image_url,
-        },
       },
     }),
   })

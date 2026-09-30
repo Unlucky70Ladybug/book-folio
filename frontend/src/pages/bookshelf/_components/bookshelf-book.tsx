@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import { type Bookshelf, type PreferenceRating } from '../../../types/bookshelf'
+import ShowBookshelfModal from './show-bookshelf'
 
 // 好み評価を星の数に変換(未評価は星を表示しない)
 const RATING_STARS: Record<PreferenceRating, number> = {
@@ -20,15 +22,15 @@ type BookshelfBookProps = {
 export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight }: BookshelfBookProps) => {
   const { book, preference_rating } = bookshelf
   const stars = RATING_STARS[preference_rating]
+  const dialogRef = useRef<HTMLDialogElement>(null)
 
   return (
     <li className="flex flex-col items-center justify-end" style={{ height: rowHeight }}>
       <div className="tooltip" data-tip={`${book.title} / ${book.author}`}>
-        <a
-          href={book.item_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block transition-transform duration-200 hover:-translate-y-2"
+        <button
+          type="button"
+          onClick={() => dialogRef.current?.showModal()}
+          className="block cursor-pointer transition-transform duration-200 hover:-translate-y-2"
         >
           <img
             src={book.large_image_url}
@@ -36,8 +38,9 @@ export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight }: BookshelfBo
             loading="lazy"
             className="h-40 w-auto max-w-24 rounded-sm object-cover shadow-[3px_4px_8px_rgba(0,0,0,0.45)] md:max-w-28"
           />
-        </a>
+        </button>
       </div>
+      <ShowBookshelfModal bookshelf={bookshelf} dialogRef={dialogRef} />
       <div className="flex items-center" style={{ height: boardHeight }}>
         {stars > 0 && (
           <div className="rating rating-xs" aria-label={`評価 ${stars} / ${MAX_STARS}`}>
