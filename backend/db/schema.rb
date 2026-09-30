@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_30_163036) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
     t.index ["book_id"], name: "index_bookshelves_on_book_id"
     t.index ["user_id", "book_id"], name: "index_bookshelves_on_user_id_and_book_id", unique: true
     t.index ["user_id"], name: "index_bookshelves_on_user_id"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_genres_on_name", unique: true
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
