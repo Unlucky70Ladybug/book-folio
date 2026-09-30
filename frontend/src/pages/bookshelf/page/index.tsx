@@ -59,6 +59,11 @@ const BookshelfPage = () => {
   const countByStatus = (status: ReadingStatus) =>
     bookshelves.filter((bookshelf) => bookshelf.reading_status === status).length
 
+  // 更新成功後、該当の1冊だけ差し替える
+  const handleUpdated = (updated_book: Bookshelf) => {
+    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* ユーザー情報 */}
@@ -116,6 +121,7 @@ const BookshelfPage = () => {
                     bookshelf={bookshelf}
                     rowHeight={SHELF_ROW_HEIGHT}
                     boardHeight={SHELF_BOARD_HEIGHT}
+                    onUpdated={handleUpdated}
                   />
                 ))}
               </ul>

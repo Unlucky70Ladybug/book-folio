@@ -16,10 +16,11 @@ type BookshelfBookProps = {
   bookshelf: Bookshelf
   rowHeight: number
   boardHeight: number
+  onUpdated: (bookshelf: Bookshelf) => void
 }
 
 // 棚に並ぶ1冊分(表紙 + 棚板上の評価)
-export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight }: BookshelfBookProps) => {
+export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight, onUpdated }: BookshelfBookProps) => {
   const { book, preference_rating } = bookshelf
   const stars = RATING_STARS[preference_rating]
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -40,7 +41,7 @@ export const BookshelfBook = ({ bookshelf, rowHeight, boardHeight }: BookshelfBo
           />
         </button>
       </div>
-      <ShowBookshelfModal bookshelf={bookshelf} dialogRef={dialogRef} />
+      <ShowBookshelfModal bookshelf={bookshelf} dialogRef={dialogRef} onUpdated={onUpdated} />
       <div className="flex items-center" style={{ height: boardHeight }}>
         {stars > 0 && (
           <div className="rating rating-xs" aria-label={`評価 ${stars} / ${MAX_STARS}`}>
