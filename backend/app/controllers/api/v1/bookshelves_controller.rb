@@ -23,9 +23,18 @@ class Api::V1::BookshelvesController < ApplicationController
     bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating])
 
     if bookshelf.save
-      render json: { book: book }, status: :created
+      render json: {}, status: :created
     else
       render json: { error: "既に登録されています" }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    bookshelf = current_user.bookshelves.find(bookshelf_params[:id])
+    if bookshelf.update(reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating])
+      render json: {}, status: :ok
+    else
+      render json: { error: "更新に失敗しました" }, status: :unprocessable_entity
     end
   end
 
@@ -33,6 +42,7 @@ class Api::V1::BookshelvesController < ApplicationController
 
   def bookshelf_params
     params.require(:bookshelf).permit(
+      :id,
       :reading_status,
       :preference_rating,
       book: [
