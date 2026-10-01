@@ -2,7 +2,7 @@
 
 class User < ActiveRecord::Base
   # Bookshelfと紐づけ
-  has_many :bookshelves
+  has_many :bookshelves, dependent: :destory
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
