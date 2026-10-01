@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       get "/search", to: "search_books#search"
 
       resources :bookshelves, only: [ :index, :create, :update ]
+      resources :genres, only: [ :index ]
     end
   end
 
