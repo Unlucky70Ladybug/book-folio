@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_01_122457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "book_genres", force: :cascade do |t|
+    t.bigint "bookshelf_id", null: false
+    t.bigint "genre_id", null: false
+    t.index ["bookshelf_id", "genre_id"], name: "index_book_genres_on_bookshelf_id_and_genre_id", unique: true
+    t.index ["bookshelf_id"], name: "index_book_genres_on_bookshelf_id"
+    t.index ["genre_id"], name: "index_book_genres_on_genre_id"
+  end
+
   create_table "books", force: :cascade do |t|
     t.string "isbn", null: false
     t.string "title", null: false
@@ -62,6 +70,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
     t.index ["book_id"], name: "index_bookshelves_on_book_id"
     t.index ["user_id", "book_id"], name: "index_bookshelves_on_user_id_and_book_id", unique: true
     t.index ["user_id"], name: "index_bookshelves_on_user_id"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_genres_on_name", unique: true
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -261,6 +276,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_28_140645) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "book_genres", "bookshelves"
+  add_foreign_key "book_genres", "genres"
   add_foreign_key "bookshelves", "books"
   add_foreign_key "bookshelves", "users"
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade
