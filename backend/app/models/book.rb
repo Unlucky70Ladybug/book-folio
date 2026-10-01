@@ -1,6 +1,6 @@
 class Book < ApplicationRecord
   # Bookshelfと紐づけ
-  has_many :bookshelves, dependent: :destory
+  has_many :bookshelves, dependent: :destroy
 
   validates :isbn, presence: true, uniqueness: true
   validates :title, presence: true
