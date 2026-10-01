@@ -7,7 +7,7 @@ class Api::V1::BookshelvesController < ApplicationController
   end
 
   def create
-    # 「!」を付けることで、念のためバリデーションに引っかかることにする
+    # 「!」を付けることで、念のためバリデーションエラーに引っかかることにする
     book = Book.find_or_create_by!(isbn: bookshelf_params[:book][:isbn]) do | new_book |
       new_book.title = bookshelf_params[:book][:title]
       new_book.author = bookshelf_params[:book][:author]
