@@ -1,5 +1,6 @@
 import { useId, useState, type RefObject } from 'react'
 import { type Bookshelf } from '../../../types/bookshelf'
+import { type Genre } from '../../../types/genre'
 import {
   PREFERENCE_RATING_LABELS,
   READING_STATUS_LABELS,
@@ -36,21 +37,26 @@ const optionClass = (color: string, selected: boolean) =>
 
 type ShowBookshelfModalProps = {
   bookshelf: Bookshelf
+  genreList: Genre[]
   dialogRef: RefObject<HTMLDialogElement | null>
   onUpdated: (bookshelf: Bookshelf) => void
 }
 
-// 読書状況・好み評価を選んで本棚に登録するモーダル
+// 読書状況・好み評価・ジャンルを選んで本棚に登録するモーダル
 export default function ShowBookshelfModal({
   bookshelf,
+  genreList,
   dialogRef,
   onUpdated,
 }: ShowBookshelfModalProps) {
-  const { id, book, reading_status, preference_rating } = bookshelf
+  const { id, book, reading_status, preference_rating, genres } = bookshelf
   const { notify } = useNotification()
-  // 読書状況は必須のため、未選択(null)の間は登録できない
+  // 読書状況・ジャンルは必須のため、未選択の間は登録できない
   const [readingStatus, setReadingStatus] = useState<ReadingStatus>(reading_status)
   const [preferenceRating, setPreferenceRating] = useState<PreferenceRating>(preference_rating)
+  const [genreIds, setGenreIds] = useState<number[]>(genres.map((genre) => genre.id))
+  // ジャンル追加メニュー(Speed Dial)の開閉
+  const [isGenreMenuOpen, setIsGenreMenuOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   // 同じページに複数のモーダルが並ぶため、ラジオのnameを一意にする
   const radio_id = useId()
@@ -61,6 +67,8 @@ export default function ShowBookshelfModal({
   const reset = () => {
     setReadingStatus(reading_status)
     setPreferenceRating(preference_rating)
+    setGenreIds(genres.map((genre) => genre.id))
+    setIsGenreMenuOpen(false)
   }
 
   // 選択中の評価をもう一度押すと未評価に戻す
@@ -68,17 +76,27 @@ export default function ShowBookshelfModal({
     setPreferenceRating((prev) => (prev === rating ? 'unrated' : rating))
   }
 
+  const addGenre = (genreId: number) => setGenreIds((prev) => [...prev, genreId])
+  const removeGenre = (genreId: number) =>
+    setGenreIds((prev) => prev.filter((id) => id !== genreId))
+
+  // 一覧の並び順で表示するため、genreList から絞り込む
+  const selectedGenres = genreList.filter((genre) => genreIds.includes(genre.id))
+  // メニューには未選択のジャンルだけを出す
+  const addableGenres = genreList.filter((genre) => !genreIds.includes(genre.id))
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setIsSubmitting(true)
     try {
-      await updateBookshelf(id, readingStatus, preferenceRating)
+      await updateBookshelf(id, readingStatus, preferenceRating, genreIds)
       // 送信した値で親の state を更新する
       onUpdated({
         ...bookshelf,
         reading_status: readingStatus,
         preference_rating: preferenceRating,
+        genres: selectedGenres,
       })
       notify(`「${bookshelf.book.title}」を本棚に登録しました`, 'success')
       close()
@@ -129,6 +147,87 @@ export default function ShowBookshelfModal({
 
               <fieldset className="fieldset">
                 <legend className="fieldset-legend">
+                  ジャンル
+                  <span className="badge badge-xs badge-primary badge-soft rounded-sm">必須</span>
+                </legend>
+
+                {/* 選択中のジャンル(×で解除) + 追加ボタン */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {selectedGenres.map((genre) => (
+                    <span key={genre.id} className="badge badge-secondary gap-1">
+                      {genre.name}
+                      <button
+                        type="button"
+                        aria-label={`${genre.name}を解除`}
+                        className="cursor-pointer opacity-70 hover:opacity-100"
+                        onClick={() => removeGenre(genre.id)}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                  <div className="tooltip" data-tip={isGenreMenuOpen ? '閉じる' : 'ジャンルを追加'}>
+                    <button
+                      type="button"
+                      aria-label="ジャンルを追加"
+                      aria-expanded={isGenreMenuOpen}
+                      className="btn btn-circle btn-sm btn-secondary"
+                      onClick={() => setIsGenreMenuOpen((prev) => !prev)}
+                    >
+                      {/* 開いている間は＋を45度回して×に見せる */}
+                      <span
+                        className={`text-lg leading-none transition-transform duration-200 ${isGenreMenuOpen ? 'rotate-45' : ''}`}
+                      >
+                        +
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 追加できるジャンル一覧(FABのように開閉する) */}
+                <div
+                  className={`grid transition-[grid-template-rows] duration-200 ${isGenreMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="mt-2 flex flex-wrap gap-2 rounded-box bg-base-200 p-3">
+                      {addableGenres.length === 0 ? (
+                        <span className="text-xs text-base-content/60">
+                          すべてのジャンルを追加済みです
+                        </span>
+                      ) : (
+                        addableGenres.map((genre, i) => (
+                          <button
+                            key={genre.id}
+                            type="button"
+                            tabIndex={isGenreMenuOpen ? 0 : -1}
+                            className={`btn btn-xs btn-secondary btn-outline rounded-full bg-base-100 transition-[scale,opacity] duration-200 ${isGenreMenuOpen ? 'scale-100 opacity-100' : 'scale-80 opacity-0'}`}
+                            // 順番に飛び出して見えるよう少しずつ遅らせる
+                            style={{
+                              transitionDelay: isGenreMenuOpen
+                                ? `${Math.min(i, 10) * 20}ms`
+                                : '0ms',
+                            }}
+                            onClick={() => addGenre(genre.id)}
+                          >
+                            + {genre.name}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {genreIds.length === 0 ? (
+                  <p className="label text-xs text-error">
+                    ＋ボタンからジャンルを1つ以上追加してください
+                  </p>
+                ) : (
+                  <p className="label text-xs">✕で解除、＋から追加できます</p>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">
                   好み評価
                   <span className="badge badge-xs badge-ghost rounded-sm">任意</span>
                 </legend>
@@ -171,7 +270,7 @@ export default function ShowBookshelfModal({
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={!readingStatus || isSubmitting}
+              disabled={!readingStatus || genreIds.length === 0 || isSubmitting}
             >
               {isSubmitting && <span className="loading loading-spinner loading-sm" />}
               登録する

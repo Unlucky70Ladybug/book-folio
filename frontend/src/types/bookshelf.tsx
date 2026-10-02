@@ -1,10 +1,12 @@
 import { type DisplayBook } from './book'
+import { type Genre } from './genre'
 
 export type Bookshelf = {
   id: number
   reading_status: ReadingStatus
   preference_rating: PreferenceRating
   book: DisplayBook
+  genres: Genre[]
 }
 
 export type ReadingStatus = 'interested' | 'reading' | 'finished'

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, type CSSProperties } from 'react'
 import { getBookshelves } from '../_hooks/get-bookshelves'
+import { getGenres } from '../_hooks/get-genres'
 import { useAuth } from '../../hooks/use-auth'
 import { NotificationContext } from '../../providers/notification-provider'
 import { type Bookshelf, READING_STATUS_LABELS } from '../../../types/bookshelf'
@@ -7,6 +8,7 @@ import { BookshelfBook } from '../_components/bookshelf-book'
 import Spinner from '../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../assets/default_user_image.png'
 import { type ReadingStatus } from '../../../types/bookshelf'
+import { type Genre } from '../../../types/genre'
 
 // 1段の高さ(本 + 棚板)。背景の棚板の間隔と本の配置をこの値で揃える
 const SHELF_ROW_HEIGHT = 240
@@ -34,14 +36,17 @@ const BookshelfPage = () => {
   const { currentUser } = useAuth()
   const { notify } = useContext(NotificationContext)
   const [bookshelves, setBookshelves] = useState<Bookshelf[]>([])
+  const [genreList, setGenreList] = useState<Genre[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     let ignore = false
 
-    getBookshelves()
-      .then((result) => {
-        if (!ignore) setBookshelves(result)
+    Promise.all([getBookshelves(), getGenres()])
+      .then(([bookshelvesResult, genresResult]) => {
+        if (ignore) return
+        setBookshelves(bookshelvesResult)
+        setGenreList(genresResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -119,6 +124,7 @@ const BookshelfPage = () => {
                   <BookshelfBook
                     key={bookshelf.id}
                     bookshelf={bookshelf}
+                    genreList={genreList}
                     rowHeight={SHELF_ROW_HEIGHT}
                     boardHeight={SHELF_BOARD_HEIGHT}
                     onUpdated={handleUpdated}
