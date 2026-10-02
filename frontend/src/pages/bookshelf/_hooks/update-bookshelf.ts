@@ -1,11 +1,12 @@
 import { type PreferenceRating, type ReadingStatus } from '../../../types/bookshelf'
 import Cookies from 'js-cookie'
 
-// 検索結果の本を読書状況・好み評価つきで自分の本棚に登録する
+// 本棚の本の読書状況・好み評価・ジャンルを更新する
 export const updateBookshelf = async (
   id: number,
   readingStatus: ReadingStatus,
   preferenceRating: PreferenceRating,
+  genreIds: number[],
 ): Promise<void> => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/bookshelves/${id}`, {
     method: 'PATCH',
@@ -20,6 +21,7 @@ export const updateBookshelf = async (
         id: id,
         reading_status: readingStatus,
         preference_rating: preferenceRating,
+        genre_ids: genreIds,
       },
     }),
   })

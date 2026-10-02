@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { type Bookshelf, type PreferenceRating } from '../../../types/bookshelf'
 import ShowBookshelfModal from './show-bookshelf'
+import { type Genre } from '../../../types/genre'
 
 // 好み評価を星の数に変換(未評価は星を表示しない)
 const RATING_STARS: Record<PreferenceRating, number> = {
@@ -14,6 +15,7 @@ const MAX_STARS = 4
 
 type BookshelfBookProps = {
   bookshelf: Bookshelf
+  genreList: Genre[]
   rowHeight: number
   boardHeight: number
   onUpdated: (bookshelf: Bookshelf) => void
@@ -22,6 +24,7 @@ type BookshelfBookProps = {
 // 棚に並ぶ1冊分(表紙 + 棚板上の評価)
 export const BookshelfBook = ({
   bookshelf,
+  genreList,
   rowHeight,
   boardHeight,
   onUpdated,
@@ -46,7 +49,12 @@ export const BookshelfBook = ({
           />
         </button>
       </div>
-      <ShowBookshelfModal bookshelf={bookshelf} dialogRef={dialogRef} onUpdated={onUpdated} />
+      <ShowBookshelfModal
+        bookshelf={bookshelf}
+        genreList={genreList}
+        dialogRef={dialogRef}
+        onUpdated={onUpdated}
+      />
       <div className="flex items-center" style={{ height: boardHeight }}>
         {stars > 0 && (
           <div className="rating rating-xs" aria-label={`評価 ${stars} / ${MAX_STARS}`}>
