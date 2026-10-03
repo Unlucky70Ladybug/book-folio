@@ -12,11 +12,7 @@ export const PreferenceRatingField = ({ value, onChange }: PreferenceRatingField
   const name = `${useId()}-preference-rating`
 
   // 選択中の評価をもう一度押すと未評価に戻す
-  const toggle = (rating: SelectableRating) => { 
-    console.log("preference:",rating)
-    onChange(value === rating ? 'unrated' : rating)
-    console.log("value:",value)
-  }
+  const toggle = (rating: SelectableRating) => {onChange(value === rating ? 'unrated' : rating)}
 
   return (
     <fieldset className="fieldset">
