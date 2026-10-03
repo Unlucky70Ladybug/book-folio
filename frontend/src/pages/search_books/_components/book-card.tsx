@@ -1,12 +1,14 @@
 import { type ApiBook } from '../../../types/book'
+import { type Genre } from '../../../types/genre'
 import AddToBookshelfButton from '../../components/bookshelf/add-to-bookshelf-button'
 
 type BookCardProps = {
   book: ApiBook
+  genreList: Genre[]
 }
 
 // 検索結果1件分の書籍カード
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, genreList }: BookCardProps) {
   return (
     <div className="card card-border card-sm bg-base-100">
       <div className="card-body flex-row gap-4 pl-2">
@@ -58,7 +60,7 @@ export default function BookCard({ book }: BookCardProps) {
               楽天で見る
             </a>
           )}
-          <AddToBookshelfButton book={book} />
+          <AddToBookshelfButton book={book} genreList={genreList} />
         </div>
       </div>
     </div>

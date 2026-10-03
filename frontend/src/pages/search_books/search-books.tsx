@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { searchBooks } from './_hooks/use-search-books'
+import { useGenres } from '../bookshelf/_hooks/use-genres'
 import { NotificationContext } from '../providers/notification-provider'
 import { type ApiBook } from '../../types/book'
 import Spinner from '../components/layouts/ui/spinner'
@@ -12,6 +13,7 @@ const SearchBook = () => {
   const keyword = searchParams.get('keyword') ?? ''
   const { notify } = useContext(NotificationContext)
   const [books, setBooks] = useState<ApiBook[]>([])
+  const genreList = useGenres()
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // 検索条件が変わったらレンダー中にローディング状態へ戻す
@@ -66,7 +68,7 @@ const SearchBook = () => {
       </p>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {books.map((book) => (
-          <BookCard key={book.isbn} book={book} />
+          <BookCard key={book.isbn} book={book} genreList={genreList} />
         ))}
       </div>
     </div>

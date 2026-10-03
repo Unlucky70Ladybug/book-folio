@@ -7,6 +7,7 @@ export const createBookshelf = async (
   book: ApiBook,
   readingStatus: ReadingStatus,
   preferenceRating: PreferenceRating,
+  genreIds: number[],
 ): Promise<void> => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/bookshelves`, {
     method: 'POST',
@@ -27,6 +28,7 @@ export const createBookshelf = async (
           item_url: book.item_url,
           large_image_url: book.image_url,
         },
+        genre_ids: genreIds,
       },
     }),
   })
