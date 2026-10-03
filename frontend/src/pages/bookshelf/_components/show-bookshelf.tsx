@@ -62,11 +62,11 @@ export default function ShowBookshelfModal({
       })
       notify(`「${bookshelf.book.title}」を本棚に登録しました`, 'success')
       isSavedRef.current = true
-      close()
     } catch (err) {
       notify(err instanceof Error ? err.message : '本棚への登録に失敗しました', 'error')
     } finally {
       setIsSubmitting(false)
+      close()
     }
   }
 
