@@ -15,7 +15,11 @@ type AddToBookshelfModalProps = {
 }
 
 // 読書状況・好み評価を選んで本棚に登録するモーダル
-export default function AddToBookshelfModal({ book, dialogRef, genreList }: AddToBookshelfModalProps) {
+export default function AddToBookshelfModal({
+  book,
+  dialogRef,
+  genreList,
+}: AddToBookshelfModalProps) {
   const { notify } = useNotification()
   // 読書状況は必須のため、未選択(null)の間は登録できない
   const [readingStatus, setReadingStatus] = useState<ReadingStatus | null>(null)
