@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Book, type: :model do
   describe "Bookモデル" do
-    let(:valid_isbn) {Faker::Number.number(digits: 13).to_s}
+    let(:valid_isbn) { Faker::Number.number(digits: 13).to_s }
     let(:valid_tite) { Faker::Lorem.sentence(word_count: 4) }
     let(:valid_author) { Faker::Name.name }
     let(:valid_item_url) { Faker::Internet.url }
