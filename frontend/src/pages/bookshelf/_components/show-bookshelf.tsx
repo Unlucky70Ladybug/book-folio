@@ -47,8 +47,6 @@ export default function ShowBookshelfModal({
     setResetKey((prev) => prev + 1)
   }
 
-  console.log("show-book")
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 

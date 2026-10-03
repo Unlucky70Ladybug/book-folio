@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { type Genre } from '../../../../types/genre'
+import { CloseIcon, PlusIcon } from './ui/icons'
 
 type GenreFieldProps = {
   genreList: Genre[]
@@ -29,31 +30,34 @@ export const GenreField = ({ genreList, value, onChange }: GenreFieldProps) => {
       {/* 選択中のジャンル(×で解除) + 追加ボタン */}
       <div className="flex flex-wrap items-center gap-2">
         {selectedGenres.map((genre) => (
-          <span key={genre.id} className="badge badge-secondary gap-1">
+          // 角丸を抑え、高さを文字に合わせて文字がふちからはみ出さないようにする
+          <span
+            key={genre.id}
+            className="badge badge-lg badge-secondary badge-soft h-auto gap-1.5 rounded-md py-1 pr-1.5 pl-3 whitespace-nowrap"
+          >
             {genre.name}
             <button
               type="button"
               aria-label={`${genre.name}を解除`}
-              className="cursor-pointer opacity-70 hover:opacity-100"
+              className="btn btn-circle btn-ghost btn-xs size-5"
               onClick={() => remove(genre.id)}
             >
-              ✕
+              <CloseIcon className="size-3" />
             </button>
           </span>
         ))}
         <div className="tooltip" data-tip={isMenuOpen ? '閉じる' : 'ジャンルを追加'}>
           <button
             type="button"
-            aria-label="ジャンルを追加"
+            aria-label={isMenuOpen ? 'ジャンル一覧を閉じる' : 'ジャンルを追加'}
             aria-expanded={isMenuOpen}
             className="btn btn-circle btn-sm btn-secondary"
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
-            {/* 開いている間は＋を45度回して×に見せる */}
-            <span
-              className={`text-lg leading-none transition-transform duration-200 ${isMenuOpen ? 'rotate-45' : ''}`}
-            >
-              +
+            {/* 開閉に合わせて＋と×を回転しながら切り替える */}
+            <span className={`swap swap-rotate ${isMenuOpen ? 'swap-active' : ''}`}>
+              <CloseIcon className="swap-on size-4" />
+              <PlusIcon className="swap-off size-4" />
             </span>
           </button>
         </div>
@@ -73,12 +77,13 @@ export const GenreField = ({ genreList, value, onChange }: GenreFieldProps) => {
                   key={genre.id}
                   type="button"
                   tabIndex={isMenuOpen ? 0 : -1}
-                  className={`btn btn-xs btn-secondary btn-outline rounded-full bg-base-100 transition-[scale,opacity] duration-200 ${isMenuOpen ? 'scale-100 opacity-100' : 'scale-80 opacity-0'}`}
+                  className={`badge badge-lg badge-outline badge-secondary h-auto cursor-pointer gap-1 rounded-md bg-base-100 py-1 whitespace-nowrap transition-[scale,opacity,background-color,color] duration-200 hover:bg-secondary hover:text-secondary-content ${isMenuOpen ? 'scale-100 opacity-100' : 'scale-80 opacity-0'}`}
                   // 順番に飛び出して見えるよう少しずつ遅らせる
                   style={{ transitionDelay: isMenuOpen ? `${Math.min(i, 10) * 20}ms` : '0ms' }}
                   onClick={() => add(genre.id)}
                 >
-                  + {genre.name}
+                  <PlusIcon className="size-3" />
+                  {genre.name}
                 </button>
               ))
             )}
