@@ -20,7 +20,9 @@ class Api::V1::BookshelvesController < ApplicationController
       return render json: { error: "既に登録されています" }, status: :unprocessable_entity
     end
 
-    bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating])
+    genre_ids = valid_genre_ids
+    return render json: { error: "不正なジャンルです" }, status: :unprocessable_entity if genre_ids == :invalid
+    bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating], genre_ids: genre_ids)
 
     if bookshelf.save
       render json: {}, status: :created
@@ -31,7 +33,7 @@ class Api::V1::BookshelvesController < ApplicationController
 
   def update
     genre_ids = valid_genre_ids
-    return render json: { error: "genre_idsが不正です" }, status: :unprocessable_entity if genre_ids == :invalid
+    return render json: { error: "不正なジャンルです" }, status: :unprocessable_entity if genre_ids == :invalid
 
     bookshelf = current_user.bookshelves.find(bookshelf_params[:id])
     if bookshelf.update(reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating], genre_ids: genre_ids)
@@ -62,8 +64,8 @@ class Api::V1::BookshelvesController < ApplicationController
   def valid_genre_ids
     genre_ids = bookshelf_params[:genre_ids]
     # genre_idsが存在するか確認. 配列の中身をint型にする
-    return :invalid if genre_ids.present?
-    return :invalid unless genre_ids.all? { |id| id.to_s.match?(/\A\d+\z/) }
+    return :invalid if genre_ids.blank?
+    return :invalid unless genre_ids.all? { |id| id.to_s.match?(/\A[1-9]\d*\z/) }
     genre_ids.map(&:to_i)
   end
 end
