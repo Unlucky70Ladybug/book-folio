@@ -73,7 +73,7 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
 
   describe "POST /api/v1/bookshelves" do
     subject(:post_bookshelf) { post '/api/v1/bookshelves', params: params, headers: headers, as: :json }
-    let(:user) {create(:user) }
+    let(:user) { create(:user) }
     let(:headers) { sign_in(user) }
     let(:genre) { create(:genre, name: 'SF') }
     let(:other_genre) { create(:genre, name: 'ビジネス') }
@@ -132,7 +132,7 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
           bookshelf = user.bookshelves.last
           expect(bookshelf).to have_attributes(reading_status: 'reading', preference_rating: 'favorite')
           expect(bookshelf.book.isbn).to eq book_params[:isbn]
-          expect(bookshelf.genres).to eq([genre, other_genre])
+          expect(bookshelf.genres).to eq([ genre, other_genre ])
         end
       end
 
@@ -248,7 +248,7 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
       patch "/api/v1/bookshelves/#{target_bookshelf.id}", params: params, headers: headers, as: :json
     end
 
-    let(:user) {create(:user) }
+    let(:user) { create(:user) }
     let(:headers) { sign_in(user) }
     let(:old_genre) { create(:genre, name: 'ホラー') }
     let(:genre) { create(:genre, name: 'SF') }
@@ -303,7 +303,7 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
 
       it 'ジャンルが送信した内容に置き換わる' do
         patch_bookshelf
-        expect(bookshelf.reload.genres).to eq([genre, other_genre])
+        expect(bookshelf.reload.genres).to eq([ genre, other_genre ])
       end
     end
 
