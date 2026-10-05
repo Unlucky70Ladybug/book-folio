@@ -22,12 +22,19 @@ class Api::V1::BookshelvesController < ApplicationController
 
     genre_ids = valid_genre_ids
     return render json: { error: "不正なジャンルです" }, status: :unprocessable_entity if genre_ids == :invalid
-    bookshelf =  current_user.bookshelves.build(book: book, reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating], genre_ids: genre_ids)
+    bookshelf = current_user.bookshelves.build(
+                  book: book,
+                  reading_status: bookshelf_params[:reading_status],
+                  preference_rating: bookshelf_params[:preference_rating],
+                  genre_ids: genre_ids
+                )
+    # postがある場合追加
+    bookshelf.build_post(bookshelf_params[:post]) if bookshelf_params[:post]&.dig(:content).present?
 
     if bookshelf.save
       render json: {}, status: :created
     else
-      render json: { error: "既に登録されています" }, status: :unprocessable_entity
+      render json: { errors: bookshelf.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -57,7 +64,11 @@ class Api::V1::BookshelvesController < ApplicationController
         :item_url,
         :large_image_url
       ],
-      genre_ids: []
+      genre_ids: [],
+      post: [
+        :content,
+        :has_spoiler
+      ]
     )
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_01_122457) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_151404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,6 +77,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_01_122457) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_genres_on_name", unique: true
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "bookshelf_id", null: false
+    t.text "content"
+    t.boolean "has_spoiler"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bookshelf_id"], name: "index_posts_on_bookshelf_id"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -280,6 +289,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_01_122457) do
   add_foreign_key "book_genres", "genres"
   add_foreign_key "bookshelves", "books"
   add_foreign_key "bookshelves", "users"
+  add_foreign_key "posts", "bookshelves"
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
