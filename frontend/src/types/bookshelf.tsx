@@ -1,5 +1,6 @@
 import { type DisplayBook } from './book'
 import { type Genre } from './genre'
+import { type CreatePostParams } from './post'
 
 export type Bookshelf = {
   id: number
@@ -7,6 +8,7 @@ export type Bookshelf = {
   preference_rating: PreferenceRating
   book: DisplayBook
   genres: Genre[]
+  post: CreatePostParams
 }
 
 export type ReadingStatus = 'interested' | 'reading' | 'finished'
