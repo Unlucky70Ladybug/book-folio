@@ -55,7 +55,7 @@ export default function AddToBookshelfModal({
     // コメントが空のときはPostを送らない
     const post =
       hasPostContent && hasSpoiler !== null
-        ? { content: postContent, has_spoiler: hasSpoiler } : null
+        ? { content: postContent, hasSpoiler: hasSpoiler } : null
 
     setIsSubmitting(true)
     try {

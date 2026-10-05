@@ -31,7 +31,12 @@ export const createBookshelf = async (
           large_image_url: book.image_url,
         },
         genre_ids: genreIds,
-        ...(post && { post }), // post が存在するときだけ追加
+        /* post が存在するときだけ追加 */
+        ...(post && {
+          post: { content: post.content,
+                  has_spoiler: post.hasSpoiler
+                }
+        }), 
       },
     }),
   })

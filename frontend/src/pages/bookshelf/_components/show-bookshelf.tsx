@@ -21,13 +21,15 @@ export default function ShowBookshelfModal({
   dialogRef,
   onUpdated,
 }: ShowBookshelfModalProps) {
-  const { id, book, reading_status, preference_rating, genres } = bookshelf
+  const { id, book, reading_status, preference_rating, genres, post } = bookshelf
   const { notify } = useNotification()
   // 読書状況・ジャンルは必須のため、未選択の間は登録できない
   const [readingStatus, setReadingStatus] = useState<ReadingStatus>(reading_status)
   const [preferenceRating, setPreferenceRating] = useState<PreferenceRating>(preference_rating)
   const [genreIds, setGenreIds] = useState<number[]>(genres.map((genre) => genre.id))
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [postContent, setPostContent] = useState(post.content)
+  const [hasSpoiler, setHasSpoiler] = useState<boolean | null>(post.has_spoiler)
   // 閉じるたびに増やし、key経由で入力欄の内部state(ジャンルメニューの開閉)もリセットする
   const [resetKey, setResetKey] = useState(0)
   // 更新成功で閉じたときは、送信した値をそのまま残す
