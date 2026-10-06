@@ -1,12 +1,10 @@
 import { useId } from 'react'
 import { optionClass } from './options'
+import { type CreatePostParams } from '../../../../types/post'
 
 type PostFieldProps = {
-  content: string
-  // 未選択(null)から始まる
-  hasSpoiler: boolean | null
-  onContentChange: (content: string) => void
-  onHasSpoilerChange: (hasSpoiler: boolean) => void
+  value: CreatePostParams
+  onChange: (value: CreatePostParams) => void
 }
 
 const SPOILER_OPTIONS: { value: boolean; label: string; color: string }[] = [
@@ -15,12 +13,8 @@ const SPOILER_OPTIONS: { value: boolean; label: string; color: string }[] = [
 ]
 
 // コメント(任意)と、そのネタバレ有無を入力する
-export const PostField = ({
-  content,
-  hasSpoiler,
-  onContentChange,
-  onHasSpoilerChange,
-}: PostFieldProps) => {
+export const PostField = ({ value, onChange }: PostFieldProps) => {
+  const { content, has_spoiler } = value
   const name = `${useId()}-has-spoiler`
   // コメントを書いたときだけネタバレ有無が必須になる
   const isSpoilerRequired = content.trim() !== ''
@@ -35,24 +29,24 @@ export const PostField = ({
         className="textarea h-24 w-full"
         placeholder="感想やメモを書けます"
         value={content}
-        onChange={(e) => onContentChange(e.target.value)}
+        onChange={(e) => onChange({ ...value, content: e.target.value })}
       />
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        {SPOILER_OPTIONS.map(({ value, label, color }) => (
+        {SPOILER_OPTIONS.map(({ value: optionValue, label, color }) => (
           <input
             key={label}
             type="radio"
             name={name}
             aria-label={label}
-            className={optionClass(color, hasSpoiler === value)}
-            checked={hasSpoiler === value}
-            onChange={() => onHasSpoilerChange(value)}
+            className={optionClass(color, has_spoiler === optionValue)}
+            checked={has_spoiler === optionValue}
+            onChange={() => onChange({ ...value, has_spoiler: optionValue })}
             required={isSpoilerRequired}
           />
         ))}
       </div>
-      {isSpoilerRequired && hasSpoiler === null ? (
+      {isSpoilerRequired && has_spoiler === null ? (
         <p className="label text-xs text-error">
           コメントを書いた場合はネタバレの有無を選択してください
         </p>

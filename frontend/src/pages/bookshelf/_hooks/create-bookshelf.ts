@@ -33,10 +33,8 @@ export const createBookshelf = async (
         genre_ids: genreIds,
         /* post が存在するときだけ追加 */
         ...(post && {
-          post: { content: post.content,
-                  has_spoiler: post.hasSpoiler
-                }
-        }), 
+          post: { content: post.content, has_spoiler: post.has_spoiler },
+        }),
       },
     }),
   })

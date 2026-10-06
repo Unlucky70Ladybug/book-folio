@@ -2,6 +2,7 @@ import { useState, type RefObject } from 'react'
 import { type ApiBook } from '../../../types/book'
 import { type Genre } from '../../../types/genre'
 import { type PreferenceRating, type ReadingStatus } from '../../../types/bookshelf'
+import { EMPTY_POST_DRAFT, type CreatePostParams } from '../../../types/post'
 import { createBookshelf } from '../../bookshelf/_hooks/create-bookshelf'
 import { useNotification } from '../../hooks/use-notification'
 import { ReadingStatusField } from './fields/reading-status-field'
@@ -25,17 +26,16 @@ export default function AddToBookshelfModal({
   // 読書状況は必須のため、未選択(null)の間は登録できない
   const [readingStatus, setReadingStatus] = useState<ReadingStatus | null>(null)
   const [preferenceRating, setPreferenceRating] = useState<PreferenceRating>('unrated')
-  const [postContent, setPostContent] = useState('')
-  // ネタバレ有無は未選択(null)から始め、コメントがあるときだけ必須にする
-  const [hasSpoiler, setHasSpoiler] = useState<boolean | null>(null)
+  const [post, setPost] = useState<CreatePostParams>(EMPTY_POST_DRAFT)
   // ジャンルも必須のため、1つも選択されていない間は登録できない
   const [genreIds, setGenreIds] = useState<number[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [resetKey, setResetKey] = useState(0)
 
-  const hasPostContent = postContent.trim() !== ''
+  const hasPostContent = post.content.trim() !== ''
+  // コメントを書いたときだけネタバレ有無が必須になる
   const canSubmit =
-    readingStatus !== null && genreIds.length > 0 && (!hasPostContent || hasSpoiler !== null)
+    readingStatus !== null && genreIds.length > 0 && (!hasPostContent || post.has_spoiler !== null)
 
   const close = () => dialogRef.current?.close()
 
@@ -44,22 +44,24 @@ export default function AddToBookshelfModal({
     setReadingStatus(null)
     setPreferenceRating('unrated')
     setGenreIds([])
-    setPostContent('')
-    setHasSpoiler(null)
+    setPost(EMPTY_POST_DRAFT)
     setResetKey((prev) => prev + 1)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!canSubmit) return
-    // コメントが空のときはPostを送らない
-    const post =
-      hasPostContent && hasSpoiler !== null
-        ? { content: postContent, hasSpoiler: hasSpoiler } : null
 
     setIsSubmitting(true)
     try {
-      await createBookshelf(book, readingStatus, preferenceRating, genreIds, post)
+      // コメントが空のときはPostを送らない
+      await createBookshelf(
+        book,
+        readingStatus,
+        preferenceRating,
+        genreIds,
+        hasPostContent ? post : null,
+      )
       notify(`「${book.title}」を本棚に登録しました`, 'success')
     } catch (err) {
       notify(err instanceof Error ? err.message : '本棚への登録に失敗しました', 'error')
@@ -91,12 +93,7 @@ export default function AddToBookshelfModal({
                 onChange={setGenreIds}
               />
               <PreferenceRatingField value={preferenceRating} onChange={setPreferenceRating} />
-              <PostField
-                content={postContent}
-                hasSpoiler={hasSpoiler}
-                onContentChange={setPostContent}
-                onHasSpoilerChange={setHasSpoiler}
-              />
+              <PostField value={post} onChange={setPost} />
             </div>
 
             {/* 右側：書影 */}
