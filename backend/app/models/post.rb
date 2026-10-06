@@ -1,6 +1,8 @@
 class Post < ApplicationRecord
   belongs_to :bookshelf
   validate :has_spoiler_valid?
+  validates :content, presence: true
+  validates :has_spoiler, inclusion: { in: [ true, false ] }
 
   private
 
