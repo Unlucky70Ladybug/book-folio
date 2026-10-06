@@ -32,5 +32,6 @@ export const updateBookshelf = async (
   })
 
   const json = await res.json()
-  if (!res.ok) throw new Error(json?.error || '本棚への登録に失敗しました')
+  if (!res.ok)
+    throw new Error(json?.errors?.join('\n') ?? json?.error ?? '本棚への登録に失敗しました')
 }

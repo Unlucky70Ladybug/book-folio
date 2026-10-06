@@ -61,7 +61,7 @@ class Api::V1::BookshelvesController < ApplicationController
     if bookshelf.save
       render json: {}, status: :ok
     else
-      render json: { error: "更新に失敗しました" }, status: :unprocessable_entity
+      render json: { errors: bookshelf.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

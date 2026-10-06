@@ -36,6 +36,10 @@ export default function ShowBookshelfModal({
   // 更新成功で閉じたときは、送信した値をそのまま残す
   const isSavedRef = useRef(false)
 
+  const hasPost = postDraft.content.trim() !== ''
+  // コメントを書いたときだけネタバレ有無が必須になる
+  const canSubmit = genreIds.length > 0 && (!hasPost || postDraft.has_spoiler !== null)
+
   const close = () => dialogRef.current?.close()
 
   // 閉じたら次に開いたとき用に選択をリセットする
@@ -45,7 +49,6 @@ export default function ShowBookshelfModal({
       setReadingStatus(reading_status)
       setPreferenceRating(preference_rating)
       setGenreIds(genres.map((genre) => genre.id))
-      // コメントは更新APIで保存していないため、常に取得時の値へ戻す
       setPostDraft(toPostDraft(post))
     }
     isSavedRef.current = false
@@ -54,8 +57,8 @@ export default function ShowBookshelfModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!canSubmit) return
 
-    const hasPost = postDraft.content.trim() !== ''
     setIsSubmitting(true)
     try {
       await updateBookshelf(
@@ -128,11 +131,7 @@ export default function ShowBookshelfModal({
             <button type="button" className="btn btn-ghost" onClick={close}>
               キャンセル
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!readingStatus || genreIds.length === 0 || isSubmitting}
-            >
+            <button type="submit" className="btn btn-primary" disabled={!canSubmit || isSubmitting}>
               {isSubmitting && <span className="loading loading-spinner loading-sm" />}
               登録する
             </button>
