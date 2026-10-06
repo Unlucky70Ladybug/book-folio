@@ -52,7 +52,8 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
               'item_url' => old_book.item_url,
               'large_image_url' => old_book.large_image_url
             },
-            'genres' => [ { 'id' => genre.id, 'name' => 'SF' } ]
+            'genres' => [ { 'id' => genre.id, 'name' => 'SF' } ],
+            'post' => nil
           })
         end
       end
@@ -241,6 +242,76 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
         end
       end
     end
+
+    context 'コメントを追加した場合' do
+      let(:post_params) { { content: 'valid', has_spoiler: true } }
+      let(:params) do
+        {
+          bookshelf: {
+            reading_status: 'finished',
+            preference_rating: 'favorite',
+            genre_ids: genre_ids,
+            book: book_params,
+            post: post_params
+          }
+        }
+      end
+
+      context 'コメントあり、ネタバレの設定がある場合' do
+        it '201が返ってくる' do
+          post_bookshelf
+          expect(response).to have_http_status(:created)
+        end
+
+        it '本棚とコメントが作成される' do
+          expect { post_bookshelf }.to change(Bookshelf, :count).by(1).and change(Post, :count).by(1)
+        end
+
+        it '送信した内容でコメントが保存される' do
+          post_bookshelf
+          expect(user.bookshelves.last.post).to have_attributes(post_params)
+        end
+      end
+
+      context 'コメントなし、ネタバレの設定がない場合' do
+        let(:post_params) { { content: '', has_spoiler: nil } }
+
+        it '201が返ってくる' do
+          post_bookshelf
+          expect(response).to have_http_status(:created)
+        end
+
+        it '本棚のみ作成され、コメントは作成されない' do
+          expect { post_bookshelf }.to change(Bookshelf, :count).by(1).and change(Post, :count).by(0)
+        end
+      end
+
+      context 'コメントあり、ネタバレの設定がない場合' do
+        let(:post_params) { { content: 'valid', has_spoiler: nil } }
+
+        it '422が返ってくる' do
+          post_bookshelf
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it '本棚もコメントも作成されない' do
+          expect { post_bookshelf }.to change(Bookshelf, :count).by(0).and change(Post, :count).by(0)
+        end
+      end
+
+      context 'コメントなし、ネタバレの設定がある場合' do
+        let(:post_params) { { content: '', has_spoiler: true } }
+
+        it '201が返ってくる' do
+          post_bookshelf
+          expect(response).to have_http_status(:created)
+        end
+
+        it '本棚のみ作成され、コメントは作成されない' do
+          expect { post_bookshelf }.to change(Bookshelf, :count).by(1).and change(Post, :count).by(0)
+        end
+      end
+    end
   end
 
   describe "PATCH /api/v1/bookshelves/:id" do
@@ -332,7 +403,7 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
 
       it 'エラーメッセージが返ってくる' do
         patch_bookshelf
-        expect(json['error']).to eq '更新に失敗しました'
+        expect(json['errors']).to include('読書状況を選択してください')
       end
     end
 

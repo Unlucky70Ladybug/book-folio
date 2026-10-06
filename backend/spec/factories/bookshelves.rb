@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :bookshelf do
-    user { nil }
-    book { nil }
-    reading_status { 1 }
-    preference_rating { 1 }
+    association :user
+    association :book
+    reading_status { Faker::Base.sample(Bookshelf.reading_statuses.keys) }
+    preference_rating { Faker::Base.sample(Bookshelf.preference_ratings.keys) }
   end
 end
