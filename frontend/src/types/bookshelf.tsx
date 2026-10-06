@@ -1,5 +1,6 @@
 import { type DisplayBook } from './book'
 import { type Genre } from './genre'
+import { type Post } from './post'
 
 export type Bookshelf = {
   id: number
@@ -7,6 +8,8 @@ export type Bookshelf = {
   preference_rating: PreferenceRating
   book: DisplayBook
   genres: Genre[]
+  // コメント未登録のときはnull
+  post: Post | null
 }
 
 export type ReadingStatus = 'interested' | 'reading' | 'finished'

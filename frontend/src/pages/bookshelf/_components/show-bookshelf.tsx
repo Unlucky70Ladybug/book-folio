@@ -6,6 +6,8 @@ import { useNotification } from '../../hooks/use-notification'
 import { ReadingStatusField } from '../../components/bookshelf/fields/reading-status-field'
 import { GenreField } from '../../components/bookshelf/fields/genre-field'
 import { PreferenceRatingField } from '../../components/bookshelf/fields/preference-rating-field'
+import { PostField } from '../../components/bookshelf/fields/post-field'
+import { toPostDraft, type CreatePostParams } from '../../../types/post'
 
 type ShowBookshelfModalProps = {
   bookshelf: Bookshelf
@@ -21,17 +23,22 @@ export default function ShowBookshelfModal({
   dialogRef,
   onUpdated,
 }: ShowBookshelfModalProps) {
-  const { id, book, reading_status, preference_rating, genres } = bookshelf
+  const { id, book, reading_status, preference_rating, genres, post } = bookshelf
   const { notify } = useNotification()
   // 読書状況・ジャンルは必須のため、未選択の間は登録できない
   const [readingStatus, setReadingStatus] = useState<ReadingStatus>(reading_status)
   const [preferenceRating, setPreferenceRating] = useState<PreferenceRating>(preference_rating)
   const [genreIds, setGenreIds] = useState<number[]>(genres.map((genre) => genre.id))
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [postDraft, setPostDraft] = useState<CreatePostParams>(toPostDraft(post))
   // 閉じるたびに増やし、key経由で入力欄の内部state(ジャンルメニューの開閉)もリセットする
   const [resetKey, setResetKey] = useState(0)
   // 更新成功で閉じたときは、送信した値をそのまま残す
   const isSavedRef = useRef(false)
+
+  const hasPost = postDraft.content.trim() !== ''
+  // コメントを書いたときだけネタバレ有無が必須になる
+  const canSubmit = genreIds.length > 0 && (!hasPost || postDraft.has_spoiler !== null)
 
   const close = () => dialogRef.current?.close()
 
@@ -42,6 +49,7 @@ export default function ShowBookshelfModal({
       setReadingStatus(reading_status)
       setPreferenceRating(preference_rating)
       setGenreIds(genres.map((genre) => genre.id))
+      setPostDraft(toPostDraft(post))
     }
     isSavedRef.current = false
     setResetKey((prev) => prev + 1)
@@ -49,16 +57,26 @@ export default function ShowBookshelfModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!canSubmit) return
 
     setIsSubmitting(true)
     try {
-      await updateBookshelf(id, readingStatus, preferenceRating, genreIds)
+      await updateBookshelf(
+        id,
+        readingStatus,
+        preferenceRating,
+        genreIds,
+        hasPost ? postDraft : null,
+      )
       // 送信した値で親の state を更新する
       onUpdated({
         ...bookshelf,
         reading_status: readingStatus,
         preference_rating: preferenceRating,
         genres: genreList.filter((genre) => genreIds.includes(genre.id)),
+        post: hasPost
+          ? { id: post?.id ?? 0, content: postDraft.content, has_spoiler: postDraft.has_spoiler }
+          : null,
       })
       notify(`「${bookshelf.book.title}」を本棚に登録しました`, 'success')
       isSavedRef.current = true
@@ -92,6 +110,7 @@ export default function ShowBookshelfModal({
                 onChange={setGenreIds}
               />
               <PreferenceRatingField value={preferenceRating} onChange={setPreferenceRating} />
+              <PostField value={postDraft} onChange={setPostDraft} />
             </div>
 
             {/* 右側：書影 */}
@@ -112,11 +131,7 @@ export default function ShowBookshelfModal({
             <button type="button" className="btn btn-ghost" onClick={close}>
               キャンセル
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!readingStatus || genreIds.length === 0 || isSubmitting}
-            >
+            <button type="submit" className="btn btn-primary" disabled={!canSubmit || isSubmitting}>
               {isSubmitting && <span className="loading loading-spinner loading-sm" />}
               登録する
             </button>

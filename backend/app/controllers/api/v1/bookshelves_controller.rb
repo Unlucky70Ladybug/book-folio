@@ -2,7 +2,7 @@ class Api::V1::BookshelvesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    bookshelves = current_user.bookshelves.preload(:book, :genres).order(created_at: :desc)
+    bookshelves = current_user.bookshelves.preload(:book, :genres, :post).order(created_at: :desc)
     render json: bookshelves, each_serializer: BookshelfSerializer, root: "books", adapter: :json
   end
 
@@ -43,10 +43,25 @@ class Api::V1::BookshelvesController < ApplicationController
     return render json: { error: "不正なジャンルです" }, status: :unprocessable_entity if genre_ids == :invalid
 
     bookshelf = current_user.bookshelves.find(bookshelf_params[:id])
-    if bookshelf.update(reading_status: bookshelf_params[:reading_status], preference_rating: bookshelf_params[:preference_rating], genre_ids: genre_ids)
+    bookshelf.assign_attributes(
+      reading_status: bookshelf_params[:reading_status],
+      preference_rating: bookshelf_params[:preference_rating],
+      genre_ids: genre_ids
+    )
+
+    post_params = bookshelf_params[:post]
+    if post_params&.dig(:content).present?
+      # 既存のpostがあれば上書き、無ければ新規作成
+      (bookshelf.post || bookshelf.build_post).assign_attributes(post_params)
+    else
+      # コメントが空なら既存のpostを削除
+      bookshelf.post&.destroy
+    end
+
+    if bookshelf.save
       render json: {}, status: :ok
     else
-      render json: { error: "更新に失敗しました" }, status: :unprocessable_entity
+      render json: { errors: bookshelf.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
