@@ -4,6 +4,9 @@ ja:
       user: "ユーザー"
       book: "書籍"
       bookshelf: "本棚"
+      post: "コメント"
+      genre: "ジャンル"
+      book_genre: "本棚のジャンル"
 
     attributes:
       user:
@@ -26,6 +29,25 @@ ja:
         book_id: "書籍"
         reading_status: "読書状況"
         preference_rating: "好み"
+        post: "コメント"
+        genres: "ジャンル"
+      bookshelf/post:
+        base: ""
+        bookshelf: "本棚"
+        content: "コメント"
+        has_spoiler: "ネタバレ有無"
+      post:
+        bookshelf: "本棚"
+        bookshelf_id: "本棚"
+        content: "コメント"
+        has_spoiler: "ネタバレ有無"
+      genre:
+        name: "ジャンル名"
+      book_genre:
+        bookshelf: "本棚"
+        genre: "ジャンル"
+        bookshelf_id: "本棚"
+        genre_id: "ジャンル"
 
     errors:
       models:
@@ -62,16 +84,36 @@ ja:
               blank: "を選択してください"
             preference_rating:
               blank: "を選択してください"
+        post:
+          attributes:
+            bookshelf:
+              required: "を入力してください"
+            content:
+              blank: "を入力してください"
+            has_spoiler:
+              inclusion: "を選択してください"
+        genre:
+          attributes:
+            name:
+              blank: "を入力してください"
+              taken: "はすでに登録されています"
+        book_genre:
+          attributes:
+            bookshelf:
+              required: "を入力してください"
+            genre:
+              required: "を入力してください"
+            bookshelf_id:
+              taken: "にはすでにこのジャンルが登録されています"
 
   enums:
     bookshelf:
       reading_status:
-        undefined: "未設定"
-        finished: "読了"
-        reading: "読書中"
         interested: "気になる"
+        reading: "読書中"
+        finished: "読了"
       preference_rating:
-        undefined: "未設定"
+        unrated: "未設定"
         not_for_me: "合わなかった"
         normal: "普通"
         interesting: "面白い"

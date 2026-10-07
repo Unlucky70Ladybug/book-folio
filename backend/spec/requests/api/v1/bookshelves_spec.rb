@@ -331,13 +331,15 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
     end
     let(:target_bookshelf) { bookshelf }
     let(:reading_status) { 'finished' }
+    let(:post_params) { { content: 'valid', has_spoiler: true } }
     let(:params) do
       {
         bookshelf: {
           id: target_bookshelf.id,
           reading_status: reading_status,
           preference_rating: 'favorite',
-          genre_ids: new_genre_ids
+          genre_ids: new_genre_ids,
+          post: post_params
         }
       }
     end
@@ -375,6 +377,14 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
       it 'ジャンルが送信した内容に置き換わる' do
         patch_bookshelf
         expect(bookshelf.reload.genres).to eq([ genre, other_genre ])
+      end
+
+      it 'コメントが送信した内容に置き換わる' do
+        patch_bookshelf
+        expect(bookshelf.reload.post).to have_attributes(
+          content: "valid",
+          has_spoiler: true
+        )
       end
     end
 
@@ -455,6 +465,44 @@ RSpec.describe "Api::V1::Bookshelves", type: :request do
         end
 
         it_behaves_like '本棚が更新されない'
+      end
+    end
+
+    context 'コメントが不正な場合' do
+      shared_examples '不正なコメントとして更新に失敗する' do
+        it '422が返ってくる' do
+          patch_bookshelf
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+
+        it_behaves_like '本棚が更新されない'
+      end
+
+      context 'コメントあり、ネタバレの設定がない場合' do
+        let(:post_params) { { content: 'valid', has_spoiler: nil } }
+
+        it 'エラーメッセージが返ってくる' do
+          patch_bookshelf
+          expect(json['errors']).to include('コメントがある場合はネタバレ有無を選択してください')
+        end
+
+        it_behaves_like '不正なコメントとして更新に失敗する'
+      end
+    end
+
+    context 'コメントなし、ネタバレの設定がある場合' do
+      let(:post_params) { { content: '', has_spoiler: true } }
+
+      before { create(:post, bookshelf: bookshelf) }
+
+      it '200が返ってくる' do
+        patch_bookshelf
+        expect(response).to have_http_status(:ok)
+      end
+
+      it '本棚が更新され、既存のコメントは削除される' do
+        expect { patch_bookshelf }.to change(Post, :count).by(-1)
+        expect(bookshelf.reload).to have_attributes(reading_status: 'finished', preference_rating: 'favorite', post: nil)
       end
     end
   end
