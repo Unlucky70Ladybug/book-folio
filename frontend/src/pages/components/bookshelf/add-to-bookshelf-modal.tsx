@@ -33,9 +33,10 @@ export default function AddToBookshelfModal({
   const [resetKey, setResetKey] = useState(0)
 
   const hasPostContent = post.content.trim() !== ''
-  // コメントを書いたときだけネタバレ有無が必須になる
+  const hasSpoilerSelected = post.has_spoiler !== null
+  // コメントとネタバレ有無は両方入力するか、両方空のときだけ登録できる
   const canSubmit =
-    readingStatus !== null && genreIds.length > 0 && (!hasPostContent || post.has_spoiler !== null)
+    readingStatus !== null && genreIds.length > 0 && hasPostContent === hasSpoilerSelected
 
   const close = () => dialogRef.current?.close()
 

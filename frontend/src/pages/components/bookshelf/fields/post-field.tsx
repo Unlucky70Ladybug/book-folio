@@ -55,6 +55,10 @@ export const PostField = ({ value, onChange }: PostFieldProps) => {
         <p className="label text-xs text-error">
           コメントを書いた場合はネタバレの有無を選択してください
         </p>
+      ) : !isSpoilerRequired && has_spoiler !== null ? (
+        <p className="label text-xs text-error">
+          コメントを書くか、ネタバレの選択をもう一度押して解除してください
+        </p>
       ) : (
         <p className="label text-xs">
           コメントにネタバレを含むかを選択してください(もう一度押すと解除できます)

@@ -43,22 +43,29 @@ class Api::V1::BookshelvesController < ApplicationController
     return render json: { error: "不正なジャンルです" }, status: :unprocessable_entity if genre_ids == :invalid
 
     bookshelf = current_user.bookshelves.find(bookshelf_params[:id])
-    bookshelf.assign_attributes(
-      reading_status: bookshelf_params[:reading_status],
-      preference_rating: bookshelf_params[:preference_rating],
-      genre_ids: genre_ids
-    )
+    # genre_idsの代入やpostの削除は即時にDBへ反映されるため、保存失敗時にまとめて巻き戻す
+    saved = false
+    ActiveRecord::Base.transaction do
+      bookshelf.assign_attributes(
+        reading_status: bookshelf_params[:reading_status],
+        preference_rating: bookshelf_params[:preference_rating],
+        genre_ids: genre_ids
+      )
 
-    post_params = bookshelf_params[:post]
-    if post_params&.dig(:content).present?
-      # 既存のpostがあれば上書き、無ければ新規作成
-      (bookshelf.post || bookshelf.build_post).assign_attributes(post_params)
-    else
-      # コメントが空なら既存のpostを削除
-      bookshelf.post&.destroy
+      post_params = bookshelf_params[:post]
+      if post_params&.dig(:content).present?
+        # 既存のpostがあれば上書き、無ければ新規作成
+        (bookshelf.post || bookshelf.build_post).assign_attributes(post_params)
+      else
+        # コメントが空なら既存のpostを削除
+        bookshelf.post&.destroy
+      end
+
+      saved = bookshelf.save
+      raise ActiveRecord::Rollback unless saved
     end
 
-    if bookshelf.save
+    if saved
       render json: {}, status: :ok
     else
       render json: { errors: bookshelf.errors.full_messages }, status: :unprocessable_entity
