@@ -38,9 +38,8 @@ export default function ShowBookshelfModal({
 
   const hasPost = postDraft.content.trim() !== ''
   const hasSpoilerSelected = postDraft.has_spoiler !== null
-    // コメントとネタバレ有無は両方入力するか、両方空のときだけ登録できる
-  const canSubmit =
-    readingStatus !== null && genreIds.length > 0 && hasPost === hasSpoilerSelected
+  // コメントとネタバレ有無は両方入力するか、両方空のときだけ登録できる
+  const canSubmit = readingStatus !== null && genreIds.length > 0 && hasPost === hasSpoilerSelected
 
   const close = () => dialogRef.current?.close()
 
