@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
       resources :bookshelves, only: [ :index, :create, :update ]
       resources :genres, only: [ :index ]
+      resources :preferences, only: [ :index ]
     end
   end
 
