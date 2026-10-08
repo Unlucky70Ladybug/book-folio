@@ -12,6 +12,13 @@ export type Bookshelf = {
   post: Post | null
 }
 
+export type BookshelfForPreference = {
+  id: number
+  reading_status: ReadingStatus
+  preference_rating: PreferenceRating
+  book: DisplayBook
+}
+
 export type ReadingStatus = 'interested' | 'reading' | 'finished'
 
 export type PreferenceRating = 'unrated' | 'not_for_me' | 'normal' | 'interesting' | 'favorite'

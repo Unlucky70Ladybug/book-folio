@@ -100,7 +100,7 @@ const LoggedInHeader = () => {
             読書分析
           </Link>
 
-          <Link to="/preference-diagnosis" className="btn btn-ghost btn-sm">
+          <Link to="/preference" className="btn btn-ghost btn-sm">
             好み診断
           </Link>
         </div>
