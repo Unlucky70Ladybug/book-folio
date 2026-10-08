@@ -13,7 +13,7 @@ import NotificationBar from './pages/components/notification-bar'
 import { NotificationProvider } from './pages/providers/notification-provider'
 import SearchBook from './pages/search_books/search-books'
 import BookshelfPage from './pages/bookshelf/page'
-import PreferenceResult from './pages/preference/index'
+import PreferenceResult from './pages/preference/page/index'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
