@@ -14,6 +14,7 @@ import { NotificationProvider } from './pages/providers/notification-provider'
 import SearchBook from './pages/search_books/search-books'
 import BookshelfPage from './pages/bookshelf/page'
 import PreferenceResult from './pages/preference/page/index'
+import UndiagnosedUpdate from './pages/preference/page/update/undiagnosed'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
 
             <Route element={<PrivateRoute />}>
               <Route path="/preference" element={<PreferenceResult />} />
+              <Route path="/preference/update" element={<UndiagnosedUpdate />} />
               <Route path="/search_book" element={<SearchBook />} />
               <Route path="/bookshelf" element={<BookshelfPage />} />
             </Route>
