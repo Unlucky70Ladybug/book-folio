@@ -2,10 +2,10 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { getPreferenceResult } from '../../_hooks/get-preference'
 import { useAuth } from '../../../hooks/use-auth'
 import { useNotification } from '../../../hooks/use-notification'
+import { type PreferenceRating } from '../../../../types/bookshelf'
 import {
   RATING_COLORS,
   type Preference,
-  type PreferenceRating,
   type RatingSummary,
 } from '../../../../types/preference'
 import { PREFERENCE_RATING_LABELS, type BookshelfForPreference } from '../../../../types/bookshelf'
