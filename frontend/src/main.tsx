@@ -15,6 +15,7 @@ import SearchBook from './pages/search_books/search-books'
 import BookshelfPage from './pages/bookshelf/page'
 import PreferenceResult from './pages/preference/page/index'
 import UndiagnosedUpdate from './pages/preference/page/update/undiagnosed'
+import NotFound from './pages/components/layouts/NotFound'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -34,6 +35,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/search_book" element={<SearchBook />} />
               <Route path="/bookshelf" element={<BookshelfPage />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
         </Router>
