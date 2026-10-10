@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getUndiagnosed } from '../../_hooks/get-undiagnosed'
 import { updatePreferenceRating } from '../../_hooks/update-preference-rating'
 import { useNotification } from '../../../hooks/use-notification'
-import { PREFERENCE_RATING_LABELS } from '../../../../types/bookshelf'
 import { type BookUndiagnosedPreference } from '../../../../types/preference'
-import {
-  PREFERENCE_RATING_OPTIONS,
-  type SelectableRating,
-} from '../../../components/bookshelf/fields/options'
+import { type SelectableRating } from '../../../components/bookshelf/fields/options'
+import { RatingCard } from '../../_components/rating-card'
 import Spinner from '../../../components/layouts/ui/spinner'
 
-// 評価の高い順(お気に入り → 合わなかった)に並べる
-const RATING_OPTIONS = [...PREFERENCE_RATING_OPTIONS].reverse()
+// 全て評価し終えてから診断結果へ移動するまでの時間(ms)
+const REDIRECT_DELAY = 3000
 
 const UndiagnosedUpdate = () => {
   const { notify } = useNotification()
+  const navigate = useNavigate()
   const [books, setBooks] = useState<BookUndiagnosedPreference[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   // 表示中の本の位置。books.length になったら全て評価済み
@@ -44,7 +42,17 @@ const UndiagnosedUpdate = () => {
   }, [notify])
 
   const currentBook = books[currentIndex]
-  const isFinished = currentIndex >= books.length
+  // 直前に評価した本。左へスライドして出ていくカードとして表示する
+  const previousBook = books[currentIndex - 1]
+  const isFinished = books.length > 0 && currentIndex >= books.length
+
+  // 全て評価し終えたら、少し待ってから診断結果へ移動する
+  useEffect(() => {
+    if (!isFinished) return
+
+    const timer = setTimeout(() => navigate('/preference', { replace: true }), REDIRECT_DELAY)
+    return () => clearTimeout(timer)
+  }, [isFinished, navigate])
 
   const handleSelect = async (rating: SelectableRating) => {
     if (!currentBook || submittingRating) return
@@ -63,18 +71,7 @@ const UndiagnosedUpdate = () => {
 
   if (isLoading) return <Spinner message="未評価の本を読み込み中..." />
 
-  if (books.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-4">
-        <div role="alert" className="alert w-full">
-          <span>好みが未登録の本はありません。</span>
-        </div>
-        <Link to="/preference" className="btn">
-          好み診断に戻る
-        </Link>
-      </div>
-    )
-  }
+  if (books.length === 0) return <Navigate to="/preference" replace />
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
@@ -85,9 +82,9 @@ const UndiagnosedUpdate = () => {
             <span className="mx-1 text-2xl font-bold tabular-nums">{currentIndex}</span>/{' '}
             {books.length}冊
           </p>
-          <p className="text-sm text-base-content/60 tabular-nums">
+          <span className="badge badge-primary badge-soft tabular-nums">
             残り {books.length - currentIndex}冊
-          </p>
+          </span>
         </div>
         <progress
           className="progress progress-primary h-3 w-full"
@@ -96,53 +93,44 @@ const UndiagnosedUpdate = () => {
         />
       </div>
 
-      {isFinished ? (
-        <div className="flex flex-col items-center gap-4">
-          <div role="alert" className="alert alert-success alert-soft w-full">
-            <span>{books.length}冊の好みを登録しました。</span>
+      {/* はみ出したカードを隠して、右から左へスライドして入れ替わるように見せる */}
+      <div className="relative overflow-hidden">
+        {previousBook && (
+          <div
+            key={`out-${previousBook.id}`}
+            aria-hidden
+            className="slide-out-to-left pointer-events-none absolute inset-x-0 top-0"
+          >
+            <RatingCard book={previousBook} submittingRating={null} />
           </div>
-          <Link to="/preference" className="btn btn-primary">
-            診断結果を見る
-          </Link>
-        </div>
-      ) : (
-        <div className="card card-border bg-base-100">
-          <div className="card-body flex-row gap-4">
-            <img
-              src={currentBook.book.large_image_url}
-              alt={currentBook.book.title}
-              className="h-40 w-auto max-w-28 shrink-0 self-start rounded-sm object-cover sm:h-56 sm:max-w-40"
-            />
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <h2 className="card-title text-base">{currentBook.book.title}</h2>
-              <p className="text-sm text-base-content/60">{currentBook.book.author}</p>
-              <div className="flex flex-wrap gap-1">
-                {currentBook.genres.map((genre) => (
-                  <span key={genre.id} className="badge badge-ghost badge-sm">
-                    {genre.name}
-                  </span>
-                ))}
-              </div>
-              <div className="card-actions mt-2">
-                {RATING_OPTIONS.map(({ value, color }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={`btn btn-sm ${color}`}
-                    disabled={submittingRating !== null}
-                    onClick={() => handleSelect(value)}
-                  >
-                    {submittingRating === value && (
-                      <span className="loading loading-spinner loading-xs" />
-                    )}
-                    {PREFERENCE_RATING_LABELS[value]}
-                  </button>
-                ))}
-              </div>
+        )}
+
+        {isFinished ? (
+          <div key="finished" className="slide-in-from-right flex flex-col items-center gap-4">
+            <div role="alert" className="alert alert-success alert-soft w-full">
+              <span>{books.length}冊の好みを登録しました。</span>
             </div>
+            <p className="flex items-center gap-2 text-sm text-base-content/60">
+              <span className="loading loading-dots loading-sm" />
+              {REDIRECT_DELAY / 1000}秒後に診断結果へ移動します
+            </p>
+            <Link to="/preference" replace className="btn btn-primary">
+              診断結果を見る
+            </Link>
           </div>
-        </div>
-      )}
+        ) : (
+          <div
+            key={currentBook.id}
+            className={currentIndex > 0 ? 'slide-in-from-right' : undefined}
+          >
+            <RatingCard
+              book={currentBook}
+              submittingRating={submittingRating}
+              onSelect={handleSelect}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
