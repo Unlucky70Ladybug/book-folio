@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { PREFERENCE_RATING_LABELS } from '../../../types/bookshelf'
-import {
-  RATING_COLORS,
-  type PreferenceRating,
-  type RatingSummary,
-} from '../../../types/preference'
+import { RATING_COLORS, type PreferenceRating, type RatingSummary } from '../../../types/preference'
 
 // 円グラフを1周描き切るまでの時間(ms)
 const CHART_DURATION = 1200
@@ -16,10 +12,12 @@ const TOOLTIP_WIDTH = 224
 
 type RatingChartProps = {
   summaries: RatingSummary[]
+  // 内訳の「未定義」の横に表示する操作
+  unratedAction?: ReactNode
 }
 
 // 評価の割合を示す円グラフと内訳。表示時に12時の位置から時計回りに描画する
-export const RatingChart = ({ summaries }: RatingChartProps) => {
+export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
   const chartRef = useRef<HTMLDivElement>(null)
   const [isDrawn, setIsDrawn] = useState<boolean>(false)
   const [activeRating, setActiveRating] = useState<PreferenceRating | null>(null)
@@ -150,7 +148,10 @@ export const RatingChart = ({ summaries }: RatingChartProps) => {
             onMouseLeave={handleMouseLeave}
           >
             <div className="flex items-baseline gap-3">
-              <span className="flex-1 font-bold">{PREFERENCE_RATING_LABELS[rating]}</span>
+              <span className="flex flex-1 flex-wrap items-center gap-2 font-bold">
+                {PREFERENCE_RATING_LABELS[rating]}
+                {rating === 'unrated' && unratedAction}
+              </span>
               <span className="text-sm text-base-content/60">{count}冊</span>
               <span className="w-14 text-right text-lg font-bold tabular-nums">{ratio}%</span>
             </div>

@@ -19,7 +19,13 @@ import Spinner from '../../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../../assets/default_user_image.png'
 
 // 評価の高い順に表示する
-const RATED_RATINGS: PreferenceRating[] = ['favorite', 'interesting', 'normal', 'not_for_me', 'unrated']
+const RATED_RATINGS: PreferenceRating[] = [
+  'favorite',
+  'interesting',
+  'normal',
+  'not_for_me',
+  'unrated',
+]
 
 // 木目の背板と、一定間隔で並ぶ棚板を背景として描画する
 const shelfStyle: CSSProperties = {
@@ -78,32 +84,48 @@ const PreferenceResult = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* ユーザー情報 */}
-      <div className="card border border-base-300 bg-base-100 shadow-sm">
-        <div className="card-body flex-col gap-6 md:flex-row md:items-center">
-          <div className="flex items-center gap-4">
-            <div className="avatar">
-              <div className="w-20 rounded-full ring-4 ring-secondary/40 ring-offset-2 ring-offset-base-100">
-                <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
+      {/* ユーザー情報と評価の割合 */}
+      <div className="card card-border bg-base-100 shadow-sm">
+        <div className="card-body">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="flex items-center gap-3">
+              <div className="avatar">
+                <div className="w-10 rounded-full">
+                  <img src={currentUser?.avatarImage ?? defaultUserImage} alt="ユーザーアイコン" />
+                </div>
               </div>
+              <h3 className="card-title text-base">{currentUser?.name}さんの好み診断</h3>
             </div>
-            <div>
-              <p className="text-xl font-bold">{currentUser?.name}の好み診断</p>
-              <p className="text-sm text-base-content/60">{currentUser?.name}さん</p>
+
+            <div className="flex flex-wrap items-center gap-2 md:ml-auto">
+              <span className="badge badge-primary badge-soft">
+                登録数 {preference?.total ?? 0}冊
+              </span>
+              <span className="badge badge-ghost">
+                {PREFERENCE_RATING_LABELS.unrated} {preference?.counts.unrated ?? 0}冊 (
+                {preference?.ratios.unrated ?? 0}%)
+              </span>
             </div>
           </div>
 
-          <div className="stats stats-horizontal bg-base-200 md:ml-auto">
-            <div className="stat place-items-center px-4 md:px-6">
-              <div className="stat-title">登録数</div>
-              <div className="stat-value text-primary">{preference?.total ?? 0}</div>
-            </div>
-            <div className="stat place-items-center px-4 md:px-6">
-              <div className="stat-title">{PREFERENCE_RATING_LABELS.unrated}</div>
-              <div className="stat-value text-2xl">{preference?.counts.unrated ?? 0}</div>
-              <div className="stat-desc">{preference?.ratios.unrated ?? 0}%</div>
-            </div>
-          </div>
+          {preference && preference.total > 0 && (
+            <>
+              <div className="divider my-0" />
+              <RatingChart
+                summaries={summaries}
+                unratedAction={
+                  // TODO: 更新処理は未実装
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-xs"
+                    disabled={(preference.counts.unrated ?? 0) === 0}
+                  >
+                    {PREFERENCE_RATING_LABELS.unrated}のものを更新する
+                  </button>
+                }
+              />
+            </>
+          )}
         </div>
       </div>
 
@@ -115,13 +137,6 @@ const PreferenceResult = () => {
         </div>
       ) : (
         <>
-          {/* 評価の割合 */}
-          <div className="card border border-base-300 bg-base-100 shadow-sm">
-            <div className="card-body">
-              <RatingChart summaries={summaries} />
-            </div>
-          </div>
-
           {/* 評価ごとの本棚 */}
           {summaries.map(({ rating, count, ratio, books: ratedBooks }) => (
             <section key={rating} className="flex flex-col gap-3">
@@ -138,11 +153,11 @@ const PreferenceResult = () => {
                 <div className="relative px-4 md:px-8" style={shelfStyle}>
                   {ratedBooks.length === 0 ? (
                     <div
-                      className="flex items-end justify-center pb-14"
-                      style={{ height: SHELF_ROW_HEIGHT }}
+                      className="flex items-center justify-center"
+                      style={{ height: SHELF_ROW_HEIGHT, paddingBottom: SHELF_BOARD_HEIGHT }}
                     >
-                      <p className="rounded-field bg-base-100/85 px-4 py-2 text-sm shadow">
-                        「{PREFERENCE_RATING_LABELS[rating]}」の本はまだありません。
+                      <p className="rounded-field bg-base-100/85 px-4 py-2 text-center text-sm shadow">
+                        登録されている本はありません
                       </p>
                     </div>
                   ) : (
