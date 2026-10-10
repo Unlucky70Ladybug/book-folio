@@ -1,11 +1,6 @@
-import { type BookshelfForPreference } from "./bookshelf";
+import { type BookshelfForPreference } from './bookshelf'
 
-export type PreferenceRating =
-  | 'unrated'
-  | 'not_for_me'
-  | 'normal'
-  | 'interesting'
-  | 'favorite'
+export type PreferenceRating = 'unrated' | 'not_for_me' | 'normal' | 'interesting' | 'favorite'
 
 type PreferenceCounts = Record<PreferenceRating, number>
 
@@ -19,7 +14,6 @@ export type BookshelfPreference = {
   books: BookshelfForPreference[]
   preference: Preference
 }
-
 
 // 評価ごとの集計(円グラフと評価別の本棚で使う)
 export type RatingSummary = {
