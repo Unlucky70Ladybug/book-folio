@@ -13,6 +13,7 @@ import NotificationBar from './pages/components/notification-bar'
 import { NotificationProvider } from './pages/providers/notification-provider'
 import SearchBook from './pages/search_books/search-books'
 import BookshelfPage from './pages/bookshelf/page'
+import PreferenceResult from './pages/preference/page/index'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/login" element={<LoginPage />} />
 
             <Route element={<PrivateRoute />}>
+              <Route path="/preference" element={<PreferenceResult />} />
               <Route path="/search_book" element={<SearchBook />} />
               <Route path="/bookshelf" element={<BookshelfPage />} />
             </Route>
