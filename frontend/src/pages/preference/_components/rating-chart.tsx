@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
-import { PREFERENCE_RATING_LABELS } from '../../../types/bookshelf'
-import { RATING_COLORS, type PreferenceRating, type RatingSummary } from '../../../types/preference'
+import { PREFERENCE_RATING_LABELS, type PreferenceRating } from '../../../types/bookshelf'
+import { RATING_COLORS, type RatingSummary } from '../../../types/preference'
 
 // 円グラフを1周描き切るまでの時間(ms)
 const CHART_DURATION = 1200
@@ -150,7 +150,7 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
             <div className="flex items-baseline gap-3">
               <span className="flex flex-1 flex-wrap items-center gap-2 font-bold">
                 {PREFERENCE_RATING_LABELS[rating]}
-                {rating === 'unrated' && unratedAction}
+                {rating === 'unrated' && count > 0 && unratedAction}
               </span>
               <span className="text-sm text-base-content/60">{count}冊</span>
               <span className="w-14 text-right text-lg font-bold tabular-nums">{ratio}%</span>

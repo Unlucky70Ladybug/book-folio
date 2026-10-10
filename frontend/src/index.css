@@ -148,3 +148,44 @@ code {
 .toast-slide-in-right {
   animation: toast-slide-in-right 0.3s ease-out;
 }
+
+/* 好みの更新で、次の本へ右から左にスライドして入れ替える */
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-to-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-in-from-right {
+  animation: slide-in-from-right 0.4s ease-out;
+}
+
+.slide-out-to-left {
+  animation: slide-out-to-left 0.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-in-from-right {
+    animation: none;
+  }
+
+  .slide-out-to-left {
+    display: none;
+  }
+}

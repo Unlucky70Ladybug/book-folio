@@ -1,13 +1,10 @@
 import { useEffect, useState, type CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import { getPreferenceResult } from '../../_hooks/get-preference'
 import { useAuth } from '../../../hooks/use-auth'
 import { useNotification } from '../../../hooks/use-notification'
-import {
-  RATING_COLORS,
-  type Preference,
-  type PreferenceRating,
-  type RatingSummary,
-} from '../../../../types/preference'
+import { type PreferenceRating } from '../../../../types/bookshelf'
+import { RATING_COLORS, type Preference, type RatingSummary } from '../../../../types/preference'
 import { PREFERENCE_RATING_LABELS, type BookshelfForPreference } from '../../../../types/bookshelf'
 import { RatingChart } from '../../_components/rating-chart'
 import {
@@ -114,14 +111,12 @@ const PreferenceResult = () => {
               <RatingChart
                 summaries={summaries}
                 unratedAction={
-                  // TODO: 更新処理は未実装
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-xs"
-                    disabled={(preference.counts.unrated ?? 0) === 0}
-                  >
-                    {PREFERENCE_RATING_LABELS.unrated}のものを更新する
-                  </button>
+                  // 未評価の本が無いときは遷移させない
+                  preference.counts.unrated > 0 && (
+                    <Link to="/preference/update" className="btn btn-primary btn-xs">
+                      {PREFERENCE_RATING_LABELS.unrated}のものを更新する
+                    </Link>
+                  )
                 }
               />
             </>
