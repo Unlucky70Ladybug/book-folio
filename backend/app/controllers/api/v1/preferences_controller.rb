@@ -16,4 +16,24 @@ class Api::V1::PreferencesController < ApplicationController
     books = current_user.bookshelves.eager_load(:book, :genres).where(reading_status: :finished, preference_rating: :unrated).order(:id)
     render json: books, each_serializer: BookUndiagnosedSerializer, root: "books", adapter: :json
   end
+
+  # 好み評価のみ更新する(ジャンルやコメントには触れない)
+  def update
+    rating = preference_params[:preference_rating]
+    bookshelf = current_user.bookshelves.find(params[:id])
+    if bookshelf&.preference_rating == rating
+      return render json: { error: "不正な評価です" }, status: :unprocessable_entity
+    end
+
+    if bookshelf.update(preference_rating: rating)
+      render json: {}, status: :ok
+    else
+      render json: { errors: bookshelf.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  private
+  def preference_params
+    params.require(:preference).permit(:preference_rating)
+  end
 end

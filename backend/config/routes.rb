@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
       resources :bookshelves, only: [ :index, :create, :update ]
       resources :genres, only: [ :index ]
-      resources :preferences, only: [ :index ] do
+      resources :preferences, only: [ :index, :update ] do
         collection do
           get :undiagnosed
         end
