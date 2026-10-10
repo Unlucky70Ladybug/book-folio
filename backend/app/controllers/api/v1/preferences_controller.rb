@@ -8,7 +8,12 @@ class Api::V1::PreferencesController < ApplicationController
     counts = books.group(:preference_rating).count
     total = counts.values.sum
     ratios = counts.transform_values { |c| total.zero? ? 0 : (c * 100.0 / total).round(1) }
-     render json: books, each_serializer: PreferenceSerializer, root: "books", adapter: :json,
-            meta: { total: total, counts: counts, ratios: ratios }, meta_key: :preference
+    render json: books, each_serializer: PreferenceSerializer, root: "books", adapter: :json,
+           meta: { total: total, counts: counts, ratios: ratios }, meta_key: :preference
+  end
+
+  def undiagnosed
+    books = current_user.bookshelves.eager_load(:book, :genres).where(reading_status: :finished, preference_rating: :unrated).order(:id)
+    render json: books, each_serializer: BookUndiagnosedSerializer, root: "books", adapter: :json
   end
 end
