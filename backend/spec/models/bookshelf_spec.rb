@@ -61,11 +61,13 @@ RSpec.describe Bookshelf, type: :model do
       end
 
       it "reading_statusが定義外の値の場合" do
-        expect { Bookshelf.new(valid_bookshelf.merge(reading_status: 3)) }.to raise_error(ArgumentError)
+        bookshelf = Bookshelf.new(valid_bookshelf.merge(reading_status: 3))
+        expect(bookshelf).to be_invalid
       end
 
       it "preference_ratingが定義外の値の場合" do
-        expect { Bookshelf.new(valid_bookshelf.merge(preference_rating: 5)) }.to raise_error(ArgumentError)
+        bookshelf = Bookshelf.new(valid_bookshelf.merge(preference_rating: 5))
+        expect(bookshelf).to be_invalid
       end
     end
 
