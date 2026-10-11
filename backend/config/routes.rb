@@ -20,6 +20,7 @@ Rails.application.routes.draw do
           get :undiagnosed
         end
       end
+      resources :genre_statistics, only: [ :index ]
     end
   end
 
