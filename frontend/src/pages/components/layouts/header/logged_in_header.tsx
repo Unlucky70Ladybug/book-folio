@@ -96,7 +96,7 @@ const LoggedInHeader = () => {
             isSecondRowVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
         >
-          <Link to="/reading-analysis" className="btn btn-ghost btn-sm">
+          <Link to="/genre-statistic" className="btn btn-ghost btn-sm">
             読書分析
           </Link>
 

@@ -1,26 +1,36 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
-import { PREFERENCE_RATING_LABELS, type PreferenceRating } from '../../../types/bookshelf'
-import { RATING_COLORS, type RatingSummary } from '../../../types/preference'
 
 // 円グラフを1周描き切るまでの時間(ms)
 const CHART_DURATION = 1200
-// 評価同士の境目に空ける隙間(%)
+// 項目同士の境目に空ける隙間(%)
 const SEGMENT_GAP = 0.6
 // ホバー時に表示する本のタイトルの最大数
 const MAX_TOOLTIP_TITLES = 8
 const TOOLTIP_WIDTH = 224
 
-type RatingChartProps = {
-  summaries: RatingSummary[]
-  // 内訳の「未定義」の横に表示する操作
-  unratedAction?: ReactNode
+// 円グラフの1項目(評価やジャンルなど)
+export type RatioChartItem = {
+  id: string | number
+  label: string
+  count: number
+  // 全体に対する割合(%)
+  ratio: number
+  color: string
+  // ホバー時に表示する本のタイトル
+  titles: string[]
+  // 内訳のラベルの横に表示する操作
+  action?: ReactNode
 }
 
-// 評価の割合を示す円グラフと内訳。表示時に12時の位置から時計回りに描画する
-export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
+type RatioChartProps = {
+  items: RatioChartItem[]
+}
+
+// 割合を示す円グラフと内訳。表示時に12時の位置から時計回りに描画する
+export const RatioChart = ({ items }: RatioChartProps) => {
   const chartRef = useRef<HTMLDivElement>(null)
   const [isDrawn, setIsDrawn] = useState<boolean>(false)
-  const [activeRating, setActiveRating] = useState<PreferenceRating | null>(null)
+  const [activeId, setActiveId] = useState<RatioChartItem['id'] | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
@@ -28,30 +38,30 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
     return () => cancelAnimationFrame(id)
   }, [])
 
-  const segments = summaries
+  const segments = items
     .filter(({ ratio }) => ratio > 0)
-    .map((summary, i, list) => ({
-      ...summary,
+    .map((item, i, list) => ({
+      ...item,
       start: list.slice(0, i).reduce((sum, { ratio }) => sum + ratio, 0),
     }))
 
-  // ホバー中の評価。ホバーしていないときは最も割合の高い評価を中央に表示する
-  const topSummary = summaries.reduce((top, summary) => (summary.ratio > top.ratio ? summary : top))
-  const activeSummary = summaries.find(({ rating }) => rating === activeRating)
-  const centerSummary = activeSummary ?? topSummary
+  // ホバー中の項目。ホバーしていないときは最も割合の高い項目を中央に表示する
+  const topItem = items.reduce((top, item) => (item.ratio > top.ratio ? item : top))
+  const activeItem = items.find(({ id }) => id === activeId)
+  const centerItem = activeItem ?? topItem
 
   // カーソルの位置にタイトル一覧を追従させる(グラフの外にはみ出さないよう横位置を収める)
-  const handleMouseMove = (e: MouseEvent<SVGCircleElement>, rating: PreferenceRating) => {
+  const handleMouseMove = (e: MouseEvent<SVGCircleElement>, id: RatioChartItem['id']) => {
     const rect = chartRef.current?.getBoundingClientRect()
     if (!rect) return
     const half = TOOLTIP_WIDTH / 2
     const x = Math.min(Math.max(e.clientX - rect.left, half), Math.max(rect.width - half, half))
-    setActiveRating(rating)
+    setActiveId(id)
     setTooltipPosition({ x, y: e.clientY - rect.top })
   }
 
   const handleMouseLeave = () => {
-    setActiveRating(null)
+    setActiveId(null)
     setTooltipPosition(null)
   }
 
@@ -62,39 +72,37 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
           viewBox="0 0 100 100"
           className="size-full -rotate-90"
           role="img"
-          aria-label={summaries
-            .map(({ rating, ratio }) => `${PREFERENCE_RATING_LABELS[rating]} ${ratio}%`)
-            .join('、')}
+          aria-label={items.map(({ label, ratio }) => `${label} ${ratio}%`).join('、')}
         >
-          {/* 評価が付いていない本の分は下地のまま残る */}
+          {/* 割合が100%に満たない分は下地のまま残る */}
           <circle cx="50" cy="50" r="40" fill="none" strokeWidth="10" className="stroke-base-200" />
-          {segments.map(({ rating, ratio, start }) => {
+          {segments.map(({ id, ratio, start, color }) => {
             const length = Math.max(ratio - SEGMENT_GAP, ratio / 2)
-            const isDimmed = activeRating !== null && activeRating !== rating
+            const isDimmed = activeId !== null && activeId !== id
 
             return (
               <circle
-                key={rating}
+                key={id}
                 cx="50"
                 cy="50"
                 r="40"
                 fill="none"
                 pathLength={100}
-                stroke={RATING_COLORS[rating]}
-                strokeWidth={activeRating === rating ? 15 : 12}
+                stroke={color}
+                strokeWidth={activeId === id ? 15 : 12}
                 strokeDasharray={`${isDrawn ? length : 0} 100`}
                 strokeDashoffset={-start}
                 opacity={isDimmed ? 0.3 : 1}
                 className="cursor-pointer motion-reduce:transition-none"
                 style={{
-                  // 前の評価を描き終えてから次を描き始め、1本の線が回るように見せる
+                  // 前の項目を描き終えてから次を描き始め、1本の線が回るように見せる
                   transition: [
                     `stroke-dasharray ${(ratio / 100) * CHART_DURATION}ms linear ${(start / 100) * CHART_DURATION}ms`,
                     'stroke-width 150ms ease-out',
                     'opacity 150ms ease-out',
                   ].join(','),
                 }}
-                onMouseMove={(e) => handleMouseMove(e, rating)}
+                onMouseMove={(e) => handleMouseMove(e, id)}
                 onMouseLeave={handleMouseLeave}
               />
             )
@@ -102,36 +110,36 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
         </svg>
 
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xs tracking-widest text-base-content/60">
-            {PREFERENCE_RATING_LABELS[centerSummary.rating]}
+          <span className="max-w-32 truncate text-xs tracking-widest text-base-content/60">
+            {centerItem.label}
           </span>
           <span className="text-4xl font-bold tabular-nums">
-            {centerSummary.ratio}
+            {centerItem.ratio}
             <span className="text-lg">%</span>
           </span>
-          <span className="text-xs text-base-content/60">{centerSummary.count}冊</span>
+          <span className="text-xs text-base-content/60">{centerItem.count}冊</span>
         </div>
 
-        {/* ホバーした評価の本のタイトル */}
-        {activeSummary && tooltipPosition && (
+        {/* ホバーした項目の本のタイトル */}
+        {activeItem && tooltipPosition && (
           <div
             className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-box bg-neutral p-3 text-xs text-neutral-content shadow-xl"
             style={{ left: tooltipPosition.x, top: tooltipPosition.y - 12, width: TOOLTIP_WIDTH }}
           >
-            <p className="mb-1 flex items-center justify-between font-bold">
-              <span>{PREFERENCE_RATING_LABELS[activeSummary.rating]}</span>
-              <span>{activeSummary.count}冊</span>
+            <p className="mb-1 flex items-center justify-between gap-2 font-bold">
+              <span className="truncate">{activeItem.label}</span>
+              <span className="shrink-0">{activeItem.count}冊</span>
             </p>
             <ul className="flex flex-col gap-0.5">
-              {activeSummary.books.slice(0, MAX_TOOLTIP_TITLES).map(({ id, book }) => (
-                <li key={id} className="truncate">
-                  {book.title}
+              {activeItem.titles.slice(0, MAX_TOOLTIP_TITLES).map((title, i) => (
+                <li key={i} className="truncate">
+                  {title}
                 </li>
               ))}
             </ul>
-            {activeSummary.books.length > MAX_TOOLTIP_TITLES && (
+            {activeItem.titles.length > MAX_TOOLTIP_TITLES && (
               <p className="mt-1 text-neutral-content/60">
-                ほか {activeSummary.books.length - MAX_TOOLTIP_TITLES}冊
+                ほか {activeItem.titles.length - MAX_TOOLTIP_TITLES}冊
               </p>
             )}
           </div>
@@ -140,17 +148,17 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
 
       {/* 内訳 */}
       <ul className="flex w-full max-w-sm flex-col gap-1">
-        {summaries.map(({ rating, count, ratio }) => (
+        {items.map(({ id, label, count, ratio, color, action }) => (
           <li
-            key={rating}
-            className={`rounded-field px-3 py-2 transition-colors ${activeRating === rating ? 'bg-base-200' : ''}`}
-            onMouseEnter={() => setActiveRating(rating)}
+            key={id}
+            className={`rounded-field px-3 py-2 transition-colors ${activeId === id ? 'bg-base-200' : ''}`}
+            onMouseEnter={() => setActiveId(id)}
             onMouseLeave={handleMouseLeave}
           >
             <div className="flex items-baseline gap-3">
               <span className="flex flex-1 flex-wrap items-center gap-2 font-bold">
-                {PREFERENCE_RATING_LABELS[rating]}
-                {rating === 'unrated' && count > 0 && unratedAction}
+                {label}
+                {action}
               </span>
               <span className="text-sm text-base-content/60">{count}冊</span>
               <span className="w-14 text-right text-lg font-bold tabular-nums">{ratio}%</span>
@@ -158,7 +166,7 @@ export const RatingChart = ({ summaries, unratedAction }: RatingChartProps) => {
             <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-base-200">
               <div
                 className="h-full rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none"
-                style={{ width: `${isDrawn ? ratio : 0}%`, backgroundColor: RATING_COLORS[rating] }}
+                style={{ width: `${isDrawn ? ratio : 0}%`, backgroundColor: color }}
               />
             </div>
           </li>
