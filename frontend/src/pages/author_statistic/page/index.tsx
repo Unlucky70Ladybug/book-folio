@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getAuthorStatisticsResult } from '../_hooks/get-author-statistic'
 import { useAuth } from '../../hooks/use-auth'
 import { useNotification } from '../../hooks/use-notification'
@@ -102,6 +103,12 @@ const AuthorStatistic = () => {
                 <span className="h-6 w-1.5 rounded-full" style={{ backgroundColor: color }} />
                 <span className="text-lg font-bold">{author}</span>
                 <span className="badge badge-sm">{books_count}冊</span>
+                <Link
+                  to={`/search_book?type=author&keyword=${encodeURIComponent(author.split('/')[0].trim())}`}
+                  className="link link-primary text-sm"
+                >
+                  この著者の本を探す
+                </Link>
                 <span className="ml-auto text-sm text-base-content/60 tabular-nums">{ratio}%</span>
               </h2>
               <div className="rounded-box border-[12px] border-[#7a4b24] shadow-xl">
