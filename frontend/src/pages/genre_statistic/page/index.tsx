@@ -44,21 +44,22 @@ const GenreStatistic = () => {
   }, [notify])
 
   // 件数と割合はAPIの集計結果(genre_statistics)をそのまま使う
-  const summaries: GenreSummary[] = [...genreStatistics]
-    .map((statistic, i) => ({
-      ...statistic,
-      books: genresBooks.find(({ id }) => id === statistic.id)?.books ?? [],
-      color: genreColor(i),
-    }))
-
-  const chartItems: RatioChartItem[] = summaries.map(({ id, name, books_count, ratio, books, color }) => ({
-    id,
-    label: name,
-    count: books_count,
-    ratio,
-    color,
-    titles: books.map(({ title }) => title),
+  const summaries: GenreSummary[] = [...genreStatistics].map((statistic, i) => ({
+    ...statistic,
+    books: genresBooks.find(({ id }) => id === statistic.id)?.books ?? [],
+    color: genreColor(i),
   }))
+
+  const chartItems: RatioChartItem[] = summaries.map(
+    ({ id, name, books_count, ratio, books, color }) => ({
+      id,
+      label: name,
+      count: books_count,
+      ratio,
+      color,
+      titles: books.map(({ title }) => title),
+    }),
+  )
 
   return (
     <div className="flex flex-col gap-6">
