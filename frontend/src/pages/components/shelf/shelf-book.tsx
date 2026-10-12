@@ -1,11 +1,8 @@
 import { type DisplayBook } from '../../../types/book'
-
-// 1段の高さ(本 + 棚板)。本棚ページと同じ見た目に揃える
-export const SHELF_ROW_HEIGHT = 240
-export const SHELF_BOARD_HEIGHT = 40
+import { SHELF_BOARD_HEIGHT, SHELF_ROW_HEIGHT } from './shelf-style'
 
 // 棚に並ぶ1冊分
-export const GenreBook = ({ title, author, large_image_url }: DisplayBook) => (
+export const ShelfBook = ({ title, author, large_image_url }: DisplayBook) => (
   <li
     className="flex flex-col items-center justify-end"
     style={{ height: SHELF_ROW_HEIGHT, paddingBottom: SHELF_BOARD_HEIGHT }}
