@@ -5,6 +5,7 @@ import { useNotification } from '../../hooks/use-notification'
 import { type AuthorStatistics } from '../../../types/author-statistic'
 import { genreColor } from '../../../types/genre-statistic'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
+import { StatisticTabs } from '../../components/statistic-tabs'
 import { ShelfBook } from '../../components/shelf/shelf-book'
 import { shelfStyle } from '../../components/shelf/shelf-style'
 import Spinner from '../../components/layouts/ui/spinner'
@@ -74,12 +75,15 @@ const AuthorStatistic = () => {
             </div>
           </div>
 
-          {summaries.length > 0 && (
-            <>
-              <div className="divider my-0" />
-              <RatioChart items={chartItems} />
-            </>
-          )}
+          <div className="divider my-0" />
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <StatisticTabs />
+            {summaries.length > 0 && (
+              <div className="flex-1">
+                <RatioChart items={chartItems} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

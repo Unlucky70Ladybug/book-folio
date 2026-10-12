@@ -66,7 +66,7 @@ export const RatioChart = ({ items }: RatioChartProps) => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-8 md:flex-row md:justify-center md:gap-14">
+    <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-center md:gap-14">
       <div ref={chartRef} className="relative size-56 shrink-0 md:size-64">
         <svg
           viewBox="0 0 100 100"
@@ -146,8 +146,8 @@ export const RatioChart = ({ items }: RatioChartProps) => {
         )}
       </div>
 
-      {/* 内訳 */}
-      <ul className="flex w-full max-w-sm flex-col gap-1">
+      {/* 内訳。項目が多いときは一覧の中でスクロールする */}
+      <ul className="flex max-h-80 w-full max-w-sm flex-col gap-1 overflow-y-auto overscroll-contain pr-1">
         {items.map(({ id, label, count, ratio, color, action }) => (
           <li
             key={id}
