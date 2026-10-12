@@ -4,8 +4,9 @@ class Api::V1::AuthorStatisticsController < ApplicationController
   def index
 
     books = Book.joins(:bookshelves).where(bookshelves: { user_id: current_user.id })
-    author_books = books.group_by{ |book| book.author }
-    total = author_books.size
+    # 著作者が多い並べる
+    author_books = books.group_by{ |book| book.author }.sort_by { |author, author_by_books| -author_by_books.size }
+    total = books.size
     ratios = author_books.map do |author, author_by_books|
       books_count = author_by_books.size
       {
