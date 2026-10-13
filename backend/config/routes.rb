@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         end
       end
       resources :genre_statistics, only: [ :index ]
+      resources :author_statistics, only: [ :index ]
     end
   end
 
