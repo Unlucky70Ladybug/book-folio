@@ -1,7 +1,7 @@
 import { type AuthorStatistics } from '../../../types/author-statistic'
 import Cookies from 'js-cookie'
 
-export const getAuthorStatisticsResult = async (): Promise<AuthorStatistics[]>=> {
+export const getAuthorStatisticsResult = async (): Promise<AuthorStatistics[]> => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/author_statistics`, {
     headers: {
       'Content-Type': 'application/json',
