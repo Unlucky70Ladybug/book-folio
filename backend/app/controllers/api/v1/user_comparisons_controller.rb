@@ -19,9 +19,9 @@ class Api::V1::UserComparisonsController < ApplicationController
         [current_user_book_genres_value, other[:book_genres].fetch(current_user_book_genres_id, 0)].min
       end
       { user: other[:user], score: other_score.round }
-    end
+    end.sort_by { |other| -other[:score] }
 
-    render json: { user_book_genres: user_book_genres, mine: mine, others: others, uses_score: user_scores }
+    render json: { user_book_genres: user_book_genres, mine: mine, others: others, uses_score: uses_score }
   end
 
   private
