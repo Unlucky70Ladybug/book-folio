@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       end
       resources :genre_statistics, only: [ :index ]
       resources :author_statistics, only: [ :index ]
+      resources :user_comparisons, only: [ :index ]
     end
   end
 
