@@ -79,11 +79,15 @@ const AuthorStatistic = () => {
           <div className="divider my-0" />
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             <StatisticTabs />
-            {summaries.length > 0 && (
-              <div className="flex-1">
-                <RatioChart items={chartItems} />
-              </div>
-            )}
+            {/* ジャンル統計と円グラフの位置を揃えるため、比較ユーザー欄と同じ幅の余白を右に確保する */}
+            <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
+              {summaries.length > 0 && (
+                <div className="w-full md:max-w-176">
+                  <RatioChart items={chartItems} />
+                </div>
+              )}
+              <div className="hidden md:block md:w-64 md:shrink-0" aria-hidden="true" />
+            </div>
           </div>
         </div>
       </div>

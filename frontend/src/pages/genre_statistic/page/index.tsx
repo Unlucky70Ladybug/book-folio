@@ -94,17 +94,15 @@ const GenreStatistic = () => {
           <div className="divider my-0" />
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             <StatisticTabs />
-            {summaries.length > 0 && (
-              <div className="flex-1">
-                <RatioChart items={chartItems} />
-              </div>
-            )}
-            {/* 円グラフの右上の余白に読書傾向の比較ユーザーを表示する */}
-            {!isLoading && (
-              <div className="md:ml-auto">
-                <UserComparisonTabs users={comparisonUsers} />
-              </div>
-            )}
+            {/* 画面が広くても比較ユーザーが離れすぎないよう、円グラフと並べて中央に寄せる */}
+            <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
+              {summaries.length > 0 && (
+                <div className="w-full md:max-w-176">
+                  <RatioChart items={chartItems} />
+                </div>
+              )}
+              {!isLoading && <UserComparisonTabs users={comparisonUsers} />}
+            </div>
           </div>
         </div>
       </div>
