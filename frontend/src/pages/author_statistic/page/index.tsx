@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAuthorStatisticsResult } from '../_hooks/get-author-statistic'
+import { getSimilarUserResult } from '../../genre_statistic/_hooks/get-similar-users'
 import { useAuth } from '../../hooks/use-auth'
 import { useNotification } from '../../hooks/use-notification'
 import { type AuthorStatistics } from '../../../types/author-statistic'
@@ -20,11 +21,12 @@ const AuthorStatistic = () => {
 
   useEffect(() => {
     let ignore = false
-
-    getAuthorStatisticsResult()
-      .then((authorStatisticsResult) => {
+    
+    Promise.all([getAuthorStatisticsResult(), getSimilarUserResult])
+      .then(([authorStatisticsResult, similarUserResult]) => {
         if (ignore) return
         setAuthorStatistics(authorStatisticsResult)
+        
       })
       .catch((err) => {
         if (!ignore)

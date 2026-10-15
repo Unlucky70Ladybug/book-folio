@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { type User } from '../../../types/user'
+import { type UserInfo } from '../../../types/user'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
 type SignUpFormProps = {
-  formData: User
+  formData: UserInfo
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onAvatarChange: (file: File | null) => void
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
