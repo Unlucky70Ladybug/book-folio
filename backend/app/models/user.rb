@@ -3,6 +3,7 @@
 class User < ActiveRecord::Base
   # Bookshelfと紐づけ
   has_many :bookshelves, dependent: :destroy
+  has_many :book_genres, through: :bookshelves, source: :book_genres
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

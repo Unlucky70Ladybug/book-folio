@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
 import * as authService from '../providers/services/auth'
-import { type CuurentUser } from '../../types/user'
+import { type User } from '../../types/user'
 
 type Props = {
   children: React.ReactNode
@@ -11,7 +11,7 @@ type Props = {
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<{
   isLogin: boolean | null
-  currentUser: CuurentUser | null
+  currentUser: User | null
   updateAuthStatus: () => Promise<void>
 }>({
   isLogin: false,
@@ -21,7 +21,7 @@ export const AuthContext = createContext<{
 
 export const AuthProvider = ({ children }: Props) => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null)
-  const [currentUser, setCurrentUser] = useState<CuurentUser | null>(null)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   const updateAuthStatus = useCallback(async () => {
     const user = await authService.fetchCurrentUser()

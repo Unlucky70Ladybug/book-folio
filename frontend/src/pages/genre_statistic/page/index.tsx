@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getGenreStatisticsResult } from '../_hooks/get-genre-statistic'
+import { getSimilarUserResult } from '../_hooks/get-similar-users'
 import { useAuth } from '../../hooks/use-auth'
+import { type SimilarUser } from '../../../types/user'
 import { useNotification } from '../../hooks/use-notification'
 import {
   genreColor,
@@ -10,6 +12,7 @@ import {
 } from '../../../types/genre-statistic'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
 import { StatisticTabs } from '../../components/statistic-tabs'
+import { UserComparisonTabs } from '../_components/user-comparison-tabs'
 import { ShelfBook } from '../../components/shelf/shelf-book'
 import { shelfStyle } from '../../components/shelf/shelf-style'
 import Spinner from '../../components/layouts/ui/spinner'
@@ -20,16 +23,22 @@ const GenreStatistic = () => {
   const { notify } = useNotification()
   const [genresBooks, setGenresBooks] = useState<GenresBooks[]>([])
   const [genreStatistics, setGenreStatistics] = useState<GenreStatistics[]>([])
+  const [comparisonUsers, setComparisonUsers] = useState<SimilarUser>({
+    similar_users: [],
+    middle_users: [],
+    different_users: [],
+  })
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     let ignore = false
 
-    getGenreStatisticsResult()
-      .then((genreStatisticsResult) => {
+    Promise.all([getGenreStatisticsResult(), getSimilarUserResult()])
+      .then(([genreStatisticsResult, similarUserResult]) => {
         if (ignore) return
         setGenresBooks(genreStatisticsResult.genres_books)
         setGenreStatistics(genreStatisticsResult.genre_statistics)
+        setComparisonUsers(similarUserResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -85,11 +94,15 @@ const GenreStatistic = () => {
           <div className="divider my-0" />
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             <StatisticTabs />
-            {summaries.length > 0 && (
-              <div className="flex-1">
-                <RatioChart items={chartItems} />
-              </div>
-            )}
+            {/* 画面が広くても比較ユーザーが離れすぎないよう、円グラフと並べて中央に寄せる */}
+            <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
+              {summaries.length > 0 && (
+                <div className="w-full md:max-w-176">
+                  <RatioChart items={chartItems} />
+                </div>
+              )}
+              {!isLoading && <UserComparisonTabs users={comparisonUsers} />}
+            </div>
           </div>
         </div>
       </div>
