@@ -48,7 +48,7 @@ class Api::V1::UserComparisonsController < ApplicationController
 
   def middle_users(other_users)
     # score が 50付近のユーザーを5人取得
-    other_users.select { |other_user| 40 <= other_user[:score] && other_user[:score] <= 60 }
+    other_users.select { |other_user| 40 < other_user[:score] && other_user[:score] < 60 }
                .sort_by { |other_user| (other_user[:score] - 50).abs }
                .first(5)
                .map { |other_user| other_user[:user] }
