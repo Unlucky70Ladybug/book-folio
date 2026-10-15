@@ -18,7 +18,7 @@ type UserComparisonTabsProps = {
 // 読書傾向が似ている/ほどほど/違うユーザーをタブで切り替えて表示する(ページ遷移はしない)
 export const UserComparisonTabs = ({ users }: UserComparisonTabsProps) => {
   const [activeTab, setActiveTab] = useState<ComparisonTabKey>('similar_users')
-  const activeUsers: ComparisonUser[] = (users[activeTab] ?? [])
+  const activeUsers: ComparisonUser[] = users[activeTab] ?? []
 
   return (
     <div className="flex w-full flex-col gap-3 md:w-64 md:shrink-0">

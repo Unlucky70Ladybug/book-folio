@@ -5,7 +5,7 @@ class Api::V1::UserComparisonsController < ApplicationController
     users = User.preload(:book_genres)
     # { user_id => { user:, book_genres: } }
     user_book_genres = users.to_h do |user|
-      [user.id, { user: user, book_genres: ratios_book_genres(user.book_genres) }]
+      [ user.id, { user: user, book_genres: ratios_book_genres(user.book_genres) } ]
     end
 
     # 自分のジャンル割合を取り出す
@@ -17,7 +17,7 @@ class Api::V1::UserComparisonsController < ApplicationController
     other_users_score = others.map do |other|
       other_score = mine.sum do | current_user_book_genres_id, current_user_book_genres_value |
         #  other[:book_genres][:current_user_book_genres_id]が存在しないとき0とする
-        [current_user_book_genres_value, other[:book_genres].fetch(current_user_book_genres_id, 0)].min
+        [ current_user_book_genres_value, other[:book_genres].fetch(current_user_book_genres_id, 0) ].min
       end
       { user: other[:user], score: other_score.round }
     end.sort_by { |other| -other[:score] } # 最後にスコアが高い順にする
@@ -60,5 +60,4 @@ class Api::V1::UserComparisonsController < ApplicationController
                .last(5)
                .map { |other_user| other_user[:user] }
   end
-
 end
