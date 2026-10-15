@@ -12,7 +12,7 @@ export const getSimilarUserResult = async (): Promise<SimilarUser> => {
   })
 
   const json = await res.json()
-  if (!res.ok) throw new Error(json?.error || 'ジャンル統計の取得に失敗しました')
+  if (!res.ok) throw new Error(json?.error || 'ユーザー統計情報の取得に失敗しました')
 
   return json.result
 }
