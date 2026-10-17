@@ -12,6 +12,7 @@ import {
 } from '../../../types/genre-statistic'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
 import { StatisticTabs } from '../../components/statistic-tabs'
+import { EmptyState } from '../../components/empty-state'
 import { UserComparisonTabs } from '../_components/user-comparison-tabs'
 import { ShelfBook } from '../../components/shelf/shelf-book'
 import { shelfStyle } from '../../components/shelf/shelf-style'
@@ -93,26 +94,27 @@ const GenreStatistic = () => {
 
           <div className="divider my-0" />
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
-            <StatisticTabs />
-            {/* 画面が広くても比較ユーザーが離れすぎないよう、円グラフと並べて中央に寄せる */}
-            <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
-              {summaries.length > 0 && (
+            {!isLoading && summaries.length > 0 && <StatisticTabs />}
+            {isLoading ? null : summaries.length === 0 ? (
+              <EmptyState
+                title="まだジャンルの付いた本がありません"
+                description="本棚の本にジャンルを設定すると、ここにジャンルの割合が表示されます"
+              />
+            ) : (
+              /* 画面が広くても比較ユーザーが離れすぎないよう、円グラフと並べて中央に寄せる */
+              <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
                 <div className="w-full md:max-w-176">
                   <RatioChart items={chartItems} />
                 </div>
-              )}
-              {!isLoading && <UserComparisonTabs users={comparisonUsers} />}
-            </div>
+                <UserComparisonTabs users={comparisonUsers} />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {isLoading ? (
         <Spinner message="ジャンル統計を読み込み中..." />
-      ) : summaries.length === 0 ? (
-        <div role="alert" className="alert">
-          <span>まだジャンルの付いた本がありません。本棚の本にジャンルを設定してみましょう！</span>
-        </div>
       ) : (
         <>
           {/* ジャンルごとの本棚 */}

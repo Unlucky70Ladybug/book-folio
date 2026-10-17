@@ -7,6 +7,7 @@ import { type AuthorStatistics } from '../../../types/author-statistic'
 import { genreColor } from '../../../types/genre-statistic'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
 import { StatisticTabs } from '../../components/statistic-tabs'
+import { EmptyState } from '../../components/empty-state'
 import { ShelfBook } from '../../components/shelf/shelf-book'
 import { shelfStyle } from '../../components/shelf/shelf-style'
 import Spinner from '../../components/layouts/ui/spinner'
@@ -78,26 +79,27 @@ const AuthorStatistic = () => {
 
           <div className="divider my-0" />
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
-            <StatisticTabs />
-            {/* ジャンル統計と円グラフの位置を揃えるため、比較ユーザー欄と同じ幅の余白を右に確保する */}
-            <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
-              {summaries.length > 0 && (
+            {!isLoading && summaries.length > 0 && <StatisticTabs />}
+            {isLoading ? null : summaries.length === 0 ? (
+              <EmptyState
+                title="まだ本棚に本がありません"
+                description="本を登録すると、ここに著作者の割合が表示されます"
+              />
+            ) : (
+              /* ジャンル統計と円グラフの位置を揃えるため、比較ユーザー欄と同じ幅の余白を右に確保する */
+              <div className="flex flex-1 flex-col gap-6 md:flex-row md:items-start md:justify-center">
                 <div className="w-full md:max-w-176">
                   <RatioChart items={chartItems} />
                 </div>
-              )}
-              <div className="hidden md:block md:w-64 md:shrink-0" aria-hidden="true" />
-            </div>
+                <div className="hidden md:block md:w-64 md:shrink-0" aria-hidden="true" />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {isLoading ? (
         <Spinner message="著作者統計を読み込み中..." />
-      ) : summaries.length === 0 ? (
-        <div role="alert" className="alert">
-          <span>まだ本棚に本がありません。本を登録してみましょう！</span>
-        </div>
       ) : (
         <>
           {/* 著作者ごとの本棚 */}
