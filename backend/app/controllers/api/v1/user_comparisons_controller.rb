@@ -2,7 +2,17 @@ class Api::V1::UserComparisonsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    users = User.preload(:book_genres)
+    if current_user.book_genres.blank?
+      return render json: {
+        result: {
+          similar_users: [],
+          middle_users: [],
+          different_users: []
+        }
+      }
+    end
+
+    users = User.eager_load(:book_genres).where.not(book_genres: nil)
     # { user_id => { user:, book_genres: } }
     user_book_genres = users.to_h do |user|
       [ user.id, { user: user, book_genres: ratios_book_genres(user.book_genres) } ]

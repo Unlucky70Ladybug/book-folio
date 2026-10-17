@@ -4,6 +4,9 @@ class Api::V1::GenreStatisticsController < ApplicationController
   def index
     genres_books = Genre.eager_load(bookshelves: :book)
                   .where(bookshelves: { user_id: current_user.id })
+    
+    return render json: { genres_books: [], genre_statistics: [] } if genres_books.blank?
+
     total = genres_books.sum { |genre| genre.bookshelves.size }
     ratios = genres_books.map do |genre|
       books_count = genre.bookshelves.size
