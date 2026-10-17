@@ -8,6 +8,7 @@ import { RATING_COLORS, type Preference, type RatingSummary } from '../../../../
 import { PREFERENCE_RATING_LABELS, type BookshelfForPreference } from '../../../../types/bookshelf'
 import { RatioChart, type RatioChartItem } from '../../../components/chart/ratio-chart'
 import { ShelfBook } from '../../../components/shelf/shelf-book'
+import { EmptyState } from '../../../components/empty-state'
 import {
   SHELF_BOARD_HEIGHT,
   SHELF_ROW_HEIGHT,
@@ -105,10 +106,17 @@ const PreferenceResult = () => {
             </div>
           </div>
 
-          {preference && preference.total > 0 && (
+          {!isLoading && (
             <>
               <div className="divider my-0" />
-              <RatioChart items={chartItems} />
+              {preference && preference.total > 0 ? (
+                <RatioChart items={chartItems} />
+              ) : (
+                <EmptyState
+                  title="まだ本が登録されていません"
+                  description="本を検索して本棚に追加すると、ここに評価の割合が表示されます"
+                />
+              )}
             </>
           )}
         </div>
@@ -116,11 +124,7 @@ const PreferenceResult = () => {
 
       {isLoading ? (
         <Spinner message="診断結果を読み込み中..." />
-      ) : !preference || preference.total === 0 ? (
-        <div role="alert" className="alert">
-          <span>まだ本が登録されていません。本を検索して本棚に追加してみましょう！</span>
-        </div>
-      ) : (
+      ) : !preference || preference.total === 0 ? null : (
         <>
           {/* 評価ごとの本棚 */}
           {summaries.map(({ rating, count, ratio, books: ratedBooks }) => (
