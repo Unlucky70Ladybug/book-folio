@@ -6,7 +6,7 @@ import { NotificationContext } from '../../providers/notification-provider'
 import {
   type Bookshelf,
   type PreferenceRating,
-  type SortKey,
+  type PreferenceSortKey,
   READING_STATUS_LABELS,
 } from '../../../types/bookshelf'
 import { BookshelfBook } from '../_components/bookshelf-book'
@@ -41,7 +41,7 @@ const BookshelfPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // 並べ替え基準
-  const [sortKey, setSortKey] = useState<SortKey>('registered')
+  const [sortKey, setSortKey] = useState<PreferenceSortKey>('registered')
   // nullのときは全ジャンルを表示する
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
@@ -124,9 +124,10 @@ const BookshelfPage = () => {
   )
 
   return (
-    <div className="flex flex-col gap-6">
+    // ユーザー情報・フィルターバー・本棚は隙間なく1つのまとまりとして見せる
+    <div className="flex flex-col">
       {/* ユーザー情報 */}
-      <div className="card border border-base-300 bg-base-100 shadow-sm">
+      <div className="card rounded-b-none border border-base-300 bg-base-100 shadow-sm">
         <div className="card-body flex-col gap-6 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
             <div className="avatar">
@@ -171,7 +172,7 @@ const BookshelfPage = () => {
       {isLoading ? (
         <Spinner message="本棚を読み込み中..." />
       ) : (
-        <div className="rounded-box border-[12px] border-[#7a4b24] shadow-xl">
+        <div className="rounded-box rounded-t-none border-[12px] border-[#7a4b24] shadow-xl">
           <div className="relative px-4 md:px-8" style={bookshelfStyle}>
             {bookshelves.length === 0 ? (
               shelfMessage('まだ本が登録されていません。本を検索して本棚に追加してみましょう！')
