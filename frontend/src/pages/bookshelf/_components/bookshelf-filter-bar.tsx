@@ -1,4 +1,9 @@
-import { PREFERENCE_SORT_TABS, READING_SORT_TABS,  type PreferenceSortKey, type ReadingSortKey } from '../../../types/bookshelf'
+import {
+  PREFERENCE_SORT_TABS,
+  READING_SORT_TABS,
+  type PreferenceSortKey,
+  type ReadingSortKey,
+} from '../../../types/bookshelf'
 import { type Genre } from '../../../types/genre'
 
 type BookshelfFilterBarProps = {
@@ -24,7 +29,7 @@ export const BookshelfFilterBar = ({
   preferenceSortKey,
   onPreferenceSortChange,
   readingSortKey,
-  onReadingSortChange
+  onReadingSortChange,
 }: BookshelfFilterBarProps) => (
   <div className="flex flex-col gap-3 border-x border-base-300 bg-base-200 px-4 py-3 md:flex-row md:items-center">
     {/* 本の検索とジャンルの絞り込みを1つのグループにまとめる */}

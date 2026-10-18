@@ -78,9 +78,7 @@ const BookshelfPage = () => {
         PREFERENCE_RATING_ORDER.indexOf(a.preference_rating),
     )
   const sortReadingStatus = (list: Bookshelf[], sortKey: string) => {
-    return list.filter( (bookshelf) =>
-        bookshelf.reading_status === sortKey
-    )
+    return list.filter((bookshelf) => bookshelf.reading_status === sortKey)
   }
 
   // タイトルか著者にキーワードを含む本だけ返す(英字の大文字・小文字は区別しない)
@@ -111,7 +109,7 @@ const BookshelfPage = () => {
       list = list.filter((bookshelf) =>
         bookshelf.genres.some((genre) => genre.id === selectedGenreId),
       )
-    if (preferenceSortKey === 'preference') list = sortPreferenceRating(list)  
+    if (preferenceSortKey === 'preference') list = sortPreferenceRating(list)
     if (readingSortKey !== 'all') list = sortReadingStatus(list, readingSortKey)
     return list
   }, [bookshelves, keyword, selectedGenreId, preferenceSortKey, readingSortKey])
