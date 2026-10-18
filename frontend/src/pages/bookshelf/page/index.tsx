@@ -7,6 +7,7 @@ import {
   type Bookshelf,
   type PreferenceRating,
   type PreferenceSortKey,
+  type ReadingSortKey,
   READING_STATUS_LABELS,
 } from '../../../types/bookshelf'
 import { BookshelfBook } from '../_components/bookshelf-book'
@@ -41,7 +42,8 @@ const BookshelfPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // 並べ替え基準
-  const [sortKey, setSortKey] = useState<PreferenceSortKey>('registered')
+  const [preferenceSortKey, setPreferenceKey] = useState<PreferenceSortKey>('registered')
+  const [readingSortKey, setReadingSortKey] = useState<ReadingSortKey>('all')
   // nullのときは全ジャンルを表示する
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
@@ -68,13 +70,18 @@ const BookshelfPage = () => {
     }
   }, [notify])
 
-  // 元の並び(登録順)を保つため、引数は変更せず並べ替えた配列を返す
+  // 元の並びを保つため、引数は変更せず並べ替えた配列を返す
   const sortPreferenceRating = (list: Bookshelf[]) =>
     [...list].sort(
       (a, b) =>
         PREFERENCE_RATING_ORDER.indexOf(b.preference_rating) -
         PREFERENCE_RATING_ORDER.indexOf(a.preference_rating),
     )
+  const sortReadingStatus = (list: Bookshelf[], sortKey: string) => {
+    return list.filter( (bookshelf) =>
+        bookshelf.reading_status === sortKey
+    )
+  }
 
   // タイトルか著者にキーワードを含む本だけ返す(英字の大文字・小文字は区別しない)
   const filterByKeyword = (list: Bookshelf[], keyword: string) => {
@@ -104,9 +111,10 @@ const BookshelfPage = () => {
       list = list.filter((bookshelf) =>
         bookshelf.genres.some((genre) => genre.id === selectedGenreId),
       )
-    if (sortKey === 'preference') list = sortPreferenceRating(list)
+    if (preferenceSortKey === 'preference') list = sortPreferenceRating(list)  
+    if (readingSortKey !== 'all') list = sortReadingStatus(list, readingSortKey)
     return list
-  }, [bookshelves, keyword, selectedGenreId, sortKey])
+  }, [bookshelves, keyword, selectedGenreId, preferenceSortKey, readingSortKey])
 
   const countByStatus = (status: ReadingStatus) =>
     bookshelves.filter((bookshelf) => bookshelf.reading_status === status).length
@@ -164,8 +172,10 @@ const BookshelfPage = () => {
         genres={shelfGenres}
         selectedGenreId={selectedGenreId}
         onGenreChange={setSelectedGenreId}
-        sortKey={sortKey}
-        onSortChange={setSortKey}
+        preferenceSortKey={preferenceSortKey}
+        onPreferenceSortChange={setPreferenceKey}
+        readingSortKey={readingSortKey}
+        onReadingSortChange={setReadingSortKey}
       />
 
       {/* 本棚 */}

@@ -1,4 +1,4 @@
-import { PREFERENCE_SORT_TABS, type PreferenceSortKey } from '../../../types/bookshelf'
+import { PREFERENCE_SORT_TABS, READING_SORT_TABS,  type PreferenceSortKey, type ReadingSortKey } from '../../../types/bookshelf'
 import { type Genre } from '../../../types/genre'
 
 type BookshelfFilterBarProps = {
@@ -8,8 +8,10 @@ type BookshelfFilterBarProps = {
   // nullのときは全ジャンルを表示する
   selectedGenreId: number | null
   onGenreChange: (genreId: number | null) => void
-  sortKey: PreferenceSortKey
-  onSortChange: (key: PreferenceSortKey) => void
+  preferenceSortKey: PreferenceSortKey
+  onPreferenceSortChange: (key: PreferenceSortKey) => void
+  readingSortKey: ReadingSortKey
+  onReadingSortChange: (key: ReadingSortKey) => void
 }
 
 // 本棚の検索・絞り込み・並べ替えのUI。状態は親(本棚ページ)が持つ
@@ -19,8 +21,10 @@ export const BookshelfFilterBar = ({
   genres,
   selectedGenreId,
   onGenreChange,
-  sortKey,
-  onSortChange,
+  preferenceSortKey,
+  onPreferenceSortChange,
+  readingSortKey,
+  onReadingSortChange
 }: BookshelfFilterBarProps) => (
   <div className="flex flex-col gap-3 border-x border-base-300 bg-base-200 px-4 py-3 md:flex-row md:items-center">
     {/* 本の検索とジャンルの絞り込みを1つのグループにまとめる */}
@@ -72,9 +76,23 @@ export const BookshelfFilterBar = ({
           key={key}
           type="button"
           role="tab"
-          aria-selected={sortKey === key}
-          className={`tab ${sortKey === key ? 'tab-active' : ''}`}
-          onClick={() => onSortChange(key)}
+          aria-selected={preferenceSortKey === key}
+          className={`tab ${preferenceSortKey === key ? 'tab-active' : ''}`}
+          onClick={() => onPreferenceSortChange(key)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+    <div role="tablist" className="tabs tabs-box tabs-sm self-end bg-base-100 md:self-auto">
+      {READING_SORT_TABS.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          role="tab"
+          aria-selected={readingSortKey === key}
+          className={`tab ${readingSortKey === key ? 'tab-active' : ''}`}
+          onClick={() => onReadingSortChange(key)}
         >
           {label}
         </button>
