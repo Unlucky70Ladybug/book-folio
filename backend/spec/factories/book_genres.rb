@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :book_genre do
-    bookshelf { nil }
-    genre { nil }
+    association :bookshelf
+    association :genre
   end
 end
