@@ -36,3 +36,21 @@ export const PREFERENCE_RATING_LABELS: Record<PreferenceRating, string> = {
   interesting: '面白い',
   favorite: 'お気に入り',
 }
+
+// 好み順の並べ替えタブ
+export const PREFERENCE_SORT_TABS = [
+  { key: 'registered', label: '登録順' },
+  { key: 'preference', label: '好み順' },
+] as const
+
+export type PreferenceSortKey = (typeof PREFERENCE_SORT_TABS)[number]['key']
+
+// 読書状況順の並べ替えタブ
+export const READING_SORT_TABS = [
+  { key: 'all', label: 'すべて' },
+  { key: 'finished', label: '読み終わった' },
+  { key: 'reading', label: '読書中' },
+  { key: 'interested', label: '気になる' },
+] as const
+
+export type ReadingSortKey = (typeof READING_SORT_TABS)[number]['key']
