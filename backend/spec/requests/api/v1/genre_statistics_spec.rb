@@ -46,12 +46,12 @@ RSpec.describe "Api::V1::GenreStatistics", type: :request do
         let(:horror) { create(:genre, name: "ホラー") }
         let(:politics_economy) { create(:genre, name: "政治・経済") }
         # 本棚登録
-        let!(:bookshelf_1) { create(:bookshelf, user: user, book: create(:book), genres: [sf]) }
-        let!(:bookshelf_2) { create(:bookshelf, user: user, book: create(:book), genres: [sf, mystery]) }
-        let!(:bookshelf_3) { create(:bookshelf, user: user, book: create(:book), genres: [horror]) }
-        let!(:bookshelf_4) { create(:bookshelf, user: user, book: create(:book), genres: [politics_economy]) }
+        let!(:bookshelf_1) { create(:bookshelf, user: user, book: create(:book), genres: [ sf ]) }
+        let!(:bookshelf_2) { create(:bookshelf, user: user, book: create(:book), genres: [ sf, mystery ]) }
+        let!(:bookshelf_3) { create(:bookshelf, user: user, book: create(:book), genres: [ horror ]) }
+        let!(:bookshelf_4) { create(:bookshelf, user: user, book: create(:book), genres: [ politics_economy ]) }
         # 他のユーザー
-        let!(:orther_bookshelf) { create(:bookshelf, user: create(:user), book: create(:book), genres: [sf])}
+        let!(:orther_bookshelf) { create(:bookshelf, user: create(:user), book: create(:book), genres: [ sf ]) }
         let!(:other_only_bookshelf) { create(:bookshelf, user: create(:user), book: create(:book), genres: [ create(:genre, name: "歴史") ]) }
 
         before { get '/api/v1/genre_statistics', headers: headers }
@@ -97,7 +97,7 @@ RSpec.describe "Api::V1::GenreStatistics", type: :request do
            books_by_genre = json['genres_books'].to_h do |genres_book|
             [ genres_book['name'], genres_book['books'].map { |book| book['id'] } ]
           end
-          expect(books_by_genre[sf.name]).not_to include( orther_bookshelf.book.id )
+          expect(books_by_genre[sf.name]).not_to include(orther_bookshelf.book.id)
         end
 
         it '他ユーザーのみが登録したジャンルは返ってこない' do

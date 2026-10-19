@@ -57,33 +57,33 @@ RSpec.describe "Api::V1::UserComparisons", type: :request do
         let!(:score_20_user) { add_bookshelves(create(:user), { sf => 1, horror => 4 }) } # スコア：20
 
         before {
-          #　カレントユーザーはSF100%
+          # 　カレントユーザーはSF100%
           create(:bookshelf, user: user, book: create(:book), genres: [ sf ])
           get '/api/v1/user_comparisons', headers: headers
         }
 
         it 'ユーザー診断結果から取得できるユーザー' do
-          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).to include( similar_user.id )
-          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).to include( middle_user.id )
-          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).to include( different_user.id )
+          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).to include(similar_user.id)
+          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).to include(middle_user.id)
+          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).to include(different_user.id)
         end
 
         it 'ユーザー診断結果から取得できないユーザー' do
-          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).not_to include( high_score_user.id, low_score_user.id )
-          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include( high_score_user.id, low_score_user.id )
-          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).not_to include( high_score_user.id, low_score_user.id )
+          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).not_to include(high_score_user.id, low_score_user.id)
+          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include(high_score_user.id, low_score_user.id)
+          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).not_to include(high_score_user.id, low_score_user.id)
         end
 
         it 'スコアが境界値のユーザーが正しい区分に含まれる' do
-          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).to include( score_80_user.id, score_60_user.id )
-          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include( score_60_user.id, score_40_user.id )
-          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).to include( score_40_user.id, score_20_user.id )
+          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).to include(score_80_user.id, score_60_user.id)
+          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include(score_60_user.id, score_40_user.id)
+          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).to include(score_40_user.id, score_20_user.id)
         end
 
         it 'ユーザー診断結果からカレントユーザーが取得されていないこと' do
-          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).not_to include( user.id )
-          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include( user.id )
-          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).not_to include( user.id )
+          expect(json['result']['similar_users'].map { |similar_user| similar_user['id'] }).not_to include(user.id)
+          expect(json['result']['middle_users'].map { |middle_user| middle_user['id'] }).not_to include(user.id)
+          expect(json['result']['different_users'].map { |different_user| different_user['id'] }).not_to include(user.id)
         end
 
         context '各区分に該当するユーザーが6人以上いる場合' do
