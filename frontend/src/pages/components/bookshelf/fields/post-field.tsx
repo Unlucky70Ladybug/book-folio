@@ -16,7 +16,7 @@ export const PostField = ({ value, onChange }: PostFieldProps) => {
   const { content, has_spoiler } = value
   const name = `${useId()}-has-spoiler`
   // コメントを書いたときだけネタバレ有無が必須になる
-  const isSpoilerRequired = content.trim() !== ''
+  const isSpoilerRequired = content !== ''
 
   // 選択中のボタンをもう一度押すと未選択に戻す
   const toggle = (optionValue: boolean) => {
