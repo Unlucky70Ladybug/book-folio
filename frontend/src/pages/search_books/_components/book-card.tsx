@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { type ApiBook } from '../../../types/book'
 import { type Genre } from '../../../types/genre'
 import AddToBookshelfButton from '../../components/bookshelf/add-to-bookshelf-button'
@@ -61,6 +62,14 @@ export default function BookCard({ book, genreList }: BookCardProps) {
             </a>
           )}
           <AddToBookshelfButton book={book} genreList={genreList} />
+          {/* コメント一覧ページで使うため、本の情報もstateで渡す */}
+          <Link
+            to={`/books/${book.isbn}/posts`}
+            state={{ book }}
+            className="btn btn-sm btn-ghost w-full"
+          >
+            コメントを見る
+          </Link>
         </div>
       </div>
     </div>

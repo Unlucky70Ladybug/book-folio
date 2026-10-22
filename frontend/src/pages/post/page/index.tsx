@@ -1,0 +1,167 @@
+import { useCallback, useEffect, useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
+import { type ApiBook } from '../../../types/book'
+import { type Genre } from '../../../types/genre'
+import { type PostsResponse } from '../../../types/post'
+import { getPostsResult } from '../_hooks/get-posts'
+import { searchBooks } from '../../search_books/_hooks/use-search-books'
+import { useGenres } from '../../bookshelf/_hooks/use-genres'
+import { useNotification } from '../../hooks/use-notification'
+import PostBookshelfForm from '../_components/post-bookshelf-form'
+import { EmptyState } from '../../components/empty-state'
+import Spinner from '../../components/layouts/ui/spinner'
+import defaultUserImage from '../../../assets/default_user_image.png'
+
+type BookPostsProps = {
+  book: ApiBook
+  genreList: Genre[]
+}
+
+// 本の登録フォームと、他のユーザーのコメント一覧を表示するページ
+const BookPosts = ({ book, genreList }: BookPostsProps) => {
+  const { notify } = useNotification()
+  const [postsResult, setPostsResult] = useState<PostsResponse | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  // 登録・更新後に増やしてコメントを取得し直す
+  const [reloadKey, setReloadKey] = useState(0)
+
+  useEffect(() => {
+    let ignore = false
+
+    getPostsResult(book.isbn)
+      .then((result) => {
+        if (!ignore) setPostsResult(result)
+      })
+      .catch((err) => {
+        if (!ignore)
+          notify(err instanceof Error ? err.message : 'コメントの取得に失敗しました', 'error')
+      })
+      .finally(() => {
+        if (!ignore) setIsLoading(false)
+      })
+
+    return () => {
+      ignore = true
+    }
+  }, [book.isbn, reloadKey, notify])
+
+  const reload = useCallback(() => setReloadKey((prev) => prev + 1), [])
+
+  if (isLoading) return <Spinner message="コメントを読み込み中" />
+
+  const currentUserInfo = postsResult?.current_user_info ?? null
+  const posts = postsResult?.posts ?? []
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* 本棚に登録するフォーム。取得した登録内容を初期値にするためkeyで作り直す */}
+      <PostBookshelfForm
+        key={currentUserInfo?.id ?? 'new'}
+        book={book}
+        genreList={genreList}
+        currentUserInfo={currentUserInfo}
+        onSaved={reload}
+      />
+
+      {/* コメント一覧 */}
+      <div className="card card-border bg-base-100 shadow-sm">
+        <div className="card-body">
+          <div className="flex items-center gap-2">
+            <h3 className="card-title text-lg">みんなのコメント</h3>
+            <span className="badge badge-primary badge-soft">{postsResult?.post_count ?? 0}件</span>
+          </div>
+
+          {posts.length === 0 ? (
+            <EmptyState
+              title="まだコメントがありません"
+              description="他のユーザーがコメントするとここに表示されます"
+            />
+          ) : (
+            <ul className="list">
+              {posts.map(({ user, genres, post }) => (
+                <li key={post.id} className="list-row items-start">
+                  <div className="avatar">
+                    <div className="w-10 rounded-full">
+                      <img
+                        src={user.avatar_image?.url ?? defaultUserImage}
+                        alt={`${user.name}さんのアイコン`}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex min-w-0 flex-col gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-semibold">{user.name}</p>
+                      {genres.map((genre) => (
+                        <span key={genre.id} className="badge badge-sm badge-ghost">
+                          {genre.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* ネタバレありのコメントは開いたときだけ表示する */}
+                    {post.has_spoiler ? (
+                      <details className="collapse collapse-arrow border border-warning/40 bg-warning/5">
+                        <summary className="collapse-title py-2 text-sm text-warning">
+                          ネタバレを含むコメントを表示
+                        </summary>
+                        <p className="collapse-content text-sm break-words whitespace-pre-wrap">
+                          {post.content}
+                        </p>
+                      </details>
+                    ) : (
+                      <p className="text-sm break-words whitespace-pre-wrap">{post.content}</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// /books/:isbn/posts のページ。検索結果から渡された本を使い、無ければ(直接アクセス・リロード時)ISBNで検索する
+const BookPostsPage = () => {
+  const { isbn = '' } = useParams<{ isbn: string }>()
+  const location = useLocation()
+  const { notify } = useNotification()
+  const genreList = useGenres()
+  const stateBook = (location.state as { book?: ApiBook } | null)?.book
+  const [fetchedBook, setFetchedBook] = useState<ApiBook | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(!stateBook)
+
+  useEffect(() => {
+    if (stateBook) return
+    let ignore = false
+
+    searchBooks('isbn', isbn)
+      .then((books) => {
+        if (!ignore) setFetchedBook(books[0] ?? null)
+      })
+      .catch((err) => {
+        if (!ignore) notify(err instanceof Error ? err.message : '本の取得に失敗しました', 'error')
+      })
+      .finally(() => {
+        if (!ignore) setIsLoading(false)
+      })
+
+    return () => {
+      ignore = true
+    }
+  }, [isbn, stateBook, notify])
+
+  const book = stateBook ?? fetchedBook
+
+  if (isLoading) return <Spinner message="本の情報を読み込み中" />
+  if (!book)
+    return (
+      <EmptyState title="本が見つかりません" description="検索画面から本を選び直してください" />
+    )
+
+  return <BookPosts book={book} genreList={genreList} />
+}
+
+export default BookPostsPage
