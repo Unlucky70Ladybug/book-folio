@@ -20,7 +20,6 @@ type PostBookshelfFormProps = {
   genreList: Genre[]
   // 本棚に未登録のときはnull
   currentUserInfo: BookshelfPost | null
-  onSaved: () => void
 }
 
 // 本棚への登録(登録済みなら更新)フォーム。ページ冒頭に直接表示する
@@ -28,7 +27,6 @@ export default function PostBookshelfForm({
   book,
   genreList,
   currentUserInfo,
-  onSaved,
 }: PostBookshelfFormProps) {
   const { notify } = useNotification()
   // 読書状況・ジャンルは必須のため、未選択の間は登録できない
@@ -65,7 +63,6 @@ export default function PostBookshelfForm({
         await createBookshelf(book, readingStatus, preferenceRating, genreIds, post)
       }
       notify(`「${book.title}」を本棚に登録しました`, 'success')
-      onSaved()
     } catch (err) {
       notify(err instanceof Error ? err.message : '本棚への登録に失敗しました', 'error')
     } finally {

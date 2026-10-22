@@ -22,8 +22,6 @@ const BookPosts = ({ book, genreList }: BookPostsProps) => {
   const { notify } = useNotification()
   const [postsResult, setPostsResult] = useState<PostsResponse | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  // 登録・更新後に増やしてコメントを取得し直す
-  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     let ignore = false
@@ -43,9 +41,7 @@ const BookPosts = ({ book, genreList }: BookPostsProps) => {
     return () => {
       ignore = true
     }
-  }, [book.isbn, reloadKey, notify])
-
-  const reload = useCallback(() => setReloadKey((prev) => prev + 1), [])
+  }, [book.isbn, notify])
 
   if (isLoading) return <Spinner message="コメントを読み込み中" />
 
@@ -60,7 +56,6 @@ const BookPosts = ({ book, genreList }: BookPostsProps) => {
         book={book}
         genreList={genreList}
         currentUserInfo={currentUserInfo}
-        onSaved={reload}
       />
 
       {/* コメント一覧 */}
