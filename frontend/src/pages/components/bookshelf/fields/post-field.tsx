@@ -25,7 +25,8 @@ export const PostField = ({ value, onChange }: PostFieldProps) => {
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend flex-wrap">
+      {/* 横に並べる要素があるときは、右端に寄せられるよう見出しを全幅にする */}
+      <legend className={`fieldset-legend flex-wrap`}>
         コメント
         <span className="badge badge-xs badge-ghost rounded-sm">任意</span>
         {SPOILER_OPTIONS.map(({ value: optionValue, label, color }) => (
