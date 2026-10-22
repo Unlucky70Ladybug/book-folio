@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { type ApiBook } from '../../../types/book'
 import { type PostsResponse } from '../../../types/post'
 import { getPostsResult } from '../_hooks/get-posts'
