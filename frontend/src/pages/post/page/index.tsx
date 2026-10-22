@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { type ApiBook } from '../../../types/book'
-import { type Genre } from '../../../types/genre'
 import { type PostsResponse } from '../../../types/post'
 import { getPostsResult } from '../_hooks/get-posts'
-import { searchBooks } from '../../search_books/_hooks/use-search-books'
 import { useGenres } from '../../bookshelf/_hooks/use-genres'
 import { useNotification } from '../../hooks/use-notification'
 import PostBookshelfForm from '../_components/post-bookshelf-form'
@@ -12,18 +10,19 @@ import { EmptyState } from '../../components/empty-state'
 import Spinner from '../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
-type BookPostsProps = {
-  book: ApiBook
-  genreList: Genre[]
-}
-
 // 本の登録フォームと、他のユーザーのコメント一覧を表示するページ
-const BookPosts = ({ book, genreList }: BookPostsProps) => {
+const BookPosts = () => {
   const { notify } = useNotification()
+  const location = useLocation()
+  // URLを直接開いた場合はstateが無いのでundefinedになる
+  const book: ApiBook | undefined = location.state?.book
+  const genreList = useGenres()
   const [postsResult, setPostsResult] = useState<PostsResponse | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(!!book)
 
   useEffect(() => {
+    if (!book) return
+
     let ignore = false
 
     getPostsResult(book.isbn)
@@ -41,7 +40,12 @@ const BookPosts = ({ book, genreList }: BookPostsProps) => {
     return () => {
       ignore = true
     }
-  }, [book.isbn, notify])
+  }, [book, notify])
+
+  if (!book)
+    return (
+      <EmptyState title="本が見つかりません" description="検索画面から本を選び直してください" />
+    )
 
   if (isLoading) return <Spinner message="コメントを読み込み中" />
 
@@ -118,45 +122,4 @@ const BookPosts = ({ book, genreList }: BookPostsProps) => {
   )
 }
 
-// /books/:isbn/posts のページ。検索結果から渡された本を使い、無ければ(直接アクセス・リロード時)ISBNで検索する
-const BookPostsPage = () => {
-  const { isbn = '' } = useParams<{ isbn: string }>()
-  const location = useLocation()
-  const { notify } = useNotification()
-  const genreList = useGenres()
-  const stateBook = (location.state as { book?: ApiBook } | null)?.book
-  const [fetchedBook, setFetchedBook] = useState<ApiBook | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(!stateBook)
-
-  useEffect(() => {
-    if (stateBook) return
-    let ignore = false
-
-    searchBooks('isbn', isbn)
-      .then((books) => {
-        if (!ignore) setFetchedBook(books[0] ?? null)
-      })
-      .catch((err) => {
-        if (!ignore) notify(err instanceof Error ? err.message : '本の取得に失敗しました', 'error')
-      })
-      .finally(() => {
-        if (!ignore) setIsLoading(false)
-      })
-
-    return () => {
-      ignore = true
-    }
-  }, [isbn, stateBook, notify])
-
-  const book = stateBook ?? fetchedBook
-
-  if (isLoading) return <Spinner message="本の情報を読み込み中" />
-  if (!book)
-    return (
-      <EmptyState title="本が見つかりません" description="検索画面から本を選び直してください" />
-    )
-
-  return <BookPosts book={book} genreList={genreList} />
-}
-
-export default BookPostsPage
+export default BookPosts
