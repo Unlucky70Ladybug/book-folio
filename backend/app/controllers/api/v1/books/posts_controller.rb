@@ -13,7 +13,7 @@ class Api::V1::Books::PostsController < ApplicationController
     render json: {
       current_user_info: current_user_info && BookshelfFormSerializer.new(current_user_info).as_json,
       posts: bookshelves && ActiveModelSerializers::SerializableResource.new(bookshelves, each_serializer: PostsIndexSerializer).as_json,
-      post_count: bookshelves.size + (current_user_info&.post ? 1 : 0)
+      post_count: bookshelves.size
   }
   end
 end
