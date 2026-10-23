@@ -96,27 +96,43 @@ export default function PostBookshelfForm({
 
   return (
     <dialog ref={dialogRef} className="modal" onClose={reset}>
-      <div className="modal-box w-11/12 max-w-2xl">
+      <div className="modal-box w-11/12 max-w-3xl">
         <h3 className="text-lg font-bold">
           {isRegistered ? '本棚の登録内容を編集' : '本棚に登録'}
         </h3>
 
         <form onSubmit={handleSubmit}>
-          <div className="mt-4 flex flex-col gap-4">
-            <div>
-              <p className="line-clamp-2 font-semibold">{book.title}</p>
-              <p className="text-sm text-base-content/70">{book.author}</p>
+          <div className="mt-4 flex flex-col-reverse gap-5 sm:flex-row">
+            {/* 左側：入力欄 */}
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+              <div>
+                <p className="line-clamp-2 font-semibold">{book.title}</p>
+                <p className="text-sm text-base-content/70">{book.author}</p>
+              </div>
+
+              <ReadingStatusField value={readingStatus} onChange={setReadingStatus} />
+              <GenreField
+                key={resetKey}
+                genreList={genreList}
+                value={genreIds}
+                onChange={setGenreIds}
+              />
+              <PreferenceRatingField value={preferenceRating} onChange={setPreferenceRating} />
+              <PostField value={postDraft} onChange={setPostDraft} />
             </div>
 
-            <ReadingStatusField value={readingStatus} onChange={setReadingStatus} />
-            <GenreField
-              key={resetKey}
-              genreList={genreList}
-              value={genreIds}
-              onChange={setGenreIds}
-            />
-            <PreferenceRatingField value={preferenceRating} onChange={setPreferenceRating} />
-            <PostField value={postDraft} onChange={setPostDraft} />
+            {/* 右側：書影 */}
+            <figure className="flex h-[200px] w-[150px] shrink-0 items-center justify-center self-center rounded-box bg-base-200 sm:self-start">
+              {book.image_url ? (
+                <img
+                  src={book.image_url}
+                  alt={book.title}
+                  className="h-full w-full object-contain p-2"
+                />
+              ) : (
+                <span className="text-xs text-base-content/50">No Image</span>
+              )}
+            </figure>
           </div>
 
           <div className="modal-action">
