@@ -6,6 +6,7 @@ import { getPostsResult } from '../_hooks/get-posts'
 import { useGenres } from '../../bookshelf/_hooks/use-genres'
 import { useNotification } from '../../hooks/use-notification'
 import PostBookshelfForm from '../_components/post-bookshelf-form'
+import { PostComment } from '../_components/post-comment'
 import { EmptyState } from '../../components/empty-state'
 import Spinner from '../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../assets/default_user_image.png'
@@ -110,7 +111,7 @@ const BookPosts = () => {
               <ul className="list">
                 {posts.map(({ user, genres, post }) => (
                   <li key={post.id} className="list-row items-start">
-                    <div className="avatar">
+                    <div className="avatar self-start">
                       <div className="w-10 rounded-full">
                         <img
                           src={user.avatar_image?.url ?? defaultUserImage}
@@ -119,29 +120,20 @@ const BookPosts = () => {
                       </div>
                     </div>
 
-                    <div className="flex min-w-0 flex-col gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-semibold">{user.name}</p>
-                        {genres.map((genre) => (
-                          <span key={genre.id} className="badge badge-sm badge-ghost">
-                            {genre.name}
-                          </span>
-                        ))}
+                    <div className="list-col-grow flex min-w-0 flex-col gap-2">
+                      {/* ユーザー名の右側にジャンルを並べる */}
+                      <div className="flex items-center gap-2">
+                        <p className="shrink-0 font-semibold">{user.name}</p>
+                        <div className="flex min-w-0 flex-wrap gap-1">
+                          {genres.map((genre) => (
+                            <span key={genre.id} className="badge badge-sm badge-ghost">
+                              {genre.name}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
-                      {/* ネタバレありのコメントは開いたときだけ表示する */}
-                      {post.has_spoiler ? (
-                        <details className="collapse collapse-arrow border border-warning/40 bg-warning/5">
-                          <summary className="collapse-title py-2 text-sm text-warning">
-                            ネタバレを含むコメントを表示
-                          </summary>
-                          <p className="collapse-content text-sm break-words whitespace-pre-wrap">
-                            {post.content}
-                          </p>
-                        </details>
-                      ) : (
-                        <p className="text-sm break-words whitespace-pre-wrap">{post.content}</p>
-                      )}
+                      <PostComment content={post.content} hasSpoiler={!!post.has_spoiler} />
                     </div>
                   </li>
                 ))}
