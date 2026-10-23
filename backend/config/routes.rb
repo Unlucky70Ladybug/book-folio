@@ -23,6 +23,9 @@ Rails.application.routes.draw do
       resources :genre_statistics, only: [ :index ]
       resources :author_statistics, only: [ :index ]
       resources :user_comparisons, only: [ :index ]
+      resources :books, param: :isbn, only: [] do
+        resources :posts, only: [ :index ], module: :books # Books 名前空間のコントローラを使う
+      end
     end
   end
 

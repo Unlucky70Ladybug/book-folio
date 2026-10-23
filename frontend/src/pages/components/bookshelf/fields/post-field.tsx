@@ -16,7 +16,7 @@ export const PostField = ({ value, onChange }: PostFieldProps) => {
   const { content, has_spoiler } = value
   const name = `${useId()}-has-spoiler`
   // コメントを書いたときだけネタバレ有無が必須になる
-  const isSpoilerRequired = content.trim() !== ''
+  const isSpoilerRequired = content !== ''
 
   // 選択中のボタンをもう一度押すと未選択に戻す
   const toggle = (optionValue: boolean) => {
@@ -25,7 +25,8 @@ export const PostField = ({ value, onChange }: PostFieldProps) => {
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend flex-wrap">
+      {/* 横に並べる要素があるときは、右端に寄せられるよう見出しを全幅にする */}
+      <legend className={`fieldset-legend flex-wrap`}>
         コメント
         <span className="badge badge-xs badge-ghost rounded-sm">任意</span>
         {SPOILER_OPTIONS.map(({ value: optionValue, label, color }) => (

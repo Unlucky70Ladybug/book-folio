@@ -19,6 +19,15 @@ export type BookshelfForPreference = {
   book: DisplayBook
 }
 
+export type BookshelfPost = {
+  id: number
+  reading_status: ReadingStatus
+  preference_rating: PreferenceRating
+  genres: Genre[]
+  // コメント未登録のときはnull
+  post: Post | null
+}
+
 export type ReadingStatus = 'interested' | 'reading' | 'finished'
 
 export type PreferenceRating = 'unrated' | 'not_for_me' | 'normal' | 'interesting' | 'favorite'

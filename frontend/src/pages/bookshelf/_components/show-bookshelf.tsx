@@ -1,4 +1,5 @@
 import { useRef, useState, type RefObject } from 'react'
+import { Link } from 'react-router-dom'
 import { type Bookshelf, type PreferenceRating, type ReadingStatus } from '../../../types/bookshelf'
 import { type Genre } from '../../../types/genre'
 import { updateBookshelf } from '../_hooks/update-bookshelf'
@@ -114,18 +115,27 @@ export default function ShowBookshelfModal({
               <PostField value={postDraft} onChange={setPostDraft} />
             </div>
 
-            {/* 右側：書影 */}
-            <figure className="flex h-[200px] w-[150px] shrink-0 items-center justify-center self-center rounded-box bg-base-200 sm:self-start">
-              {book.large_image_url ? (
-                <img
-                  src={book.large_image_url}
-                  alt={book.title}
-                  className="h-full w-full object-contain p-2"
-                />
-              ) : (
-                <span className="text-xs text-base-content/50">No Image</span>
-              )}
-            </figure>
+            {/* 右側：書影とコメントへのリンク */}
+            <div className="flex w-[150px] shrink-0 flex-col gap-2 self-center sm:self-start">
+              <figure className="flex h-[200px] w-full items-center justify-center rounded-box bg-base-200">
+                {book.large_image_url ? (
+                  <img
+                    src={book.large_image_url}
+                    alt={book.title}
+                    className="h-full w-full object-contain p-2"
+                  />
+                ) : (
+                  <span className="text-xs text-base-content/50">No Image</span>
+                )}
+              </figure>
+              <Link
+                to={`/books/${book.isbn}/posts`}
+                state={{ book: { ...book, image_url: book.large_image_url } }}
+                className="btn btn-sm btn-ghost w-full"
+              >
+                コメントを見る
+              </Link>
+            </div>
           </div>
 
           <div className="modal-action">
