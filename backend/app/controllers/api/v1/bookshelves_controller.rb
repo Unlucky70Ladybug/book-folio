@@ -7,8 +7,12 @@ class Api::V1::BookshelvesController < ApplicationController
   end
 
   def show
-    bookshelves = User.find(params[:id]).bookshelves.preload(:book, :genres, :post).order(created_at: :desc)
-    render json: bookshelves, each_serializer: BookshelfSerializer, root: "books", adapter: :json
+    user = User.find(params[:id])
+    bookshelves = user.bookshelves.preload(:book, :genres, :post).order(created_at: :desc)
+    render json: {
+      user: user && UserSerializer.new(user).as_json,
+      bookshelves: bookshelves && ActiveModelSerializers::SerializableResource.new(bookshelves, each_serializer: BookshelfSerializer).as_json
+    }
   end
 
   def create
