@@ -18,7 +18,7 @@ import UndiagnosedUpdate from './pages/preference/page/update/undiagnosed'
 import NotFound from './pages/components/layouts/NotFound'
 import GenreStatistic from './pages/genre_statistic/page'
 import AuthorStatistic from './pages/author_statistic/page'
-import BookPostsPage from './pages/post/page'
+import BookPosts from './pages/post/page'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -39,7 +39,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/author-statistic" element={<AuthorStatistic />} />
               <Route path="/search_book" element={<SearchBook />} />
               <Route path="/bookshelf" element={<BookshelfPage />} />
-              <Route path="/books/:isbn/posts" element={<BookPostsPage />} />
+              <Route path="/books/:isbn/posts" element={<BookPosts />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
