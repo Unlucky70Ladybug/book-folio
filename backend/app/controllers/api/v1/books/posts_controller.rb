@@ -3,7 +3,7 @@ class Api::V1::Books::PostsController < ApplicationController
 
   def index
     book = Book.find_by(isbn: params[:book_isbn])
-    return render json: { current_user_info: nil, posts: nil, post_count: 0} unless book
+    return render json: { current_user_info: nil, posts: nil, post_count: 0 } unless book
     bookshelves = book.bookshelves
                       .where.not(user: current_user)
                       .where.associated(:post)

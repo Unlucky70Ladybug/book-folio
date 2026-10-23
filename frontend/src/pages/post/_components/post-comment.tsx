@@ -16,7 +16,6 @@ export const PostComment = ({ content, hasSpoiler }: PostCommentProps) => {
   useLayoutEffect(() => {
     const el = textRef.current
     if (!el || isExpanded) return
-    console.log("el:", el)
 
     const measure = () => setIsOverflowing(el.scrollHeight > el.clientHeight)
     measure()
