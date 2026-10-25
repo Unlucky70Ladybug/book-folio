@@ -6,6 +6,15 @@ class Api::V1::BookshelvesController < ApplicationController
     render json: bookshelves, each_serializer: BookshelfSerializer, root: "books", adapter: :json
   end
 
+  def show
+    user = User.find(params[:id])
+    bookshelves = user.bookshelves.preload(:book, :genres, :post).order(created_at: :desc)
+    render json: {
+      user: user && UserSerializer.new(user).as_json,
+      bookshelves: bookshelves && ActiveModelSerializers::SerializableResource.new(bookshelves, each_serializer: BookshelfSerializer).as_json
+    }
+  end
+
   def create
     # 「!」を付けることで、念のためバリデーションエラーに引っかかることにする
     book = Book.find_or_create_by!(isbn: bookshelf_params[:book][:isbn]) do | new_book |
