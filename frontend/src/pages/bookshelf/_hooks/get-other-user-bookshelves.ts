@@ -1,7 +1,7 @@
 import { type OtherUserBookshelves } from '../../../types/bookshelf'
 import Cookies from 'js-cookie'
 
-export const getOtherUserBookshelves = async (id: number): Promise<OtherUserBookshelves> => {
+export const getOtherUserBookshelves = async (id: string): Promise<OtherUserBookshelves> => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/bookshelves/${id}`, {
     headers: {
       'Content-Type': 'application/json',
