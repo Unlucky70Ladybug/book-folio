@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { type ApiBook } from '../../../types/book'
 import { type PostsResponse } from '../../../types/post'
 import { getPostsResult } from '../_hooks/get-posts'
@@ -111,19 +111,26 @@ const BookPosts = () => {
               <ul className="list">
                 {posts.map(({ user, genres, post }) => (
                   <li key={post.id} className="list-row items-start">
-                    <div className="avatar self-start">
+                    {/* アイコンからもその人の本棚へ移動できるようにする */}
+                    <Link to={`/bookshelf/${user.id}`} className="avatar self-start">
                       <div className="w-10 rounded-full">
                         <img
                           src={user.avatar_image?.url ?? defaultUserImage}
                           alt={`${user.name}さんのアイコン`}
                         />
                       </div>
-                    </div>
+                    </Link>
 
                     <div className="list-col-grow flex min-w-0 flex-col gap-2">
                       {/* ユーザー名の右側にジャンルを並べる */}
                       <div className="flex items-center gap-2">
-                        <p className="shrink-0 font-semibold">{user.name}</p>
+                        {/* ユーザー名からその人の本棚へ移動できるようにする */}
+                        <Link
+                          to={`/bookshelf/${user.id}`}
+                          className="link link-hover shrink-0 font-semibold"
+                        >
+                          {user.name}
+                        </Link>
                         <div className="flex min-w-0 flex-wrap gap-1">
                           {genres.map((genre) => (
                             <span key={genre.id} className="badge badge-sm badge-ghost">
