@@ -64,9 +64,9 @@ const OtherUserBookshelfPage = () => {
         setBookshelves(bookshelvesResult.bookshelves)
         setGenreList(genresResult)
       })
-      .catch((err) => {
+      .catch(() => {
         if (ignore) return
-        notify(err instanceof Error ? err.message : '本棚の表示に失敗しました', 'error')
+        notify('本棚が存在しませんでした', 'error')
         setIsNotFound(true)
       })
       .finally(() => {
