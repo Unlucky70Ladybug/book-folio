@@ -12,7 +12,8 @@ import { AuthProvider } from './pages/providers/auth-provides'
 import NotificationBar from './pages/components/notification-bar'
 import { NotificationProvider } from './pages/providers/notification-provider'
 import SearchBook from './pages/search_books/search-books'
-import BookshelfPage from './pages/bookshelf/page'
+import BookshelfPage from './pages/bookshelf/page/index'
+import OtherUserBookshelfPage from './pages/bookshelf/page/show'
 import PreferenceResult from './pages/preference/page/index'
 import UndiagnosedUpdate from './pages/preference/page/update/undiagnosed'
 import NotFound from './pages/components/layouts/NotFound'
@@ -39,6 +40,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/author-statistic" element={<AuthorStatistic />} />
               <Route path="/search_book" element={<SearchBook />} />
               <Route path="/bookshelf" element={<BookshelfPage />} />
+              <Route path="/bookshelf/:id" element={<OtherUserBookshelfPage />} />
               <Route path="/books/:isbn/posts" element={<BookPosts />} />
             </Route>
             <Route path="*" element={<NotFound />} />

@@ -1,3 +1,4 @@
+import { type User } from './user'
 import { type DisplayBook } from './book'
 import { type Genre } from './genre'
 import { type Post } from './post'
@@ -17,6 +18,11 @@ export type BookshelfForPreference = {
   reading_status: ReadingStatus
   preference_rating: PreferenceRating
   book: DisplayBook
+}
+
+export type OtherUserBookshelves = {
+  user: User
+  bookshelves: Bookshelf[]
 }
 
 export type BookshelfPost = {
