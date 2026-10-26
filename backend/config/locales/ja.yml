@@ -82,8 +82,10 @@ ja:
               taken: "はすでに本棚に登録されています"
             reading_status:
               blank: "を選択してください"
+              inclusion: "を選択してください"
             preference_rating:
               blank: "を選択してください"
+              inclusion: "を選択してください"
         post:
           attributes:
             bookshelf:
@@ -124,3 +126,20 @@ ja:
       max_size_error: "ファイルサイズは%{max_size}以下にしてください"
       extension_allowlist_error: "%{extension}は許可されていないファイル形式です。許可されている形式: %{allowed_types}"
       carrierwave_integrity_error: "は許可されていないファイル形式です"
+      not_found: "対象のデータが見つかりません"
+      parameter_missing: "必要なパラメータが不足しています"
+
+  auth:
+    sessions:
+      user_not_found: "ユーザーが存在しません"
+
+  api:
+    search_books:
+      keyword_blank: "検索内容を入れてください"
+      search_failed: "書籍検索に失敗しました"
+      too_many_requests: "リクエストが多すぎます。しばらくしてから再度お試しください"
+    bookshelves:
+      already_registered: "既に登録されています"
+      invalid_genre: "不正なジャンルです"
+    preferences:
+      invalid_rating: "不正な評価です"
