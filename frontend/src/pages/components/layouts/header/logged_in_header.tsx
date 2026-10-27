@@ -44,8 +44,8 @@ const LoggedInHeader = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-base-300 bg-base-100">
-      <div className="navbar px-4 sm:px-8">
+    <header className="sticky top-0 z-50 mb-12 border-b border-base-300 bg-base-100">
+      <div className="navbar relative z-10 bg-base-100 px-4 sm:px-8">
         <div className="flex-1">
           <Link
             to="/"
@@ -87,23 +87,19 @@ const LoggedInHeader = () => {
       </div>
 
       <div
-        className={`overflow-hidden border-base-300 transition-[height] duration-300 ease-out ${
-          isSecondRowVisible ? 'h-12 border-t' : 'h-0'
+        inert={!isSecondRowVisible}
+        aria-hidden={!isSecondRowVisible}
+        className={`absolute inset-x-0 top-full flex h-12 items-center gap-2 border-y border-base-300 bg-base-100 px-4 sm:px-8 transition-transform duration-300 ease-out ${
+          isSecondRowVisible ? 'translate-y-0' : 'pointer-events-none -translate-y-full'
         }`}
       >
-        <div
-          className={`flex h-12 items-center gap-2 px-4 sm:px-8 transition-transform duration-300 ease-out ${
-            isSecondRowVisible ? 'translate-y-0' : '-translate-y-full'
-          }`}
-        >
-          <Link to="/genre-statistic" className="btn btn-ghost btn-sm">
-            読書分析
-          </Link>
+        <Link to="/genre-statistic" className="btn btn-ghost btn-sm">
+          読書分析
+        </Link>
 
-          <Link to="/preference" className="btn btn-ghost btn-sm">
-            好み診断
-          </Link>
-        </div>
+        <Link to="/preference" className="btn btn-ghost btn-sm">
+          好み診断
+        </Link>
       </div>
     </header>
   )
