@@ -28,23 +28,25 @@ createRoot(document.getElementById('root')!).render(
         <Router>
           <Header />
           <NotificationBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/login" element={<LoginPage />} />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
-            <Route element={<PrivateRoute />}>
-              <Route path="/preference" element={<PreferenceResult />} />
-              <Route path="/preference/update" element={<UndiagnosedUpdate />} />
-              <Route path="/genre-statistic" element={<GenreStatistic />} />
-              <Route path="/author-statistic" element={<AuthorStatistic />} />
-              <Route path="/search_book" element={<SearchBook />} />
-              <Route path="/bookshelf" element={<BookshelfPage />} />
-              <Route path="/bookshelf/:id" element={<OtherUserBookshelfPage />} />
-              <Route path="/books/:isbn/posts" element={<BookPosts />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route element={<PrivateRoute />}>
+                <Route path="/preference" element={<PreferenceResult />} />
+                <Route path="/preference/update" element={<UndiagnosedUpdate />} />
+                <Route path="/genre-statistic" element={<GenreStatistic />} />
+                <Route path="/author-statistic" element={<AuthorStatistic />} />
+                <Route path="/search_book" element={<SearchBook />} />
+                <Route path="/bookshelf" element={<BookshelfPage />} />
+                <Route path="/bookshelf/:id" element={<OtherUserBookshelfPage />} />
+                <Route path="/books/:isbn/posts" element={<BookPosts />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
           <Footer />
         </Router>
       </NotificationProvider>
