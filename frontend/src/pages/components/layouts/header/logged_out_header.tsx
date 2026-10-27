@@ -4,10 +4,7 @@ const LoggedOutHeader = () => {
   return (
     <header className="navbar bg-base-100 border-b border-base-300 px-4 sm:px-8">
       <div className="flex-1">
-        <Link
-          to="/"
-          className="rounded-full px-4 py-1.5 text-lg font-medium tracking-wide text-primary"
-        >
+        <Link to="/" className="text-lg font-medium tracking-wide text-primary">
           BookFolio
         </Link>
       </div>
