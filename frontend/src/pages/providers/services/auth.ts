@@ -14,7 +14,7 @@ export const signup = async (data: {
   formData.append('email', data.email)
   formData.append('password', data.password)
   formData.append('password_confirmation', data.passwordConfirmation)
-  formData.append('confirm_success_url', import.meta.env.VITE_FRONTEND_URL)
+  formData.append('confirm_success_url', import.meta.env.VITE_CONFIRM_SUCCESS_URL)
   if (data.avatarImage) {
     formData.append('avatar_image', data.avatarImage)
   }
