@@ -47,10 +47,7 @@ const LoggedInHeader = () => {
     <header className="sticky top-0 z-50 mb-12 border-b border-base-300 bg-base-100">
       <div className="navbar relative z-10 bg-base-100 px-4 sm:px-8">
         <div className="flex-1">
-          <Link
-            to="/"
-            className="text-lg font-medium tracking-wide text-primary"
-          >
+          <Link to="/" className="text-lg font-medium tracking-wide text-primary">
             BookFolio
           </Link>
         </div>
