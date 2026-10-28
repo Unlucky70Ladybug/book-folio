@@ -114,7 +114,10 @@ const BookPosts = () => {
                     {/* アイコンからもその人の本棚へ移動できるようにする */}
                     <Link to={`/bookshelf/${user.id}`} className="avatar self-start">
                       <div className="w-10 rounded-full">
-                        <img src={user.avatar_image?.url ?? defaultUserImage} alt={`${user.name}さんのアイコン`} />
+                        <img
+                          src={user.avatar_image?.url ?? defaultUserImage}
+                          alt={`${user.name}さんのアイコン`}
+                        />
                       </div>
                     </Link>
 

@@ -50,10 +50,7 @@ export const UserComparisonTabs = ({ users }: UserComparisonTabsProps) => {
                   <img src={avatar_image?.url ?? defaultUserImage} alt={`${name}さんのアイコン`} />
                 </div>
               </Link>
-              <Link
-                to={`/bookshelf/${id}`}
-                className="link link-hover shrink-0 font-semibold"
-              >
+              <Link to={`/bookshelf/${id}`} className="link link-hover shrink-0 font-semibold">
                 {name}
               </Link>
             </li>
