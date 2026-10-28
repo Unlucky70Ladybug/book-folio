@@ -48,6 +48,9 @@ const BookshelfPage = () => {
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
 
+  // この本の所有権はない
+  const isOwner = true
+
   useEffect(() => {
     let ignore = false
 
@@ -196,6 +199,7 @@ const BookshelfPage = () => {
                     rowHeight={SHELF_ROW_HEIGHT}
                     boardHeight={SHELF_BOARD_HEIGHT}
                     onUpdated={handleUpdated}
+                    isOwner={isOwner}
                   />
                 ))}
               </ul>
