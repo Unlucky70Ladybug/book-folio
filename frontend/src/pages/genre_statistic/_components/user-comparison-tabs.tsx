@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { type ComparisonUser, type SimilarUser } from '../../../types/user'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
@@ -44,12 +45,14 @@ export const UserComparisonTabs = ({ users }: UserComparisonTabsProps) => {
         <ul className="list rounded-box bg-base-100">
           {activeUsers.map(({ id, name, avatar_image }) => (
             <li key={id} className="list-row items-center py-2">
-              <div className="avatar">
+              <Link to={`/bookshelf/${id}`} className="avatar">
                 <div className="w-8 rounded-full">
                   <img src={avatar_image?.url ?? defaultUserImage} alt={`${name}さんのアイコン`} />
                 </div>
-              </div>
-              <span className="truncate text-sm">{name}</span>
+              </Link>
+              <Link to={`/bookshelf/${id}`} className="link link-hover shrink-0 font-semibold">
+                {name}
+              </Link>
             </li>
           ))}
         </ul>

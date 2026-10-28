@@ -45,6 +45,8 @@ const OtherUserBookshelfPage = () => {
   const [genreList, setGenreList] = useState<Genre[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isNotFound, setIsNotFound] = useState<boolean>(false)
+  // この本の所有権はない
+  const isOwner = false
 
   // 並べ替え基準
   const [preferenceSortKey, setPreferenceKey] = useState<PreferenceSortKey>('registered')
@@ -206,6 +208,7 @@ const OtherUserBookshelfPage = () => {
                     rowHeight={SHELF_ROW_HEIGHT}
                     boardHeight={SHELF_BOARD_HEIGHT}
                     onUpdated={handleUpdated}
+                    isOwner={isOwner}
                   />
                 ))}
               </ul>
