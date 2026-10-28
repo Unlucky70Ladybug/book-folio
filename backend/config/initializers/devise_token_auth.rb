@@ -66,9 +66,9 @@ DeviseTokenAuth.setup do |config|
 
   # confirm_success_url / redirect_url として許可するURLのホワイトリスト。
   # 未設定だとオープンリダイレクトの脆弱性になるため必ず設定する。
-  config.redirect_whitelist = [ ENV.fetch("FRONTEND_URL") ]
+  config.redirect_whitelist = [ ENV.fetch("FRONTEND_URL"), ENV.fetch("CONFIRM_SUCCESS_URL") ]
 
   # 確認メールのリンクにredirect_urlが付与されなかった場合のフォールバック先。
   # 未設定だとConfirmationsController#showでURI.parse(nil)が発生し500エラーになる。
-  config.default_confirm_success_url = ENV.fetch("FRONTEND_URL")
+  config.default_confirm_success_url = ENV.fetch("CONFIRM_SUCCESS_URL")
 end
