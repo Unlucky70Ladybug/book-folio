@@ -123,7 +123,13 @@ reading_patterns = [
 ]
 
 # 本を先頭のジャンルごとに分類する
-# 例： { "ミステリー・サスペンス" => [十角館の殺人, 方舟, ...], "SF" => [...], ... }
+# {
+#   "ミステリー・サスペンス" => [
+#     { isbn: "9784062758574", title: "十角館の殺人　＜新装改訂版＞", author: "綾辻 行人", item_url: "...", large_image_url: "...", genres: ["ミステリー・サスペンス"] },
+#     { isbn: "9784065358542", title: "方舟", author: "夕木 春央", item_url: "...", large_image_url: "...", genres: ["ミステリー・サスペンス"] },
+#   ],
+#   "SF" => [ ... ],
+# }
 book_queues = book_seeds.group_by { |attrs| attrs[:genres].first }
 
 users.each_with_index do |user, user_index|
