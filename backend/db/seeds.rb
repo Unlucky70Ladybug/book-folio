@@ -10,10 +10,10 @@
 
 # Userモデルにデータ登録する
 users = Array.new(10) do |i|
-  User.find_or_create_by!(email: "user_#{i}@example.com") do |user|
+  User.find_or_create_by!(email: "user_#{i + 1}@example.com") do |user|
     password = SecureRandom.alphanumeric(32)
-    user.name = "ユーザー#{i}"
-    user.email = "user_#{i}@example.com"
+    user.name = "ユーザー#{i + 1}"
+    user.email = "user_#{i + 1}@example.com"
     user.password = password
     user.password_confirmation = password
     user.confirmed_at = Time.current
