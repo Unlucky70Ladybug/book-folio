@@ -70,9 +70,9 @@ const LoggedInHeader = () => {
               tabIndex={0}
               className="menu dropdown-content z-1 mt-3 w-48 rounded-box bg-base-100 p-2 shadow"
             >
-              <li>
+              {/* <li>
                 <Link to="/mypage">マイページ</Link>
-              </li>
+              </li> */}
               <li>
                 <button type="button" onClick={handleLogout}>
                   ログアウト

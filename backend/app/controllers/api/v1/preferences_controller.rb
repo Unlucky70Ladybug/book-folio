@@ -21,7 +21,7 @@ class Api::V1::PreferencesController < ApplicationController
   def update
     rating = preference_params[:preference_rating]
     bookshelf = current_user.bookshelves.find(params[:id])
-    if bookshelf&.preference_rating == rating
+    if bookshelf.preference_rating == rating
       return render json: { error: "不正な評価です" }, status: :unprocessable_entity
     end
 
