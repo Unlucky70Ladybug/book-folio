@@ -14,7 +14,7 @@ export default function NotificationBar() {
   if (notifications.length === 0) return null
 
   return (
-    <div className="toast toast-top toast-end z-50">
+    <div className="toast toast-bottom toast-end z-50">
       {notifications.map((n) => (
         <div
           key={n.id}
