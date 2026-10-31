@@ -75,6 +75,8 @@ group :development, :test do
 
   # デバック用
   gem "pry-rails"
+
+  gem "bullet"
 end
 
 group :development do
