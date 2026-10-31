@@ -13,7 +13,7 @@ class Api::V1::UserComparisonsController < ApplicationController
     end
 
     user_comparison_result = Comparison::UserComparisonService.get_result(current_user)
-    
+
     render json: { result: user_comparison_result }
   end
 end

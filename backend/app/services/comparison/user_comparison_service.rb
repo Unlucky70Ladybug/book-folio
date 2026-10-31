@@ -1,7 +1,6 @@
 module Comparison
   class UserComparisonService
     class << self
-
       def get_result(target_user)
         users = User.eager_load(:book_genres).where.not(book_genres: nil)
         # { user_id => { user:, book_genres: } }
@@ -31,7 +30,7 @@ module Comparison
           ActiveModelSerializers::SerializableResource.new(users, each_serializer: UserSerializer).as_json
         end
 
-        return serialized_result
+        serialized_result
       end
 
       private
@@ -62,6 +61,5 @@ module Comparison
                   .map { |other_user| other_user[:user] }
       end
     end
-
   end
 end
