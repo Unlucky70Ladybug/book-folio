@@ -8,18 +8,21 @@ const alertColor: Record<NotificationType, string> = {
   warning: 'alert-warning',
 }
 
+// スナックバーの表示位置(画面上端からの距離)。値を変えて高さを微調整する
+const TOAST_TOP_OFFSET = '30vh'
+
 export default function NotificationBar() {
   const { notifications, dismiss } = useNotification()
 
   if (notifications.length === 0) return null
 
   return (
-    <div className="toast toast-bottom toast-end z-50">
+    <div className="toast toast-top toast-end z-50" style={{ top: TOAST_TOP_OFFSET }}>
       {notifications.map((n) => (
         <div
           key={n.id}
           role="alert"
-          className={`alert ${alertColor[n.type]} toast-slide-in-right py-2 px-3 min-h-0 text-sm`}
+          className={`alert alert-outline ${alertColor[n.type]} toast-slide-in-right bg-white border-2 text-black py-2 px-3 min-h-0 text-sm`}
         >
           <span>{n.message}</span>
           <button
