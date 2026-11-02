@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate  } from 'react-router-dom'
 import SignUpForm from './signup-form'
 import { useAuth } from '../../hooks/use-auth'
 
@@ -12,6 +12,7 @@ export default function SignUpContainer() {
     passwordConfirmation: '',
     avatarImage: null as File | null,
   })
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -31,6 +32,7 @@ export default function SignUpContainer() {
     e.preventDefault()
     try {
       await signUp(formData)
+      navigate("/login")
     } catch (err) {
       console.error('Request failed', err)
     }
