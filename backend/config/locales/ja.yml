@@ -61,6 +61,8 @@ ja:
               blank: "を入力してください"
             password_confirmation:
               blank: "を入力してください"
+            avatar_image:
+              format: "%{message}"
         book:
           attributes:
             isbn:
@@ -124,8 +126,8 @@ ja:
   errors:
     messages:
       max_size_error: "ファイルサイズは%{max_size}以下にしてください"
-      extension_allowlist_error: "%{extension}は許可されていないファイル形式です。許可されている形式: %{allowed_types}"
-      carrierwave_integrity_error: "は許可されていないファイル形式です"
+      extension_allowlist_error: "許可されていないファイル形式です。許可されている形式: %{allowed_types}"
+      carrierwave_integrity_error: "許可されていないファイル形式です"
       not_found: "対象のデータが見つかりません"
       parameter_missing: "必要なパラメータが不足しています"
 
