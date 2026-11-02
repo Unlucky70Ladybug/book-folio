@@ -1,6 +1,12 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import TermsOfServiceModal from './components/terms-of-service'
+import PrivacyPolicyModal from './components/privacy-policy'
 
 const Footer = () => {
+  const TermsOfServiceRef = useRef<HTMLDialogElement>(null)
+  const PrivacyPolicyRef = useRef<HTMLDialogElement>(null)
+
   return (
     <footer className="flex w-full items-center justify-between bg-base-100 border-t border-base-300 px-4 sm:px-8 py-4">
       {/* 左端 */}
@@ -17,12 +23,24 @@ const Footer = () => {
           Supported by Rakuten Developers
         </a>
         {/* Rakuten Web Services Attribution Snippet FROM HERE */}
-        <Link to="/terms" className="text-sm text-primary hover:underline">
+
+        <button
+          type="button"
+          className="link link-hover link-primary text-sm"
+          onClick={() => TermsOfServiceRef.current?.showModal()}
+        >
           利用規約
-        </Link>
-        <Link to="/privacy" className="text-sm text-primary hover:underline">
+        </button>
+        <TermsOfServiceModal dialogRef={TermsOfServiceRef} />
+
+        <button
+          type="button"
+          className="link link-hover link-primary text-sm"
+          onClick={() => PrivacyPolicyRef.current?.showModal()}
+        >
           プライバシーポリシー
-        </Link>
+        </button>
+        <PrivacyPolicyModal dialogRef={PrivacyPolicyRef} />
       </div>
     </footer>
   )
