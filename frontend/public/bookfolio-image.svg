@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf2"/>
+      <stop offset="1" stop-color="#fbe6cf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#ffd3a1" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffd3a1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b9774a"/>
+      <stop offset="1" stop-color="#8f5532"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#8a4a1f" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <circle cx="90" cy="560" r="140" fill="#f6c58f" opacity="0.25"/>
+  <circle cx="1130" cy="40" r="90" fill="#f29a5c" opacity="0.15"/>
+
+  <!-- 左側：ロゴとコピー -->
+  <g transform="translate(80,150)">
+    <!-- ロゴマーク（開いた本） -->
+    <g transform="translate(0,0)">
+      <rect width="76" height="76" rx="20" fill="#e8772e"/>
+      <path d="M38 24 C30 19 20 18 14 20 V54 C20 52 30 53 38 58 Z" fill="#fffaf2"/>
+      <path d="M38 24 C46 19 56 18 62 20 V54 C56 52 46 53 38 58 Z" fill="#ffe3c4"/>
+      <path d="M38 24 V58" stroke="#e8772e" stroke-width="2.5"/>
+    </g>
+    <text x="96" y="58" font-family="Inter, 'Segoe UI', Roboto, 'Noto Sans JP', sans-serif" font-size="58" font-weight="800" fill="#4a2e1c" letter-spacing="-1">Book<tspan fill="#e8772e">Folio</tspan></text>
+
+    <text x="0" y="170" font-family="'Noto Sans JP', 'Hiragino Sans', 'Droid Sans Fallback', sans-serif" font-size="46" font-weight="700" fill="#4a2e1c" stroke="#4a2e1c" stroke-width="0.8">読んだ本を、</text>
+    <text x="0" y="232" font-family="'Noto Sans JP', 'Hiragino Sans', 'Droid Sans Fallback', sans-serif" font-size="46" font-weight="700" fill="#4a2e1c" stroke="#4a2e1c" stroke-width="0.8">自分だけの<tspan fill="#e8772e" stroke="#e8772e">本棚</tspan>に。</text>
+
+    <text x="0" y="300" font-family="'Noto Sans JP', 'Hiragino Sans', 'Droid Sans Fallback', sans-serif" font-size="22" fill="#7a5a44">記録した本から、ジャンルや著者ごとの</text>
+    <text x="0" y="336" font-family="'Noto Sans JP', 'Hiragino Sans', 'Droid Sans Fallback', sans-serif" font-size="22" fill="#7a5a44">読書傾向をグラフで可視化します。</text>
+  </g>
+
+  <!-- 右側：本棚イラスト -->
+  <g transform="translate(560,120)" filter="url(#shadow)">
+    <!-- 棚の枠 -->
+    <rect x="0" y="0" width="300" height="400" rx="18" fill="#fff4e6" stroke="#d9a376" stroke-width="4"/>
+    <!-- 上段 -->
+    <g>
+      <rect x="22" y="40" width="30" height="138" rx="4" fill="#e8772e"/>
+      <rect x="56" y="58" width="26" height="120" rx="4" fill="#f4b860"/>
+      <rect x="86" y="30" width="36" height="148" rx="4" fill="#5b8fd6"/>
+      <rect x="126" y="52" width="24" height="126" rx="4" fill="#e45d4f"/>
+      <rect x="154" y="44" width="32" height="134" rx="4" fill="#6fbf8e"/>
+      <rect x="196" y="70" width="28" height="108" rx="4" fill="#c58ad8" transform="rotate(-12 210 178)"/>
+      <rect x="236" y="62" width="34" height="116" rx="4" fill="#f29a5c"/>
+      <g fill="#ffffff" opacity="0.55">
+        <rect x="29" y="60" width="16" height="4" rx="2"/>
+        <rect x="93" y="50" width="22" height="4" rx="2"/>
+        <rect x="93" y="60" width="22" height="4" rx="2"/>
+        <rect x="160" y="64" width="20" height="4" rx="2"/>
+        <rect x="243" y="82" width="20" height="4" rx="2"/>
+      </g>
+    </g>
+    <rect x="10" y="178" width="280" height="14" rx="4" fill="url(#wood)"/>
+    <!-- 下段 -->
+    <g>
+      <rect x="22" y="236" width="34" height="140" rx="4" fill="#6fbf8e"/>
+      <rect x="60" y="256" width="28" height="120" rx="4" fill="#e8772e"/>
+      <rect x="92" y="246" width="24" height="130" rx="4" fill="#f4b860"/>
+      <rect x="120" y="226" width="38" height="150" rx="4" fill="#e45d4f"/>
+      <rect x="162" y="262" width="30" height="114" rx="4" fill="#5b8fd6"/>
+      <!-- 空きスペース：これから読む本 -->
+      <rect x="204" y="250" width="70" height="126" rx="6" fill="none" stroke="#d9a376" stroke-width="3" stroke-dasharray="8 7"/>
+      <path d="M239 298 V328 M224 313 H254" stroke="#e8772e" stroke-width="5" stroke-linecap="round"/>
+      <g fill="#ffffff" opacity="0.55">
+        <rect x="29" y="256" width="20" height="4" rx="2"/>
+        <rect x="128" y="246" width="22" height="4" rx="2"/>
+        <rect x="128" y="256" width="22" height="4" rx="2"/>
+        <rect x="168" y="282" width="18" height="4" rx="2"/>
+      </g>
+    </g>
+    <rect x="10" y="376" width="280" height="14" rx="4" fill="url(#wood)"/>
+  </g>
+
+  <!-- 右側：グラフカード（ドーナツ） -->
+  <g transform="translate(880,90)" filter="url(#shadow)">
+    <rect width="240" height="230" rx="22" fill="#ffffff"/>
+    <text x="24" y="40" font-family="'Noto Sans JP', 'Droid Sans Fallback', sans-serif" font-size="18" fill="#4a2e1c" font-weight="700">ジャンル別</text>
+    <g transform="translate(78,135)">
+      <!-- r=52, 円周 ≈ 326.7 -->
+      <circle r="52" fill="none" stroke="#f3e6d8" stroke-width="22"/>
+      <circle r="52" fill="none" stroke="#e8772e" stroke-width="22" stroke-dasharray="124 203" transform="rotate(-90)"/>
+      <circle r="52" fill="none" stroke="#5b8fd6" stroke-width="22" stroke-dasharray="78 249" stroke-dashoffset="-124" transform="rotate(-90)"/>
+      <circle r="52" fill="none" stroke="#6fbf8e" stroke-width="22" stroke-dasharray="65 262" stroke-dashoffset="-202" transform="rotate(-90)"/>
+      <circle r="52" fill="none" stroke="#f4b860" stroke-width="22" stroke-dasharray="60 267" stroke-dashoffset="-267" transform="rotate(-90)"/>
+    </g>
+    <g font-family="'Noto Sans JP', 'Droid Sans Fallback', sans-serif" font-size="14" fill="#7a5a44">
+      <circle cx="158" cy="92" r="6" fill="#e8772e"/><text x="170" y="97">小説</text>
+      <circle cx="158" cy="122" r="6" fill="#5b8fd6"/><text x="170" y="127">技術</text>
+      <circle cx="158" cy="152" r="6" fill="#6fbf8e"/><text x="170" y="157">ビジネス</text>
+      <circle cx="158" cy="182" r="6" fill="#f4b860"/><text x="170" y="187">エッセイ</text>
+    </g>
+  </g>
+
+  <!-- 右側：棒グラフカード（著者別） -->
+  <g transform="translate(900,350)" filter="url(#shadow)">
+    <rect width="220" height="180" rx="22" fill="#ffffff"/>
+    <text x="24" y="40" font-family="'Noto Sans JP', 'Droid Sans Fallback', sans-serif" font-size="18" fill="#4a2e1c" font-weight="700">著者別</text>
+    <g>
+      <rect x="28" y="66" width="150" height="16" rx="8" fill="#e8772e"/>
+      <rect x="28" y="96" width="112" height="16" rx="8" fill="#f29a5c"/>
+      <rect x="28" y="126" width="80" height="16" rx="8" fill="#f4b860"/>
+      <rect x="28" y="156" width="0" height="0"/>
+    </g>
+    <g font-family="Inter, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#7a5a44">
+      <text x="186" y="79">12</text>
+      <text x="148" y="109">9</text>
+      <text x="116" y="139">6</text>
+    </g>
+  </g>
+</svg>
