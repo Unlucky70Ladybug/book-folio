@@ -8,18 +8,21 @@ import Spinner from '../components/layouts/ui/spinner'
 import BookCard from './_components/book-card'
 import Pagination from '../auth/_components/pagination'
 
+// 1ページあたりの取得件数(これ未満なら最終ページとみなす)
+const PER_PAGE = 20
+
 const SearchBook = () => {
   const [searchParams] = useSearchParams()
   const type = searchParams.get('type') ?? ''
   const keyword = searchParams.get('keyword') ?? ''
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const nextPage = () => setCurrentPage((prev) => prev + 1)
+  const prevPage = () => setCurrentPage((prev) => Math.max(1, prev - 1))
+
   const { notify } = useContext(NotificationContext)
   const [books, setBooks] = useState<ApiBook[]>([])
   const genreList = useGenres()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
-  const nextPage = () => setCurrentPage((prev) => prev + 1)
-  const prevPage = () => setCurrentPage((prev) => Math.max(1, prev - 1))
 
   // 検索条件が変わったらレンダー中にローディング状態へ戻す
   // (effect内で同期的にsetStateすると再レンダーが連鎖するため)
@@ -31,7 +34,7 @@ const SearchBook = () => {
     setCurrentPage(1)
   }
 
-  // クエリ(type / keyword)が変わるたびに検索を実行する
+  // クエリ(type / keyword)やページが変わるたびに検索を実行する
   useEffect(() => {
     if (!keyword && !type) return
 
@@ -64,22 +67,25 @@ const SearchBook = () => {
 
   if (isLoading) return <Spinner message="検索中..." />
 
-  if (books.length === 0) {
+  const isEmpty = books.length === 0
+
+  // 1ページ目で0件ならページ送り自体が不要
+  if (isEmpty && currentPage === 1) {
     return (
-      <div className="flex flex-col gap-3 pt-2 pb-8">
-        {currentPage > 1 && (
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-base-content/70">
-              「<span className="font-semibold text-base-content">{keyword}</span>」の検索結果
-              <span className="badge badge-primary badge-soft ml-2">{books.length}件</span>
-            </p>
-            <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
-          </div>
-        )}
+      <div className="pt-2 pb-8">
         <p className="py-10 text-center text-base-content/70">検索結果がありませんでした</p>
       </div>
     )
   }
+
+  const pagination = (
+    <Pagination
+      currentPage={currentPage}
+      nextPage={nextPage}
+      prevPage={prevPage}
+      lastPage={books.length < PER_PAGE}
+    />
+  )
 
   return (
     <div className="flex flex-col gap-3 pt-2 pb-8">
@@ -88,25 +94,22 @@ const SearchBook = () => {
           「<span className="font-semibold text-base-content">{keyword}</span>」の検索結果
           <span className="badge badge-primary badge-soft ml-2">{books.length}件</span>
         </p>
-        {books.length < 20 ? (
-          <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
-        ):(
-          <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
-        )
-        }
+        {pagination}
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {books.map((book) => (
-          <BookCard key={book.isbn} book={book} genreList={genreList} />
-        ))}
-      </div>
-      <div className="divider my-0" />
-      {books.length < 20 ? (
-        <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
-      ):(
-        <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
-      )
-      }
+
+      {isEmpty ? (
+        <p className="py-10 text-center text-base-content/70">検索結果がありませんでした</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {books.map((book) => (
+              <BookCard key={book.isbn} book={book} genreList={genreList} />
+            ))}
+          </div>
+          <div className="divider my-0" />
+          {pagination}
+        </>
+      )}
     </div>
   )
 }
