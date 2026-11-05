@@ -2,6 +2,7 @@ type PaginationProps = {
   currentPage: number
   nextPage: () => void
   prevPage: () => void
+  lastPage?: boolean
 }
 
 const ChevronIcon = ({ direction }: { direction: 'left' | 'right' }) => (
@@ -20,7 +21,7 @@ const ChevronIcon = ({ direction }: { direction: 'left' | 'right' }) => (
   </svg>
 )
 
-const Pagination = ({ currentPage, nextPage, prevPage }: PaginationProps) => {
+const Pagination = ({ currentPage, nextPage, prevPage, lastPage = false }: PaginationProps) => {
   const isFirstPage = currentPage <= 1
 
   return (
@@ -47,6 +48,7 @@ const Pagination = ({ currentPage, nextPage, prevPage }: PaginationProps) => {
         className="btn btn-circle btn-primary"
         aria-label="次のページへ"
         onClick={nextPage}
+        disabled={lastPage}
       >
         <ChevronIcon direction="right" />
       </button>

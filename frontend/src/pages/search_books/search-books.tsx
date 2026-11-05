@@ -28,6 +28,7 @@ const SearchBook = () => {
   if (query !== prevQuery) {
     setPrevQuery(query)
     setIsLoading(true)
+    setCurrentPage(1)
   }
 
   // クエリ(type / keyword)が変わるたびに検索を実行する
@@ -36,7 +37,7 @@ const SearchBook = () => {
 
     let ignore = false
 
-    searchBooks(type, keyword)
+    searchBooks(type, keyword, currentPage)
       .then((result) => {
         if (!ignore) setBooks(result)
       })
@@ -50,8 +51,9 @@ const SearchBook = () => {
     // クリーンアップをし古いリクエストの結果は表示しない
     return () => {
       ignore = true
+      setIsLoading(true)
     }
-  }, [type, keyword, notify])
+  }, [type, keyword, currentPage, notify])
 
   // 検索条件がない場合は検索自体が走らないため、スピナーより先に判定する
   if (!keyword && !type) {
@@ -63,7 +65,20 @@ const SearchBook = () => {
   if (isLoading) return <Spinner message="検索中..." />
 
   if (books.length === 0) {
-    return <p className="py-10 text-center text-base-content/70">検索結果がありませんでした</p>
+    return (
+      <div className="flex flex-col gap-3 pt-2 pb-8">
+        {currentPage > 1 && (
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-base-content/70">
+              「<span className="font-semibold text-base-content">{keyword}</span>」の検索結果
+              <span className="badge badge-primary badge-soft ml-2">{books.length}件</span>
+            </p>
+            <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
+          </div>
+        )}
+        <p className="py-10 text-center text-base-content/70">検索結果がありませんでした</p>
+      </div>
+    )
   }
 
   return (
