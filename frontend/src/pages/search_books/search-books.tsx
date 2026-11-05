@@ -88,7 +88,12 @@ const SearchBook = () => {
           「<span className="font-semibold text-base-content">{keyword}</span>」の検索結果
           <span className="badge badge-primary badge-soft ml-2">{books.length}件</span>
         </p>
-        <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
+        {books.length < 20 ? (
+          <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
+        ):(
+          <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
+        )
+        }
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {books.map((book) => (
@@ -96,7 +101,12 @@ const SearchBook = () => {
         ))}
       </div>
       <div className="divider my-0" />
-      <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
+      {books.length < 20 ? (
+        <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} lastPage={true} />
+      ):(
+        <Pagination currentPage={currentPage} nextPage={nextPage} prevPage={prevPage} />
+      )
+      }
     </div>
   )
 }
