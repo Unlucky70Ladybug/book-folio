@@ -1,11 +1,16 @@
 import { type ApiBook } from '../../../types/book'
 import Cookies from 'js-cookie'
 
-export const searchBooks = async (type: string, keyword: string): Promise<ApiBook[]> => {
+export const searchBooks = async (
+  type: string,
+  keyword: string,
+  page: number,
+): Promise<ApiBook[]> => {
   // URLのクエリ文字列を作成
   const params = new URLSearchParams({
     type: type,
     keyword: keyword,
+    page: page.toString(),
   })
 
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/search?${params.toString()}`, {
