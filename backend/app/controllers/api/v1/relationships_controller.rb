@@ -5,7 +5,7 @@ class Api::V1::RelationshipsController < ApplicationController
     render json: {
         result: {
           following_count: current_user.following.count,
-          followers_count: current_user.followers.count,
+          followers_count: current_user.followers.count
         }
       }
   end
@@ -15,7 +15,7 @@ class Api::V1::RelationshipsController < ApplicationController
     render json: {
         result: {
           following_count: user.following.count,
-          followers_count: user.followers.count,
+          followers_count: user.followers.count
         }
       }
   end

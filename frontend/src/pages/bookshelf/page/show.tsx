@@ -57,7 +57,7 @@ const OtherUserBookshelfPage = () => {
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
   const [relationshipStats, setRelationshipStats] = useState<RelationshipStats | null>(null)
-  
+
   useEffect(() => {
     if (!id) return
     let ignore = false
