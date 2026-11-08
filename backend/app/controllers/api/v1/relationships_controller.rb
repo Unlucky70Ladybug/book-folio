@@ -10,6 +10,16 @@ class Api::V1::RelationshipsController < ApplicationController
       }
   end
 
+  def show
+    user = User.find(params[:id])
+    render json: {
+        result: {
+          following_count: user.following.count,
+          followers_count: user.followers.count,
+        }
+      }
+  end
+
   def create
     user = User.find(params[:followed_id])
     current_user.follow(user)

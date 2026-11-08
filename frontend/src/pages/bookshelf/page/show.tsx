@@ -23,6 +23,8 @@ import defaultUserImage from '../../../assets/default_user_image.png'
 import { type ReadingStatus } from '../../../types/bookshelf'
 import { type Genre } from '../../../types/genre'
 import NotFound from '../../components/layouts/NotFound'
+import { getOtherUserRelationshipStats } from '../../relationship/_hooks/get-other-user-relationshipStats'
+import { type RelationshipStats } from '../../../types/relationship'
 
 // 本が少なくても棚が2段分は見えるようにする
 const bookshelfStyle: CSSProperties = { ...shelfStyle, minHeight: SHELF_ROW_HEIGHT * 2 }
@@ -54,17 +56,19 @@ const OtherUserBookshelfPage = () => {
   // nullのときは全ジャンルを表示する
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
-
+  const [relationshipStats, setRelationshipStats] = useState<RelationshipStats | null>(null)
+  
   useEffect(() => {
     if (!id) return
     let ignore = false
 
-    Promise.all([getOtherUserBookshelves(id), getGenres()])
-      .then(([bookshelvesResult, genresResult]) => {
+    Promise.all([getOtherUserBookshelves(id), getGenres(), getOtherUserRelationshipStats(id)])
+      .then(([bookshelvesResult, genresResult, relationshipStatsResult]) => {
         if (ignore) return
         setUser(bookshelvesResult.user)
         setBookshelves(bookshelvesResult.bookshelves)
         setGenreList(genresResult)
+        setRelationshipStats(relationshipStatsResult)
       })
       .catch(() => {
         if (ignore) return
@@ -156,6 +160,10 @@ const OtherUserBookshelfPage = () => {
             <div>
               <p className="text-xl font-bold">{user?.name}の本棚</p>
               <p className="text-sm text-base-content/60">{user?.name}さん</p>
+              <p className="text-sm text-base-content/60 flex gap-4">
+                <span>フォロー：{relationshipStats?.following_count}人</span>
+                <span>フォロワー：{relationshipStats?.followers_count}人</span>
+              </p>
             </div>
           </div>
 
