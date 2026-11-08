@@ -21,6 +21,8 @@ import Spinner from '../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../assets/default_user_image.png'
 import { type ReadingStatus } from '../../../types/bookshelf'
 import { type Genre } from '../../../types/genre'
+import { getRelationshipStats } from '../../relationship/_hooks/get-relationshipStats'
+import { type RelationshipStats } from '../../../types/relationship'
 
 // 本が少なくても棚が2段分は見えるようにする
 const bookshelfStyle: CSSProperties = { ...shelfStyle, minHeight: SHELF_ROW_HEIGHT * 2 }
@@ -47,6 +49,7 @@ const BookshelfPage = () => {
   // nullのときは全ジャンルを表示する
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState<string>('')
+  const [relationshipStats, setRelationshipStats] = useState<RelationshipStats | null>(null)
 
   // この本の所有権はない
   const isOwner = true
@@ -54,11 +57,12 @@ const BookshelfPage = () => {
   useEffect(() => {
     let ignore = false
 
-    Promise.all([getBookshelves(), getGenres()])
-      .then(([bookshelvesResult, genresResult]) => {
+    Promise.all([getBookshelves(), getGenres(), getRelationshipStats()])
+      .then(([bookshelvesResult, genresResult, relationshipStatsResult]) => {
         if (ignore) return
         setBookshelves(bookshelvesResult)
         setGenreList(genresResult)
+        setRelationshipStats(relationshipStatsResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -147,6 +151,10 @@ const BookshelfPage = () => {
             <div>
               <p className="text-xl font-bold">{currentUser?.name}の本棚</p>
               <p className="text-sm text-base-content/60">{currentUser?.name}さん</p>
+              <p className="text-sm text-base-content/60 flex gap-4">
+                <span>フォロー：{relationshipStats?.following_count}人</span>
+                <span>フォロワー：{relationshipStats?.followers_count}人</span>
+              </p>
             </div>
           </div>
 
