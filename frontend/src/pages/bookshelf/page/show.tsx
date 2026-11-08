@@ -161,8 +161,8 @@ const OtherUserBookshelfPage = () => {
               <p className="text-xl font-bold">{user?.name}の本棚</p>
               <p className="text-sm text-base-content/60">{user?.name}さん</p>
               <p className="text-sm text-base-content/60 flex gap-4">
-                <span>フォロー：{relationshipStats?.following_count}人</span>
-                <span>フォロワー：{relationshipStats?.followers_count}人</span>
+                <span>フォロー：{relationshipStats?.following.length}人</span>
+                <span>フォロワー：{relationshipStats?.followers.length}人</span>
               </p>
             </div>
           </div>

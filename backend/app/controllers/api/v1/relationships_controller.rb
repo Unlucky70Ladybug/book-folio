@@ -4,8 +4,8 @@ class Api::V1::RelationshipsController < ApplicationController
   def index
     render json: {
         result: {
-          following_count: current_user.following.count,
-          followers_count: current_user.followers.count
+          following: ActiveModelSerializers::SerializableResource.new(current_user.following, each_serializer: UserSerializer).as_json,
+          followers: ActiveModelSerializers::SerializableResource.new(current_user.followers, each_serializer: UserSerializer).as_json,
         }
       }
   end
@@ -14,8 +14,8 @@ class Api::V1::RelationshipsController < ApplicationController
     user = User.find(params[:id])
     render json: {
         result: {
-          following_count: user.following.count,
-          followers_count: user.followers.count
+          following: ActiveModelSerializers::SerializableResource.new(user.following, each_serializer: UserSerializer).as_json,
+          followers: ActiveModelSerializers::SerializableResource.new(user.followers, each_serializer: UserSerializer).as_json,
         }
       }
   end
