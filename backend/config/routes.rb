@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       resources :books, param: :isbn, only: [] do
         resources :posts, only: [ :index ], module: :books # Books 名前空間のコントローラを使う
       end
+      resources :relationships_controller, only: [ :create, :destroy ]
     end
   end
 
