@@ -1,7 +1,9 @@
+import { useRef } from 'react'
 import { type User } from '../../../types/user'
 import { type RelationshipStats } from '../../../types/relationship'
 import { type Bookshelf, type ReadingStatus, READING_STATUS_LABELS } from '../../../types/bookshelf'
 import defaultUserImage from '../../../assets/default_user_image.png'
+import Relationship from '../../relationship/_components/relationship-modal'
 
 type UserInfoProps = {
   user: User | null
@@ -10,9 +12,11 @@ type UserInfoProps = {
 }
 
 // 本棚ページ上部のユーザー情報(アイコン・名前・フォロー数・読書状況)
-export const UserInfo = ({ user, relationshipStats, bookshelves }: UserInfoProps) => {
+export default function UserInfo({ user, relationshipStats, bookshelves }: UserInfoProps){
   const countByStatus = (status: ReadingStatus) =>
     bookshelves.filter((bookshelf) => bookshelf.reading_status === status).length
+  const followingRef = useRef<HTMLDialogElement>(null)
+  const followersRef = useRef<HTMLDialogElement>(null)
 
   return (
     <div className="card rounded-b-none border border-base-300 bg-base-100 shadow-sm">
@@ -27,9 +31,15 @@ export const UserInfo = ({ user, relationshipStats, bookshelves }: UserInfoProps
             <p className="text-xl font-bold">{user?.name}の本棚</p>
             <p className="text-sm text-base-content/60">{user?.name}さん</p>
             <p className="text-sm text-base-content/60 flex gap-4">
-              <span>フォロー：{relationshipStats?.following.length}人</span>
-              <span>フォロワー：{relationshipStats?.followers.length}人</span>
+              <button type="button" className="link-hover" onClick={() => followingRef.current?.showModal()}>
+                フォロー：{relationshipStats?.following.length ?? 0}人
+              </button>
+              <button type="button" className="link-hover" onClick={() => followersRef.current?.showModal()}>
+                フォロワー：{relationshipStats?.followers.length ?? 0}人
+              </button>
             </p>
+            <Relationship title="フォロー" users={relationshipStats?.following ?? []} dialogRef={followingRef} />
+            <Relationship title="フォロワー" users={relationshipStats?.followers ?? []} dialogRef={followersRef} />
           </div>
         </div>
 
