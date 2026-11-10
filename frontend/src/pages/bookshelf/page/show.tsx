@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { type User } from '../../../types/user'
+import { useAuth } from '../../hooks/use-auth'
 import { getOtherUserBookshelves } from '../_hooks/get-other-user-bookshelves'
 import { getGenres } from '../_hooks/get-genres'
 import { NotificationContext } from '../../providers/notification-provider'
@@ -38,7 +39,10 @@ const PREFERENCE_RATING_ORDER: PreferenceRating[] = [
 
 const OtherUserBookshelfPage = () => {
   // /bookshelf/:id の「:id」部分(例: /bookshelf/2 なら '2')
+  const { currentUser } = useAuth()
   const { id } = useParams<{ id: string }>()
+  // useParams は文字列なので、数値の id と揃えて比較する
+  const isMyPage = currentUser != null && String(currentUser.id) === id
   const [user, setUser] = useState<User | null>(null)
   const { notify } = useContext(NotificationContext)
   const [bookshelves, setBookshelves] = useState<Bookshelf[]>([])
@@ -57,7 +61,8 @@ const OtherUserBookshelfPage = () => {
   const [relationshipStats, setRelationshipStats] = useState<RelationshipStats | null>(null)
 
   useEffect(() => {
-    if (!id) return
+    // 自分の本棚なら他人用の取得はしない
+    if (!id || isMyPage) return
     let ignore = false
 
     Promise.all([getOtherUserBookshelves(id), getGenres(), getOtherUserRelationshipStats(id)])
@@ -80,7 +85,7 @@ const OtherUserBookshelfPage = () => {
     return () => {
       ignore = true
     }
-  }, [id, notify])
+  }, [id, notify, isMyPage])
 
   // 元の並びを保つため、引数は変更せず並べ替えた配列を返す
   const sortPreferenceRating = (list: Bookshelf[]) =>
@@ -138,6 +143,8 @@ const OtherUserBookshelfPage = () => {
     </div>
   )
 
+  // フックをすべて呼んだ後で分岐する
+  if (isMyPage) return <Navigate to="/bookshelf" replace />
   if (isNotFound) return <NotFound />
 
   return (
