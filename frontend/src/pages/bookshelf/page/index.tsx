@@ -11,7 +11,7 @@ import {
 } from '../../../types/bookshelf'
 import { BookshelfBook } from '../_components/bookshelf-book'
 import { BookshelfFilterBar } from '../_components/bookshelf-filter-bar'
-import { UserInfo } from '../_components/user-info'
+import UserInfo from '../_components/user-info'
 import {
   SHELF_BOARD_HEIGHT,
   SHELF_ROW_HEIGHT,
