@@ -3,5 +3,5 @@ import { type User } from './user'
 export type RelationshipStats = {
   following: User[]
   followers: User[]
-  follow_status?: Boolean
+  follow_status?: boolean
 }

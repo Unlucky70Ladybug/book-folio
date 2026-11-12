@@ -151,7 +151,12 @@ const OtherUserBookshelfPage = () => {
     // ユーザー情報・フィルターバー・本棚は隙間なく1つのまとまりとして見せる
     <div className="flex flex-col">
       {/* ユーザー情報 */}
-      <UserInfo user={user} relationshipStats={relationshipStats} bookshelves={bookshelves} onRelationshipChange={setRelationshipStats} />
+      <UserInfo
+        user={user}
+        relationshipStats={relationshipStats}
+        bookshelves={bookshelves}
+        onRelationshipChange={setRelationshipStats}
+      />
 
       <BookshelfFilterBar
         keyword={keyword}

@@ -44,7 +44,10 @@ export default function Relationship({ title, users, dialogRef }: RelationshipPr
                   >
                     <div className="avatar">
                       <div className="w-10 rounded-full">
-                        <img src={user.avatarImage ?? defaultUserImage} alt={`${user.name}のアイコン`} />
+                        <img
+                          src={user.avatarImage ?? defaultUserImage}
+                          alt={`${user.name}のアイコン`}
+                        />
                       </div>
                     </div>
                     <p className="font-medium">{user.name}</p>

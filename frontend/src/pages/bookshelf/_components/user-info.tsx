@@ -18,7 +18,12 @@ type UserInfoProps = {
 }
 
 // 本棚ページ上部のユーザー情報(アイコン・名前・フォロー数・読書状況)
-export default function UserInfo({ user, relationshipStats, bookshelves, onRelationshipChange }: UserInfoProps){
+export default function UserInfo({
+  user,
+  relationshipStats,
+  bookshelves,
+  onRelationshipChange,
+}: UserInfoProps) {
   const countByStatus = (status: ReadingStatus) =>
     bookshelves.filter((bookshelf) => bookshelf.reading_status === status).length
   const followingRef = useRef<HTMLDialogElement>(null)
@@ -27,7 +32,10 @@ export default function UserInfo({ user, relationshipStats, bookshelves, onRelat
   const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
 
   // フォロー・フォロー解除の共通処理。成功後に最新のフォロー状態・人数を取り直して親に渡す
-  const handleFollowToggle = async (action: (id: number) => Promise<RelationshipStats>, message: string) => {
+  const handleFollowToggle = async (
+    action: (id: number) => Promise<RelationshipStats>,
+    message: string,
+  ) => {
     if (!user?.id) return
     setIsRelationshipLoading(true)
     try {
@@ -54,15 +62,31 @@ export default function UserInfo({ user, relationshipStats, bookshelves, onRelat
             <p className="text-xl font-bold">{user?.name}の本棚</p>
             <p className="text-sm text-base-content/60">{user?.name}さん</p>
             <p className="text-sm text-base-content/60 flex gap-4">
-              <button type="button" className="link-hover" onClick={() => followingRef.current?.showModal()}>
+              <button
+                type="button"
+                className="link-hover"
+                onClick={() => followingRef.current?.showModal()}
+              >
                 フォロー：{relationshipStats?.following.length}人
               </button>
-              <button type="button" className="link-hover" onClick={() => followersRef.current?.showModal()}>
+              <button
+                type="button"
+                className="link-hover"
+                onClick={() => followersRef.current?.showModal()}
+              >
                 フォロワー：{relationshipStats?.followers.length}人
               </button>
             </p>
-            <Relationship title="フォロー" users={relationshipStats?.following ?? []} dialogRef={followingRef} />
-            <Relationship title="フォロワー" users={relationshipStats?.followers ?? []} dialogRef={followersRef} />
+            <Relationship
+              title="フォロー"
+              users={relationshipStats?.following ?? []}
+              dialogRef={followingRef}
+            />
+            <Relationship
+              title="フォロワー"
+              users={relationshipStats?.followers ?? []}
+              dialogRef={followersRef}
+            />
           </div>
         </div>
         {relationshipStats?.follow_status === false && (
