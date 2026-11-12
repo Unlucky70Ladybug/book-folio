@@ -1,4 +1,7 @@
+import { type User } from './user'
+
 export type RelationshipStats = {
-  following_count: number
-  followers_count: number
+  following: User[]
+  followers: User[]
+  follow_status?: boolean
 }
