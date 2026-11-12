@@ -1,22 +1,45 @@
-import { useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { type User } from '../../../types/user'
 import { type RelationshipStats } from '../../../types/relationship'
 import { type Bookshelf, type ReadingStatus, READING_STATUS_LABELS } from '../../../types/bookshelf'
 import defaultUserImage from '../../../assets/default_user_image.png'
 import Relationship from '../../relationship/_components/relationship-modal'
+import UnFollowButton from '../../relationship/_components/unfollow'
+import FollowButton from '../../relationship/_components/follow'
+import { postFollow } from '../../relationship/_hooks/post-follow'
+import { deleteFollow } from '../../relationship/_hooks/delete-follow'
+import { NotificationContext } from '../../providers/notification-provider'
 
 type UserInfoProps = {
   user: User | null
   relationshipStats: RelationshipStats | null
   bookshelves: Bookshelf[]
+  onRelationshipChange?: (stats: RelationshipStats) => void
 }
 
 // 本棚ページ上部のユーザー情報(アイコン・名前・フォロー数・読書状況)
-export default function UserInfo({ user, relationshipStats, bookshelves }: UserInfoProps){
+export default function UserInfo({ user, relationshipStats, bookshelves, onRelationshipChange }: UserInfoProps){
   const countByStatus = (status: ReadingStatus) =>
     bookshelves.filter((bookshelf) => bookshelf.reading_status === status).length
   const followingRef = useRef<HTMLDialogElement>(null)
   const followersRef = useRef<HTMLDialogElement>(null)
+  const { notify } = useContext(NotificationContext)
+  const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
+
+  // フォロー・フォロー解除の共通処理。成功後に最新のフォロー状態・人数を取り直して親に渡す
+  const handleFollowToggle = async (action: (id: number) => Promise<RelationshipStats>, message: string) => {
+    if (!user?.id) return
+    setIsRelationshipLoading(true)
+    try {
+      const stats = await action(user.id)
+      onRelationshipChange?.(stats)
+      notify(message, 'success')
+    } catch {
+      notify('操作に失敗しました', 'error')
+    } finally {
+      setIsRelationshipLoading(false)
+    }
+  }
 
   return (
     <div className="card rounded-b-none border border-base-300 bg-base-100 shadow-sm">
@@ -32,10 +55,10 @@ export default function UserInfo({ user, relationshipStats, bookshelves }: UserI
             <p className="text-sm text-base-content/60">{user?.name}さん</p>
             <p className="text-sm text-base-content/60 flex gap-4">
               <button type="button" className="link-hover" onClick={() => followingRef.current?.showModal()}>
-                フォロー：{relationshipStats?.following.length ?? 0}人
+                フォロー：{relationshipStats?.following.length}人
               </button>
               <button type="button" className="link-hover" onClick={() => followersRef.current?.showModal()}>
-                フォロワー：{relationshipStats?.followers.length ?? 0}人
+                フォロワー：{relationshipStats?.followers.length}人
               </button>
             </p>
             <Relationship title="フォロー" users={relationshipStats?.following ?? []} dialogRef={followingRef} />
@@ -57,6 +80,18 @@ export default function UserInfo({ user, relationshipStats, bookshelves }: UserI
             <div className="stat-value text-2xl">{countByStatus('reading')}</div>
           </div>
         </div>
+        {relationshipStats?.follow_status === false && (
+          <FollowButton
+            onClick={() => handleFollowToggle(postFollow, 'フォローしました')}
+            isLoading={isRelationshipLoading}
+          />
+        )}
+        {relationshipStats?.follow_status === true && (
+          <UnFollowButton
+            onClick={() => handleFollowToggle(deleteFollow, 'フォローを解除しました')}
+            isLoading={isRelationshipLoading}
+          />
+        )}
       </div>
     </div>
   )
