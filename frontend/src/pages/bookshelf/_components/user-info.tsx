@@ -65,6 +65,18 @@ export default function UserInfo({ user, relationshipStats, bookshelves, onRelat
             <Relationship title="フォロワー" users={relationshipStats?.followers ?? []} dialogRef={followersRef} />
           </div>
         </div>
+        {relationshipStats?.follow_status === false && (
+          <FollowButton
+            onClick={() => handleFollowToggle(postFollow, 'フォローしました')}
+            isLoading={isRelationshipLoading}
+          />
+        )}
+        {relationshipStats?.follow_status === true && (
+          <UnFollowButton
+            onClick={() => handleFollowToggle(deleteFollow, 'フォローを解除しました')}
+            isLoading={isRelationshipLoading}
+          />
+        )}
 
         <div className="stats stats-horizontal bg-base-200 md:ml-auto">
           <div className="stat place-items-center px-4 md:px-6">
@@ -80,18 +92,6 @@ export default function UserInfo({ user, relationshipStats, bookshelves, onRelat
             <div className="stat-value text-2xl">{countByStatus('reading')}</div>
           </div>
         </div>
-        {relationshipStats?.follow_status === false && (
-          <FollowButton
-            onClick={() => handleFollowToggle(postFollow, 'フォローしました')}
-            isLoading={isRelationshipLoading}
-          />
-        )}
-        {relationshipStats?.follow_status === true && (
-          <UnFollowButton
-            onClick={() => handleFollowToggle(deleteFollow, 'フォローを解除しました')}
-            isLoading={isRelationshipLoading}
-          />
-        )}
       </div>
     </div>
   )
