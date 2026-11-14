@@ -17,21 +17,20 @@ const slides: Slide[] = [
     type: 'video',
     src: searchDemo,
     title: '本を検索する',
-    description:
-      '左上の検索バーでタイトルや著者名を入力すると、登録したい本を探すことができます。',
+    description: '左上の検索バーでタイトルや著者名を入力すると、登録したい本を探すことができます。',
   },
   {
     type: 'video',
     src: searchRegistrationDemo,
     title: '本棚に登録する',
-    description: '検索結果から本を選び、読書状況・ジャンルを選択し登録ボタンを押すと本棚に追加されます。',
+    description:
+      '検索結果から本を選び、読書状況・ジャンルを選択し登録ボタンを押すと本棚に追加されます。',
   },
   {
     type: 'image',
     src: searchResult,
     title: '本棚を確認する',
-    description:
-      '登録した本は、本棚に並びます。さっそく最初の一冊を追加してみましょう!',
+    description: '登録した本は、本棚に並びます。さっそく最初の一冊を追加してみましょう!',
   },
 ]
 
@@ -106,16 +105,9 @@ const Explanation = () => {
           </form>
         </div>
 
-        <div
-          ref={carouselRef}
-          className="carousel w-full"
-          onScroll={handleScroll}
-        >
+        <div ref={carouselRef} className="carousel w-full" onScroll={handleScroll}>
           {slides.map((slide, i) => (
-            <div
-              key={slide.title}
-              className="carousel-item w-full flex-col items-center gap-2"
-            >
+            <div key={slide.title} className="carousel-item w-full flex-col items-center gap-2">
               {/* 説明文(メディアの上) */}
               <div role="note" className="w-full rounded-box bg-base-200 px-4 py-2 text-center">
                 <p>{slide.description}</p>
