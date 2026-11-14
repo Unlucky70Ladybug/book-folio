@@ -21,6 +21,7 @@ import Spinner from '../../components/layouts/ui/spinner'
 import { type Genre } from '../../../types/genre'
 import { getRelationshipStats } from '../../relationship/_hooks/get-relationshipStats'
 import { type RelationshipStats } from '../../../types/relationship'
+import Explanation from '../_components/explanation'
 
 // 本が少なくても棚が2段分は見えるようにする
 const bookshelfStyle: CSSProperties = { ...shelfStyle, minHeight: SHELF_ROW_HEIGHT * 2 }
@@ -157,29 +158,32 @@ const BookshelfPage = () => {
       {isLoading ? (
         <Spinner message="本棚を読み込み中..." />
       ) : (
-        <div className="rounded-box rounded-t-none border-[12px] border-[#7a4b24] shadow-xl">
-          <div className="relative px-4 md:px-8" style={bookshelfStyle}>
-            {bookshelves.length === 0 ? (
-              shelfMessage('まだ本が登録されていません。本を検索して本棚に追加してみましょう！')
-            ) : displayedBookshelves.length === 0 ? (
-              shelfMessage('条件に一致する本がありません')
-            ) : (
-              <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                {displayedBookshelves.map((bookshelf) => (
-                  <BookshelfBook
-                    key={bookshelf.id}
-                    bookshelf={bookshelf}
-                    genreList={genreList}
-                    rowHeight={SHELF_ROW_HEIGHT}
-                    boardHeight={SHELF_BOARD_HEIGHT}
-                    onUpdated={handleUpdated}
-                    isOwner={isOwner}
-                  />
-                ))}
-              </ul>
-            )}
+        <>
+          {bookshelves.length === 0 && <Explanation />}
+          <div className="rounded-box rounded-t-none border-[12px] border-[#7a4b24] shadow-xl">
+            <div className="relative px-4 md:px-8" style={bookshelfStyle}>
+              {bookshelves.length === 0 ? (
+                shelfMessage('まだ本が登録されていません。本を検索して本棚に追加してみましょう！')
+              ) : displayedBookshelves.length === 0 ? (
+                shelfMessage('条件に一致する本がありません')
+              ) : (
+                <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+                  {displayedBookshelves.map((bookshelf) => (
+                    <BookshelfBook
+                      key={bookshelf.id}
+                      bookshelf={bookshelf}
+                      genreList={genreList}
+                      rowHeight={SHELF_ROW_HEIGHT}
+                      boardHeight={SHELF_BOARD_HEIGHT}
+                      onUpdated={handleUpdated}
+                      isOwner={isOwner}
+                    />
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )

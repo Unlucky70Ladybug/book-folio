@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react'
 import * as authService from '../providers/services/auth'
 import { AuthContext } from '../providers/auth-provides'
 import { NotificationContext } from '../providers/notification-provider'
+import { explanationStorage } from '../bookshelf/_utils/explanation-storage'
 
 export const useAuth = () => {
   const { isLogin, currentUser, updateAuthStatus } = useContext(AuthContext)
@@ -32,6 +33,7 @@ export const useAuth = () => {
     async (data: { email: string; password: string }) => {
       try {
         await authService.login(data)
+        explanationStorage.mark()
         await updateAuthStatus()
         notify('ログインに成功しました', 'success')
       } catch (err) {
@@ -45,6 +47,7 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       await authService.logout()
+      explanationStorage.dismiss()
       await updateAuthStatus()
       notify('ログアウトに成功しました', 'info')
     } catch (err) {
