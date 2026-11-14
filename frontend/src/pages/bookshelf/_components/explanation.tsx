@@ -114,13 +114,13 @@ const Explanation = () => {
               </div>
 
               {/* 動画・画像(中央配置) + 前後ボタン */}
-              <div className="relative flex w-full justify-center">
+              <div className="relative flex h-[65vh] w-full items-center justify-center">
                 {slide.type === 'video' ? (
                   <video
                     ref={(el) => {
                       videoRefs.current[i] = el
                     }}
-                    className="max-h-[65vh] w-auto max-w-full rounded-box bg-base-200"
+                    className="max-h-full w-auto max-w-full rounded-box bg-base-200"
                     controls
                     playsInline
                     muted
@@ -133,7 +133,7 @@ const Explanation = () => {
                   <img
                     src={slide.src}
                     alt={slide.title}
-                    className="max-h-[65vh] w-auto max-w-full rounded-box object-contain"
+                    className="max-h-full w-auto max-w-full rounded-box object-contain"
                   />
                 )}
                 <div className="absolute left-2 right-2 top-1/2 flex -translate-y-1/2 justify-between">
