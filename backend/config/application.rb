@@ -48,5 +48,8 @@ module App
     config.middleware.use ActionDispatch::Cookies # Required for all session management
     config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
     config.middleware.use ActionDispatch::Flash
+
+    # ログローテーション
+    config.logger = Logger.new('log/cron.log', 3, 10 * 1024 * 1024)
   end
 end
