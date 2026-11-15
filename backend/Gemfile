@@ -56,6 +56,9 @@ gem "enum_help"
 # serializerを扱うため
 gem "active_model_serializers"
 
+# 定期ジョブを実施するため
+gem 'whenever', :require => false
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
