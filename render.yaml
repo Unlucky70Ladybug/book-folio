@@ -8,7 +8,7 @@ services:
     branch: main
     rootDir: backend
     # 毎日 1:00 JST（scheduleはUTCで指定する）
-    schedule: "15 16 * * *"
+    schedule: "20 16 * * *"
     # マイグレーションはWebサービス側で行うため、ここではgemのインストールのみ
     buildCommand: bundle install
     startCommand: bundle exec rake rakuten_api:refresh_books
