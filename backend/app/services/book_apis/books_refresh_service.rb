@@ -5,8 +5,7 @@ module BookApis
   #   # => { updated: 10, skipped: 1, failed: 0 }
   class BooksRefreshService
     # この時間より前に取得した書籍を更新対象にする
-    STALE_AFTER = 1.hours
-    #3.months
+    STALE_AFTER = 3.months
     # 楽天APIのリクエスト制限（1秒に1回）に合わせた待機時間
     REQUEST_INTERVAL = 1
 
