@@ -1,0 +1,28 @@
+services:
+  # 保存済み書籍情報を楽天APIから取り直すバッチ
+  - type: cron
+    name: bookfolio-rakuten-batch
+    runtime: ruby
+    plan: starter
+    region: singapore # Web/DBと同じリージョンに合わせる
+    branch: main
+    rootDir: backend
+    # 毎日 1:00 JST（scheduleはUTCで指定する）
+    schedule: "0 16 * * *"
+    # マイグレーションはWebサービス側で行うため、ここではgemのインストールのみ
+    buildCommand: bundle install
+    startCommand: bundle exec rake rakuten_api:refresh_books
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      # sync: false の値は、Blueprint作成時にダッシュボードで入力する
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: RAKUTEN_BOOKS_APP_ID
+        sync: false
+      - key: RAKUTEN_BOOKS_ACCESS_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
