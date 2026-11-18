@@ -57,4 +57,67 @@ RSpec.describe "Api::V1::Relationships", type: :request do
       end
     end
   end
+
+  describe "GET /api/v1/relationships/:id" do
+    let(:other_user_1) { create(:user) }
+    let(:other_user_2) { create(:user) }
+    let(:other_user_3) { create(:user) }
+
+    context '未ログインの場合' do
+      it '401が返ってくる' do
+        get "/api/v1/relationships/#{other_user_1.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'ログイン済みの場合' do
+      it '200が返ってくる' do
+        get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+        expect(response).to have_http_status(:ok)
+      end
+
+      context 'カレントユーザーがフォローしているか' do
+        it '対象ユーザーをフォローしていればtrue' do
+          create(:relationship, follower: user, followed: other_user_1)
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['follow_status']).to be true
+        end
+
+        it '対象ユーザーをフォローしていなければfalse' do
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['follow_status']).to be false
+        end
+
+        it '対象ユーザーにフォローされているだけならfalse' do
+          create(:relationship, follower: other_user_1, followed: user)
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['follow_status']).to be false
+        end
+      end
+
+      context '対象ユーザーのフォロー・フォロワー一覧' do
+        it 'フォロー・フォロワーがいないとき空配列' do
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['following']).to eq []
+          expect(json['result']['followers']).to eq []
+        end
+
+        it '対象ユーザーの一覧が返る' do
+          create(:relationship, follower: other_user_1, followed: other_user_2)
+          create(:relationship, follower: other_user_3, followed: other_user_1)
+          create(:relationship, follower: user, followed: other_user_3)
+
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['following'].map { |user| user['id'] }).to eq [other_user_2.id]
+          expect(json['result']['followers'].map { |user| user['id'] }).to eq [other_user_3.id]
+        end
+
+        it 'カレントユーザーが対象ユーザーをフォローすると、対象のfollowersに含まれる' do
+          create(:relationship, follower: user, followed: other_user_1)
+          get "/api/v1/relationships/#{other_user_1.id}", headers: headers
+          expect(json['result']['followers'].map { |user| user['id'] }).to include(user.id)
+        end
+      end
+    end
+  end
 end
