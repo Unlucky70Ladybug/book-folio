@@ -27,7 +27,6 @@ RSpec.describe "Api::V1::Relationships", type: :request do
         get '/api/v1/relationships', headers: headers
         expect(json['result']['following']).to eq []
         expect(json['result']['followers']).to eq []
-
       end
 
       it 'フォローあり、フォロワーがいないとき' do
@@ -51,7 +50,7 @@ RSpec.describe "Api::V1::Relationships", type: :request do
         create(:relationship, follower: other_user_2, followed: user)
         create(:relationship, follower: user, followed: other_user_3)
         get '/api/v1/relationships', headers: headers
-        expect(json['result']['following'].map { |user| user['id'] }).to eq [other_user_3.id]
+        expect(json['result']['following'].map { |user| user['id'] }).to eq [ other_user_3.id ]
         expect(json['result']['followers'].map { |user| user['id'] }).to include(other_user_1.id, other_user_2.id)
         expect(json['result']['followers'].map { |user| user['id'] }).not_to include(other_user_3.id)
       end
@@ -108,8 +107,8 @@ RSpec.describe "Api::V1::Relationships", type: :request do
           create(:relationship, follower: user, followed: other_user_3)
 
           get "/api/v1/relationships/#{other_user_1.id}", headers: headers
-          expect(json['result']['following'].map { |user| user['id'] }).to eq [other_user_2.id]
-          expect(json['result']['followers'].map { |user| user['id'] }).to eq [other_user_3.id]
+          expect(json['result']['following'].map { |user| user['id'] }).to eq [ other_user_2.id ]
+          expect(json['result']['followers'].map { |user| user['id'] }).to eq [ other_user_3.id ]
         end
 
         it 'カレントユーザーが対象ユーザーをフォローすると、対象のfollowersに含まれる' do
@@ -125,9 +124,9 @@ RSpec.describe "Api::V1::Relationships", type: :request do
     let(:other_user_1) { create(:user) }
     let(:other_user_2) { create(:user) }
     let(:other_user_3) { create(:user) }
-    let(:params) { {relationship: { followed_id: other_user_1.id }} }
-    let(:nonexistent_user_params) { {relationship: { followed_id: 0 }} }
-    let(:self_follow_params) { {relationship: { followed_id: user.id }} }
+    let(:params) { { relationship: { followed_id: other_user_1.id } } }
+    let(:nonexistent_user_params) { { relationship: { followed_id: 0 } } }
+    let(:self_follow_params) { { relationship: { followed_id: user.id } } }
 
     context '未ログインの場合' do
       it '401が返ってくる' do
@@ -150,8 +149,8 @@ RSpec.describe "Api::V1::Relationships", type: :request do
 
       it 'フォローが成功する' do
         expect { post_relationships }.to change(Relationship, :count).by(1)
-        expect(json['result']['following'].map { |user| user['id'] }).to match_array([other_user_2.id, other_user_3.id])
-        expect(json['result']['followers'].map { |user| user['id'] }).to match_array([other_user_2.id, user.id])
+        expect(json['result']['following'].map { |user| user['id'] }).to match_array([ other_user_2.id, other_user_3.id ])
+        expect(json['result']['followers'].map { |user| user['id'] }).to match_array([ other_user_2.id, user.id ])
         expect(json['result']['follow_status']).to be true
       end
       it 'すでにフォローしている' do
@@ -199,8 +198,8 @@ RSpec.describe "Api::V1::Relationships", type: :request do
 
         it 'フォロー解除が成功する' do
           expect { delete_relationships }.to change(Relationship, :count).by(-1)
-          expect(json['result']['following'].map { |user| user['id'] }).to match_array([other_user_3.id])
-          expect(json['result']['followers'].map { |user| user['id'] }).to match_array([other_user_2.id])
+          expect(json['result']['following'].map { |user| user['id'] }).to match_array([ other_user_3.id ])
+          expect(json['result']['followers'].map { |user| user['id'] }).to match_array([ other_user_2.id ])
           expect(json['result']['follow_status']).to be false
         end
 

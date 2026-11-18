@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Relationship, type: :model do
   describe "Relationshipモデル" do
-    let(:user) {create(:user)}
-    let(:other_user) {create(:user)}
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
 
     context "有効な場合" do
       it "正常に登録できる" do
