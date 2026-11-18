@@ -32,12 +32,16 @@ class Api::V1::RelationshipsController < ApplicationController
 
   def destroy
     user = User.find(params[:id])
-    current_user.unfollow(user)
-    render json: {
-      result: relationship_status(user).merge(
-        follow_status: current_user.following?(user)
-      )
-    }
+    relationship = current_user.unfollow(user)
+    if relationship.destroyed?
+      render json: {
+        result: relationship_status(user).merge(
+          follow_status: current_user.following?(user)
+        )
+      }
+    else
+      render json: { errors: relationship.errors.full_messages }, status: :unprocessable_content
+    end
   end
 
   private
