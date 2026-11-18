@@ -26,7 +26,7 @@ class Api::V1::RelationshipsController < ApplicationController
         )
       }, status: :created
     else
-      render json: { errors: relationship.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: relationship.errors.full_messages }, status: :unprocessable_content
     end
   end
 
