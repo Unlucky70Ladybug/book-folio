@@ -12,7 +12,9 @@ export const deleteFollow = async (id: number): Promise<RelationshipStats> => {
   })
 
   const json = await res.json()
-  if (!res.ok) throw new Error(json?.error || '失敗しました')
+  if (!res.ok) {
+    throw new Error(json?.errors?.join('\n') ?? json?.error ?? 'フォロー解除に失敗しました')
+  }
 
   return json.result
 }
