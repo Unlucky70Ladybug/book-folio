@@ -169,4 +169,57 @@ RSpec.describe "Api::V1::Relationships", type: :request do
       end
     end
   end
+
+  describe "DELETE /api/v1/relationships/:id" do
+    let(:other_user_1) { create(:user) }
+    let(:other_user_2) { create(:user) }
+    let(:other_user_3) { create(:user) }
+
+    context '未ログインの場合' do
+      it '401が返ってくる' do
+        delete "/api/v1/relationships/#{other_user_1.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'ログイン時の場合' do
+      subject(:delete_relationships) { delete "/api/v1/relationships/#{other_user_1.id}", headers: headers }
+
+      context 'フォローしている場合' do
+        before {
+          create(:relationship, follower: user, followed: other_user_1)
+          create(:relationship, follower: other_user_2, followed: other_user_1)
+          create(:relationship, follower: other_user_1, followed: other_user_3)
+        }
+
+        it '200が返ってくる' do
+          delete_relationships
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'フォロー解除が成功する' do
+          expect { delete_relationships }.to change(Relationship, :count).by(-1)
+          expect(json['result']['following'].map { |user| user['id'] }).to match_array([other_user_3.id])
+          expect(json['result']['followers'].map { |user| user['id'] }).to match_array([other_user_2.id])
+          expect(json['result']['follow_status']).to be false
+        end
+
+        it '他のユーザーのフォロー関係は削除されない' do
+          delete_relationships
+          expect(Relationship.exists?(follower: other_user_2, followed: other_user_1)).to be true
+          expect(Relationship.exists?(follower: other_user_1, followed: other_user_3)).to be true
+        end
+      end
+
+      it 'フォローしていないユーザーは解除できない' do
+        expect { delete_relationships }.not_to change(Relationship, :count)
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it '存在しないユーザーは解除できない' do
+        expect { delete '/api/v1/relationships/0', headers: headers }.not_to change(Relationship, :count)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
