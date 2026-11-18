@@ -120,4 +120,53 @@ RSpec.describe "Api::V1::Relationships", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/relationships" do
+    let(:other_user_1) { create(:user) }
+    let(:other_user_2) { create(:user) }
+    let(:other_user_3) { create(:user) }
+    let(:params) { {relationship: { followed_id: other_user_1.id }} }
+    let(:nonexistent_user_params) { {relationship: { followed_id: 0 }} }
+    let(:self_follow_params) { {relationship: { followed_id: user.id }} }
+
+    context '未ログインの場合' do
+      it '401が返ってくる' do
+        post '/api/v1/relationships', params: params, as: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'ログイン時の場合' do
+      subject(:post_relationships) { post '/api/v1/relationships', params: params, headers: headers, as: :json }
+      before {
+        create(:relationship, follower: other_user_2, followed: other_user_1)
+        create(:relationship, follower: other_user_1, followed: other_user_2)
+        create(:relationship, follower: other_user_1, followed: other_user_3)
+      }
+      it '201が返ってくる' do
+        post_relationships
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'フォローが成功する' do
+        expect { post_relationships }.to change(Relationship, :count).by(1)
+        expect(json['result']['following'].map { |user| user['id'] }).to match_array([other_user_2.id, other_user_3.id])
+        expect(json['result']['followers'].map { |user| user['id'] }).to match_array([other_user_2.id, user.id])
+        expect(json['result']['follow_status']).to be true
+      end
+      it 'すでにフォローしている' do
+        create(:relationship, follower: user, followed: other_user_1)
+        expect { post_relationships }.not_to change(Relationship, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+      it '存在しないユーザーをフォロー出来ない' do
+        expect { post '/api/v1/relationships', params: nonexistent_user_params, headers: headers, as: :json }.not_to change(Relationship, :count)
+        expect(response).to have_http_status(:not_found)
+      end
+      it '自分をフォローできない' do
+        expect { post '/api/v1/relationships', params: self_follow_params, headers: headers, as: :json }.not_to change(Relationship, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
 end
