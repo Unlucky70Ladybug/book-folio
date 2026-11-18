@@ -36,13 +36,13 @@ RSpec.describe Relationship, type: :model do
         Relationship.create!(follower: user, followed: other_user)
         relationship = Relationship.new(follower: user, followed: other_user)
         expect(relationship).to be_invalid
-        expect(relationship.errors[:followed_id]).to be_present
+        expect(relationship.errors[:followed]).to be_present
       end
 
       it "自分をフォローしようとする" do
         relationship = Relationship.new(follower: user, followed: user)
         expect(relationship).to be_invalid
-        expect(relationship.errors[:followed_id]).to be_present
+        expect(relationship.errors[:followed]).to be_present
       end
     end
   end
