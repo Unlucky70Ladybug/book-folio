@@ -7,6 +7,7 @@ ja:
       post: "コメント"
       genre: "ジャンル"
       book_genre: "本棚のジャンル"
+      relationship: "フォロー関係"
 
     attributes:
       user:
@@ -48,6 +49,9 @@ ja:
         genre: "ジャンル"
         bookshelf_id: "本棚"
         genre_id: "ジャンル"
+      relationship:
+        follower: "フォロワー"
+        followed: "フォロー先"
 
     errors:
       models:
@@ -109,6 +113,12 @@ ja:
               required: "を入力してください"
             bookshelf_id:
               taken: "にはすでにこのジャンルが登録されています"
+        relationship:
+          attributes:
+            follower:
+              taken: "はすでに登録されています"
+            followed:
+              taken: "はすでに登録されています"
 
   enums:
     bookshelf:

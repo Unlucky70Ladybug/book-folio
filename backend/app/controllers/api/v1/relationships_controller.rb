@@ -18,22 +18,30 @@ class Api::V1::RelationshipsController < ApplicationController
 
   def create
     user = User.find(relationship_params[:followed_id])
-    current_user.follow(user)
-    render json: {
-      result: relationship_status(user).merge(
-        follow_status: current_user.following?(user)
-      )
-    }
+    relationship = current_user.follow(user)
+    if relationship.persisted?
+      render json: {
+        result: relationship_status(user).merge(
+          follow_status: current_user.following?(user)
+        )
+      }, status: :created
+    else
+      render json: { errors: relationship.errors.full_messages }, status: :unprocessable_content
+    end
   end
 
   def destroy
     user = User.find(params[:id])
-    current_user.unfollow(user)
-    render json: {
-      result: relationship_status(user).merge(
-        follow_status: current_user.following?(user)
-      )
-    }
+    relationship = current_user.unfollow(user)
+    if relationship.destroyed?
+      render json: {
+        result: relationship_status(user).merge(
+          follow_status: current_user.following?(user)
+        )
+      }
+    else
+      render json: { errors: relationship.errors.full_messages }, status: :unprocessable_content
+    end
   end
 
   private
