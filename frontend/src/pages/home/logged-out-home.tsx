@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import LoginGuestUser from '../auth/_components/login-guest-user'
 
 const features = [
   {
@@ -65,6 +66,7 @@ const LoggedOutHome = () => {
               ログイン
             </Link>
           </div>
+          <LoginGuestUser />
         </div>
       </section>
 

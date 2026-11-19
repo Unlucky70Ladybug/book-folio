@@ -52,6 +52,26 @@ export const login = async (data: { email: string; password: string }) => {
   return json
 }
 
+export const gestUserloginlogin = async () => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/guest_sign_in`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  })
+
+  const json = await res.json()
+  if (!res.ok) throw new Error(json?.errors?.[0] || 'ログインに失敗しました')
+
+  Cookies.set('_access_token', res.headers.get('access-token') ?? '')
+  Cookies.set('_client', res.headers.get('client') ?? '')
+  Cookies.set('_uid', res.headers.get('uid') ?? '')
+
+  return json
+}
+
+
 export const logout = async () => {
   const accessToken = Cookies.get('_access_token')
   const client = Cookies.get('_client')

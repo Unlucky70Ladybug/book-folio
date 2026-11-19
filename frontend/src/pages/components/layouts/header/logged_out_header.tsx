@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import LoginGuestUser from '../../../auth/_components/login-guest-user'
 
 const LoggedOutHeader = () => {
   return (
@@ -10,6 +11,7 @@ const LoggedOutHeader = () => {
       </div>
       <div className="flex-none">
         <div className="flex gap-2">
+          <LoginGuestUser />
           <Link to="/signup" className="btn btn-primary btn-sm sm:btn-md">
             新規登録
           </Link>
