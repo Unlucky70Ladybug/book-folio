@@ -39,4 +39,16 @@ class User < ActiveRecord::Base
   def following?(other_user)
     following.include?(other_user)
   end
+
+  # ゲストユーザー
+  def self.guest
+    find_or_create_by!(email: 'guest_user@example.com') do |user|
+      password = SecureRandom.alphanumeric(32)
+      user.name = "ゲスト"
+      user.email = 'guest_user@example.com'
+      user.password = password
+      user.password_confirmation = password
+      user.confirmed_at = Time.current
+    end
+  end
 end
