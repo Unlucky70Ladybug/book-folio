@@ -1,7 +1,17 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/use-auth'
 
-const LoginGuestUser = () => {
+type Props = {
+  formClassName?: string
+  buttonClassName?: string
+  label?: string
+}
+
+const LoginGuestUser = ({
+  formClassName,
+  buttonClassName,
+  label = 'ゲストユーザーでログイン',
+}: Props) => {
   const { gestUserlogin } = useAuth()
   const navigate = useNavigate()
 
@@ -16,14 +26,22 @@ const LoginGuestUser = () => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="card my-8 w-full border border-base-300 bg-base-100 shadow-lg"
-    >
-
-        <button type="submit" className="btn btn-primary btn-lg mt-2 w-full">
-          ゲストユーザーでログイン
-        </button>
+    <form onSubmit={handleSubmit} className={formClassName}>
+      <button type="submit" className={buttonClassName}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          className="size-4"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21a8 8 0 0 1 16 0" strokeLinecap="round" />
+        </svg>
+        {label}
+      </button>
     </form>
   )
 }

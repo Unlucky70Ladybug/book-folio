@@ -66,7 +66,17 @@ const LoggedOutHome = () => {
               ログイン
             </Link>
           </div>
-          <LoginGuestUser />
+
+          {/* ゲストログイン(お試し用):通常の登録・ログインと区別するため区切り線で離す */}
+          <div className="flex flex-col items-center w-full sm:w-auto mt-2">
+            <div className="divider text-sm opacity-70 w-full sm:w-80">または</div>
+            <LoginGuestUser
+              formClassName="flex flex-col items-center w-full sm:w-auto"
+              buttonClassName="btn btn-soft btn-secondary btn-lg w-full sm:w-auto"
+              label="ゲストで試す"
+            />
+            <p className="text-xs opacity-60 mt-2">登録せずにお試しできます</p>
+          </div>
         </div>
       </section>
 
