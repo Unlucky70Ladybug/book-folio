@@ -33,7 +33,7 @@ export const useAuth = () => {
     async (data: { email: string; password: string }) => {
       try {
         await authService.login(data)
-        explanationStorage.mark()
+        explanationStorage.markAsShown()
         await updateAuthStatus()
         notify('ログインに成功しました', 'success')
       } catch (err) {
@@ -48,7 +48,7 @@ export const useAuth = () => {
   const gestUserlogin = useCallback(async () => {
       try {
         await authService.gestUserloginlogin()
-        explanationStorage.mark()
+        explanationStorage.markAsGuest()
         await updateAuthStatus()
         notify('ログインに成功しました', 'success')
       } catch (err) {
