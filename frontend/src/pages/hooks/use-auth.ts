@@ -46,18 +46,16 @@ export const useAuth = () => {
 
   // ゲストユーザーでログイン
   const gestUserlogin = useCallback(async () => {
-      try {
-        await authService.gestUserloginlogin()
-        explanationStorage.markAsGuest()
-        await updateAuthStatus()
-        notify('ログインに成功しました', 'success')
-      } catch (err) {
-        notify(err instanceof Error ? err.message : 'ログインに失敗しました', 'error')
-        throw err
-      }
-    },
-    [updateAuthStatus, notify],
-  )
+    try {
+      await authService.gestUserloginlogin()
+      explanationStorage.markAsGuest()
+      await updateAuthStatus()
+      notify('ログインに成功しました', 'success')
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'ログインに失敗しました', 'error')
+      throw err
+    }
+  }, [updateAuthStatus, notify])
 
   const logout = useCallback(async () => {
     try {

@@ -44,9 +44,7 @@ const Explanation = ({ bookshelvesLength }: ExplanationProps) => {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   // ゲストログイン: 必ず表示 / 通常ログイン: 本棚に本が1冊もないときだけ表示
   const [isOpen, setIsOpen] = useState(
-    () =>
-      explanationStorage.isGuest() ||
-      (explanationStorage.isShown() && bookshelvesLength === 0),
+    () => explanationStorage.isGuest() || (explanationStorage.isShown() && bookshelvesLength === 0),
   )
   const [current, setCurrent] = useState(0)
 

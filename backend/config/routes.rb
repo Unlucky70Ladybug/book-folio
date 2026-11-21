@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   namespace :auth do
     resources :sessions, only: %i[index]
     # ゲストユーザーのログイン
-    post 'guest_sign_in', to: 'guests#guest_sign_in'
+    post "guest_sign_in", to: "guests#guest_sign_in"
   end
 
   namespace :api do

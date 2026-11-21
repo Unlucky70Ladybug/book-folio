@@ -71,7 +71,6 @@ export const gestUserloginlogin = async () => {
   return json
 }
 
-
 export const logout = async () => {
   const accessToken = Cookies.get('_access_token')
   const client = Cookies.get('_client')
