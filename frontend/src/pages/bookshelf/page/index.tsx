@@ -159,7 +159,7 @@ const BookshelfPage = () => {
         <Spinner message="本棚を読み込み中..." />
       ) : (
         <>
-          {bookshelves.length === 0 && <Explanation />}
+          <Explanation bookshelvesLength={bookshelves.length} />
           <div className="rounded-box rounded-t-none border-[12px] border-[#7a4b24] shadow-xl">
             <div className="relative px-4 md:px-8" style={bookshelfStyle}>
               {bookshelves.length === 0 ? (

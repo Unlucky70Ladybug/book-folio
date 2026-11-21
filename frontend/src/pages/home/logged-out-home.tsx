@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import AuthActions from './_componets/auth-actions'
 
 const features = [
   {
@@ -43,35 +43,30 @@ const LoggedOutHome = () => {
   return (
     <div className="min-h-screen bg-base-100 text-base-content">
       {/* ヒーロー */}
-      <section className="hero bg-gradient-to-b from-primary/10 via-base-100 to-base-100 py-20 px-4">
-        <div className="hero-content flex-col max-w-3xl text-center">
-          <h1 className="relative inline-block text-6xl md:text-8xl font-black tracking-tight bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 bg-clip-text text-transparent drop-shadow-sm">
+      <section className="hero bg-gradient-to-b from-primary/10 via-base-100 to-base-100 pt-6 pb-10 md:pt-8 px-4">
+        <div className="hero-content flex-col max-w-3xl text-center gap-2 py-0">
+          <h1 className="relative inline-block text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 bg-clip-text text-transparent drop-shadow-sm">
             BookFolio
             <span className="absolute -bottom-2 left-0 h-1.5 w-full rounded-full bg-gradient-to-r from-amber-400 to-rose-500" />
           </h1>
-          <p className="text-lg md:text-xl font-medium mt-2">
+          <p className="text-lg md:text-xl font-medium mt-3">
             読んだ本から、自分の好みと読書傾向が見えてくる。
           </p>
-          <p className="opacity-80 mt-4 leading-relaxed">
-            読んだ本を記録・蓄積し、ジャンルや著者ごとの読書傾向をグラフで可視化する読書記録サービスです。
-            これまでの読書を振り返りながら、自分に合った次の一冊を見つけやすくします。
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto justify-center">
-            <Link to="/signup" className="btn btn-primary btn-lg">
-              新規登録
-            </Link>
-            <Link to="/login" className="btn btn-outline btn-primary btn-lg">
-              ログイン
-            </Link>
+          <div className="opacity-80 mt-1 leading-relaxed">
+            <p>
+              読んだ本を記録・蓄積し、ジャンルや著者ごとの読書傾向をグラフで可視化する読書記録サービスです。
+            </p>
+            <p>これまでの読書を振り返りながら、自分に合った次の一冊を見つけやすくします。</p>
           </div>
+
+          <AuthActions className="mt-4" />
         </div>
       </section>
 
       {/* 機能紹介 */}
       <section className="max-w-5xl mx-auto py-16 px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">BookFolio でできること</h2>
-        <p className="text-center opacity-75 mb-10">
+        <p className="text-center opacity-80 mb-10">
           記録するだけで終わらせない。読書を振り返り、次につなげる。
         </p>
 
@@ -98,14 +93,7 @@ const LoggedOutHome = () => {
           <p className="opacity-80 mb-8">
             読んだ本を記録するほど、あなたの読書傾向がはっきりしていきます。
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/signup" className="btn btn-primary btn-lg">
-              新規登録
-            </Link>
-            <Link to="/login" className="btn btn-outline btn-primary btn-lg">
-              ログイン
-            </Link>
-          </div>
+          <AuthActions />
         </div>
       </section>
     </div>

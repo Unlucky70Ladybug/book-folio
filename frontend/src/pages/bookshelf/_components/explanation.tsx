@@ -34,11 +34,18 @@ const slides: Slide[] = [
   },
 ]
 
-const Explanation = () => {
+type ExplanationProps = {
+  bookshelvesLength: number
+}
+
+const Explanation = ({ bookshelvesLength }: ExplanationProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const carouselRef = useRef<HTMLDivElement>(null) // スライド全体
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const [isOpen, setIsOpen] = useState(explanationStorage.shouldShow)
+  // ゲストログイン: 必ず表示 / 通常ログイン: 本棚に本が1冊もないときだけ表示
+  const [isOpen, setIsOpen] = useState(
+    () => explanationStorage.isGuest() || (explanationStorage.isShown() && bookshelvesLength === 0),
+  )
   const [current, setCurrent] = useState(0)
 
   useEffect(() => {

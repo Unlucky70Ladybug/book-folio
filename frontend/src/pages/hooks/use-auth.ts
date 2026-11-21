@@ -28,12 +28,12 @@ export const useAuth = () => {
     [updateAuthStatus, notify],
   )
 
-  // ログイン（仮）
+  // ログイン
   const login = useCallback(
     async (data: { email: string; password: string }) => {
       try {
         await authService.login(data)
-        explanationStorage.mark()
+        explanationStorage.markAsShown()
         await updateAuthStatus()
         notify('ログインに成功しました', 'success')
       } catch (err) {
@@ -43,6 +43,19 @@ export const useAuth = () => {
     },
     [updateAuthStatus, notify],
   )
+
+  // ゲストユーザーでログイン
+  const gestUserlogin = useCallback(async () => {
+    try {
+      await authService.gestUserloginlogin()
+      explanationStorage.markAsGuest()
+      await updateAuthStatus()
+      notify('ログインに成功しました', 'success')
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'ログインに失敗しました', 'error')
+      throw err
+    }
+  }, [updateAuthStatus, notify])
 
   const logout = useCallback(async () => {
     try {
@@ -58,6 +71,7 @@ export const useAuth = () => {
   return {
     signUp,
     login,
+    gestUserlogin,
     logout,
     isLogin,
     currentUser,
