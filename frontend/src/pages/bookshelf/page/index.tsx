@@ -50,7 +50,7 @@ const BookshelfPage = () => {
   const [keyword, setKeyword] = useState<string>('')
   const [relationshipStats, setRelationshipStats] = useState<RelationshipStats | null>(null)
 
-  // この本の所有権はない
+  // この本の所有権
   const isOwner = true
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { type DisplayBook } from './book'
-import { type BookshelfForPreference, type ReadingStatus, type PreferenceRating } from './bookshelf'
+import { type ReadingStatus, type PreferenceRating, type Bookshelf } from './bookshelf'
 import { type Genre } from './genre'
 
 type PreferenceCounts = Record<PreferenceRating, number>
@@ -11,7 +11,7 @@ export type Preference = {
 }
 
 export type BookshelfPreference = {
-  books: BookshelfForPreference[]
+  books: Bookshelf[]
   preference: Preference
 }
 
@@ -29,7 +29,7 @@ export type RatingSummary = {
   count: number
   // 登録した本全体に対する割合(%)
   ratio: number
-  books: BookshelfForPreference[]
+  books: Bookshelf[]
 }
 
 // 評価ごとのグラフの色(テーマのオレンジに合わせ、評価が高いほど濃い暖色にする)
