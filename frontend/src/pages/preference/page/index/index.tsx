@@ -115,9 +115,7 @@ const PreferenceResult = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 md:ml-auto">
-              <span className="badge badge-primary badge-soft">
-                登録数 {total}冊
-              </span>
+              <span className="badge badge-primary badge-soft">登録数 {total}冊</span>
               <span className="badge badge-ghost">
                 {PREFERENCE_RATING_LABELS.unrated} {unratedSummary?.count ?? 0}冊 (
                 {unratedSummary?.ratio ?? 0}%)
