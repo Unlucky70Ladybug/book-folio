@@ -16,6 +16,7 @@ import {
   shelfStyle,
 } from '../../../components/shelf/shelf-style'
 import { BookshelfBook } from '../../../bookshelf/_components/bookshelf-book'
+import { handleUpdated } from '../../../bookshelf/_utils/handle-updated'
 import Spinner from '../../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../../assets/default_user_image.png'
 
@@ -61,11 +62,6 @@ const PreferenceResult = () => {
       ignore = true
     }
   }, [notify])
-
-  // 更新成功後、該当の1冊だけ差し替える
-  const handleUpdated = (updated_book: Bookshelf) => {
-    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
-  }
 
   // 本棚の更新(handleUpdated)に追従させるため、件数と割合はbookshelvesから算出する(APIと同じく小数第1位で四捨五入)
   const total = bookshelves.length
@@ -175,7 +171,7 @@ const PreferenceResult = () => {
                           genreList={genreList}
                           rowHeight={SHELF_ROW_HEIGHT}
                           boardHeight={SHELF_BOARD_HEIGHT}
-                          onUpdated={handleUpdated}
+                          onUpdated={handleUpdated(setBookshelves)}
                           isOwner={isOwner}
                         />
                       ))}

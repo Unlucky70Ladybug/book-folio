@@ -17,6 +17,7 @@ import {
   shelfStyle,
 } from '../../components/shelf/shelf-style'
 import { BookshelfBook } from '../../bookshelf/_components/bookshelf-book'
+import { handleUpdated } from '../../bookshelf/_utils/handle-updated'
 import Spinner from '../../components/layouts/ui/spinner'
 import { UserComparisonTabs } from '../_components/user-comparison-tabs'
 import defaultUserImage from '../../../assets/default_user_image.png'
@@ -108,11 +109,6 @@ const GenreStatistic = () => {
     }),
   )
 
-  // 更新成功後、該当の1冊だけ差し替える(ジャンル別の集計は再計算される)
-  const handleUpdated = (updated_book: Bookshelf) => {
-    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
-  }
-
   return (
     <div className="flex flex-col gap-6">
       {/* ユーザー情報とジャンルの割合 */}
@@ -177,7 +173,7 @@ const GenreStatistic = () => {
                         genreList={genreList}
                         rowHeight={SHELF_ROW_HEIGHT}
                         boardHeight={SHELF_BOARD_HEIGHT}
-                        onUpdated={handleUpdated}
+                        onUpdated={handleUpdated(setBookshelves)}
                         isOwner={isOwner}
                       />
                     ))}
