@@ -2,22 +2,35 @@ class Api::V1::GenreStatisticsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    genres_books = Genre.eager_load(bookshelves: :book)
-                  .where(bookshelves: { user_id: current_user.id })
+    bookshelves = current_user.bookshelves.preload(:book, :genres, :post).order(preference_rating: :desc)
+    return render json: { genres_books: [], genre_statistics: [] } if bookshelves.blank?
 
-    return render json: { genres_books: [], genre_statistics: [] } if genres_books.blank?
+    # { genre => [bookshelf, bookshelf, ...] } にまとめる
+    bookshelves_by_genre = Hash.new { |hash, key| hash[key] = [] }
+    bookshelves.each do |bookshelf|
+      bookshelf.genres.each { |genre| bookshelves_by_genre[genre] << bookshelf }
+    end
 
-    total = genres_books.sum { |genre| genre.bookshelves.size }
-    ratios = genres_books.map do |genre|
-      books_count = genre.bookshelves.size
+    # ジャンルごとの本を返す
+    genres_books = bookshelves_by_genre.map do |genre, genre_bookshelves|
       {
         id: genre.id,
         name: genre.name,
-        books_count: books_count,
-        ratio: total.zero? ? 0 : (books_count * 100.0 / total).round(1)
+        bookshelves: ActiveModelSerializers::SerializableResource.new(genre_bookshelves, each_serializer: BookshelfSerializer).as_json
       }
-    end
-    render json: genres_books, each_serializer: GenreStatisticSerializer, root: "genres_books", adapter: :json,
-           meta: ratios, meta_key: :genre_statistics
+    end.sort_by { |genre| -genre[:bookshelves].size }
+
+    # ジャンルごとに分類された本棚の総数（重複を含む）
+    total = bookshelves_by_genre.values.sum(&:size)
+    ratios = bookshelves_by_genre.map do |genre, genre_bookshelves|
+      {
+        id: genre.id,
+        name: genre.name,
+        books_count: genre_bookshelves.size,
+        ratio: total.zero? ? 0 : (genre_bookshelves.size * 100.0 / total).round(1)
+      }
+    end.sort_by { |genre| -genre[:ratio] }
+
+    render json: { genres_books: genres_books, genre_statistics: ratios }
   end
 end

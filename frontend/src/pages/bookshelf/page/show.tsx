@@ -12,6 +12,7 @@ import {
   type ReadingSortKey,
 } from '../../../types/bookshelf'
 import { BookshelfBook } from '../_components/bookshelf-book'
+import { handleUpdated } from '../_utils/handle-updated'
 import { BookshelfFilterBar } from '../_components/bookshelf-filter-bar'
 import UserInfo from '../_components/user-info'
 import {
@@ -131,11 +132,6 @@ const OtherUserBookshelfPage = () => {
     return list
   }, [bookshelves, keyword, selectedGenreId, preferenceSortKey, readingSortKey])
 
-  // 更新成功後、該当の1冊だけ差し替える
-  const handleUpdated = (updated_book: Bookshelf) => {
-    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
-  }
-
   // 棚が空のときに出す案内(未登録時・該当なし時で共通)
   const shelfMessage = (message: string) => (
     <div className="flex items-end justify-center pb-14" style={{ height: SHELF_ROW_HEIGHT }}>
@@ -189,7 +185,7 @@ const OtherUserBookshelfPage = () => {
                     genreList={genreList}
                     rowHeight={SHELF_ROW_HEIGHT}
                     boardHeight={SHELF_BOARD_HEIGHT}
-                    onUpdated={handleUpdated}
+                    onUpdated={handleUpdated(setBookshelves)}
                     isOwner={isOwner}
                   />
                 ))}

@@ -27,15 +27,24 @@ RSpec.describe "Api::V1::GenreStatistics", type: :request do
         end
       end
 
-      context 'ジャンル未設定の本しかない場合' do
+      context 'ジャンル未設定の本が含まれている場合' do
+        let(:sf) { create(:genre, name: "SF") }
+        let!(:no_genre_bookshelf) { create(:bookshelf, user: user, book: create(:book)) }
+        let!(:sf_bookshelf) { create(:bookshelf, user: user, book: create(:book), genres: [ sf ]) }
+
         before do
-          create(:bookshelf, user: user, book: create(:book))
+          create(:post, bookshelf: no_genre_bookshelf)
+          create(:post, bookshelf: sf_bookshelf)
           get '/api/v1/genre_statistics', headers: headers
         end
 
-        it '空の配列が返ってくる' do
-          expect(json['genres_books']).to eq []
-          expect(json['genre_statistics']).to eq []
+        it 'ジャンル未設定の本は返ってこない' do
+          book_ids = json['genres_books'].flat_map { |genres_book| genres_book['bookshelves'].map { |bookshelf| bookshelf['book']['id'] } }
+          expect(book_ids).to contain_exactly(sf_bookshelf.book.id)
+        end
+
+        it 'ジャンル未設定の本は統計に含まれない' do
+          expect(json['genre_statistics'].map { |genre_statistic| [ genre_statistic['name'], genre_statistic['books_count'] ] }).to eq [ [ sf.name, 1 ] ]
         end
       end
 
@@ -67,7 +76,7 @@ RSpec.describe "Api::V1::GenreStatistics", type: :request do
         it '本棚に登録した本がジャンル別に返ってくる' do
           # { "SF" => [book_id, ...], ... } の形に変換して比較
           books_by_genre = json['genres_books'].to_h do |genres_book|
-            [ genres_book['name'], genres_book['books'].map { |book| book['id'] } ]
+            [ genres_book['name'], genres_book['bookshelves'].map { |bookshelf| bookshelf['book']['id'] } ]
           end
           expect(books_by_genre[sf.name]).to match_array [ bookshelf_1.book.id, bookshelf_2.book.id ]
           expect(books_by_genre[mystery.name]).to match_array [ bookshelf_2.book.id ]
@@ -95,7 +104,7 @@ RSpec.describe "Api::V1::GenreStatistics", type: :request do
 
         it 'カレントユーザー以外の結果は帰ってこない' do
            books_by_genre = json['genres_books'].to_h do |genres_book|
-            [ genres_book['name'], genres_book['books'].map { |book| book['id'] } ]
+            [ genres_book['name'], genres_book['bookshelves'].map { |bookshelf| bookshelf['book']['id'] } ]
           end
           expect(books_by_genre[sf.name]).not_to include(orther_bookshelf.book.id)
         end
