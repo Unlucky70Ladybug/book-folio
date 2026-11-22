@@ -1,9 +1,9 @@
-import { type DisplayBook } from './book'
+import { type Bookshelf } from './bookshelf'
 import { type Genre } from './genre'
 
 // ジャンルと、そのジャンルに登録した本
 export type GenresBooks = Genre & {
-  books: DisplayBook[]
+  bookshelves: Bookshelf[]
 }
 
 // ジャンルごとの集計
@@ -14,7 +14,7 @@ export type GenreStatistics = Genre & {
 
 // ジャンルごとの集計と本(円グラフとジャンル別の本棚で使う)
 export type GenreSummary = GenreStatistics & {
-  books: DisplayBook[]
+  bookshelves: Bookshelf[]
   color: string
 }
 

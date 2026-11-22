@@ -1,29 +1,40 @@
 import { useEffect, useState } from 'react'
 import { getGenreStatisticsResult } from '../_hooks/get-genre-statistic'
 import { getSimilarUserResult } from '../_hooks/get-similar-users'
+import { getGenres } from '../../bookshelf/_hooks/get-genres'
 import { useAuth } from '../../hooks/use-auth'
-import { type SimilarUser } from '../../../types/user'
 import { useNotification } from '../../hooks/use-notification'
-import {
-  genreColor,
-  type GenresBooks,
-  type GenreStatistics,
-  type GenreSummary,
-} from '../../../types/genre-statistic'
+import { type Bookshelf, type PreferenceRating } from '../../../types/bookshelf'
+import { type Genre } from '../../../types/genre'
+import { genreColor, type GenreSummary } from '../../../types/genre-statistic'
+import { type SimilarUser } from '../../../types/user'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
 import { StatisticTabs } from '../../components/statistic-tabs'
 import { EmptyState } from '../../components/empty-state'
-import { UserComparisonTabs } from '../_components/user-comparison-tabs'
-import { ShelfBook } from '../../components/shelf/shelf-book'
-import { shelfStyle } from '../../components/shelf/shelf-style'
+import {
+  SHELF_BOARD_HEIGHT,
+  SHELF_ROW_HEIGHT,
+  shelfStyle,
+} from '../../components/shelf/shelf-style'
+import { BookshelfBook } from '../../bookshelf/_components/bookshelf-book'
 import Spinner from '../../components/layouts/ui/spinner'
+import { UserComparisonTabs } from '../_components/user-comparison-tabs'
 import defaultUserImage from '../../../assets/default_user_image.png'
+
+// APIと同じく好み評価の高い順に並べるための順位
+const RATING_RANK: Record<PreferenceRating, number> = {
+  unrated: 0,
+  not_for_me: 1,
+  normal: 2,
+  interesting: 3,
+  favorite: 4,
+}
 
 const GenreStatistic = () => {
   const { currentUser } = useAuth()
   const { notify } = useNotification()
-  const [genresBooks, setGenresBooks] = useState<GenresBooks[]>([])
-  const [genreStatistics, setGenreStatistics] = useState<GenreStatistics[]>([])
+  const [bookshelves, setBookshelves] = useState<Bookshelf[]>([])
+  const [genreList, setGenreList] = useState<Genre[]>([])
   const [comparisonUsers, setComparisonUsers] = useState<SimilarUser>({
     similar_users: [],
     middle_users: [],
@@ -31,15 +42,23 @@ const GenreStatistic = () => {
   })
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
+  // この本の所有権
+  const isOwner = true
+
   useEffect(() => {
     let ignore = false
 
-    Promise.all([getGenreStatisticsResult(), getSimilarUserResult()])
-      .then(([genreStatisticsResult, similarUserResult]) => {
+    Promise.all([getGenreStatisticsResult(), getGenres(), getSimilarUserResult()])
+      .then(([genreStatisticsResult, genresResult, similarUserResult]) => {
         if (ignore) return
-        setGenresBooks(genreStatisticsResult.genres_books)
-        setGenreStatistics(genreStatisticsResult.genre_statistics)
+        // 1冊が複数ジャンルに含まれるため、重複を除いた本棚の一覧にする
+        const uniqueBookshelves = new Map<number, Bookshelf>()
+        genreStatisticsResult.genres_books.forEach((genre) =>
+          genre.bookshelves.forEach((b) => uniqueBookshelves.set(b.id, b)),
+        )
+        setBookshelves([...uniqueBookshelves.values()])
         setComparisonUsers(similarUserResult)
+        setGenreList(genresResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -54,23 +73,45 @@ const GenreStatistic = () => {
     }
   }, [notify])
 
-  // 件数と割合はAPIの集計結果(genre_statistics)をそのまま使う
-  const summaries: GenreSummary[] = [...genreStatistics].map((statistic, i) => ({
-    ...statistic,
-    books: genresBooks.find(({ id }) => id === statistic.id)?.books ?? [],
-    color: genreColor(i),
-  }))
+  // 本棚の更新(handleUpdated)に追従させるため、ジャンルごとの本・件数・割合はbookshelvesから算出する(APIと同じく小数第1位で四捨五入)
+  const bookshelvesByGenre = new Map<number, { genre: Genre; bookshelves: Bookshelf[] }>()
+  ;[...bookshelves]
+    .sort((a, b) => RATING_RANK[b.preference_rating] - RATING_RANK[a.preference_rating])
+    .forEach((bookshelf) =>
+      bookshelf.genres.forEach((genre) => {
+        const group = bookshelvesByGenre.get(genre.id) ?? { genre, bookshelves: [] }
+        group.bookshelves.push(bookshelf)
+        bookshelvesByGenre.set(genre.id, group)
+      }),
+    )
+  // ジャンルごとに分類された本棚の総数(重複を含む)
+  const total = [...bookshelvesByGenre.values()].reduce((sum, g) => sum + g.bookshelves.length, 0)
+  const summaries: GenreSummary[] = [...bookshelvesByGenre.values()]
+    .sort((a, b) => b.bookshelves.length - a.bookshelves.length)
+    .map(({ genre, bookshelves: genreBookshelves }, i) => ({
+      id: genre.id,
+      name: genre.name,
+      books_count: genreBookshelves.length,
+      ratio: total === 0 ? 0 : Math.round((genreBookshelves.length * 1000) / total) / 10,
+      bookshelves: genreBookshelves,
+      color: genreColor(i),
+    }))
 
   const chartItems: RatioChartItem[] = summaries.map(
-    ({ id, name, books_count, ratio, books, color }) => ({
+    ({ id, name, books_count, ratio, bookshelves, color }) => ({
       id,
       label: name,
       count: books_count,
       ratio,
       color,
-      titles: books.map(({ title }) => title),
+      titles: bookshelves.map(({ book }) => book.title),
     }),
   )
+
+  // 更新成功後、該当の1冊だけ差し替える(ジャンル別の集計は再計算される)
+  const handleUpdated = (updated_book: Bookshelf) => {
+    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -118,7 +159,7 @@ const GenreStatistic = () => {
       ) : (
         <>
           {/* ジャンルごとの本棚 */}
-          {summaries.map(({ id, name, books_count, ratio, books, color }) => (
+          {summaries.map(({ id, name, books_count, ratio, bookshelves, color }) => (
             <section key={id} className="flex flex-col gap-3">
               <h2 className="flex items-center gap-3">
                 <span className="h-6 w-1.5 rounded-full" style={{ backgroundColor: color }} />
@@ -129,8 +170,16 @@ const GenreStatistic = () => {
               <div className="rounded-box border-[12px] border-[#7a4b24] shadow-xl">
                 <div className="relative px-4 md:px-8" style={shelfStyle}>
                   <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                    {books.map((book) => (
-                      <ShelfBook key={book.id} {...book} />
+                    {bookshelves.map((bookshelf) => (
+                      <BookshelfBook
+                        key={bookshelf.id}
+                        bookshelf={bookshelf}
+                        genreList={genreList}
+                        rowHeight={SHELF_ROW_HEIGHT}
+                        boardHeight={SHELF_BOARD_HEIGHT}
+                        onUpdated={handleUpdated}
+                        isOwner={isOwner}
+                      />
                     ))}
                   </ul>
                 </div>
