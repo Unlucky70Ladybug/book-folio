@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom'
 import { getPreferenceResult } from '../../_hooks/get-preference'
 import { useAuth } from '../../../hooks/use-auth'
 import { useNotification } from '../../../hooks/use-notification'
+import { getGenres } from '../../../bookshelf/_hooks/get-genres'
+import { type Genre } from '../../../../types/genre'
 import { type PreferenceRating } from '../../../../types/bookshelf'
 import { RATING_COLORS, type Preference, type RatingSummary } from '../../../../types/preference'
-import { PREFERENCE_RATING_LABELS, type BookshelfForPreference } from '../../../../types/bookshelf'
+import { PREFERENCE_RATING_LABELS, type Bookshelf } from '../../../../types/bookshelf'
 import { RatioChart, type RatioChartItem } from '../../../components/chart/ratio-chart'
-import { ShelfBook } from '../../../components/shelf/shelf-book'
 import { EmptyState } from '../../../components/empty-state'
 import {
   SHELF_BOARD_HEIGHT,
   SHELF_ROW_HEIGHT,
   shelfStyle,
 } from '../../../components/shelf/shelf-style'
+import { BookshelfBook } from '../../../bookshelf/_components/bookshelf-book'
 import Spinner from '../../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../../assets/default_user_image.png'
 
@@ -29,18 +31,23 @@ const RATED_RATINGS: PreferenceRating[] = [
 const PreferenceResult = () => {
   const { currentUser } = useAuth()
   const { notify } = useNotification()
-  const [books, setBooks] = useState<BookshelfForPreference[]>([])
+  const [bookshelves, setBookshelves] = useState<Bookshelf[]>([])
+  const [genreList, setGenreList] = useState<Genre[]>([])
   const [preference, setPreference] = useState<Preference | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  // この本の所有権
+  const isOwner = true
 
   useEffect(() => {
     let ignore = false
 
-    getPreferenceResult()
-      .then((preferenceResult) => {
+    Promise.all([getPreferenceResult(), getGenres()])
+      .then(([preferenceResult, genresResult]) => {
         if (ignore) return
-        setBooks(preferenceResult.books)
+        setBookshelves(preferenceResult.books)
         setPreference(preferenceResult.preference)
+        setGenreList(genresResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -55,13 +62,25 @@ const PreferenceResult = () => {
     }
   }, [notify])
 
-  // 件数と割合はAPIの集計結果(preference)をそのまま使う。1冊もない評価はキーごと返ってこない
-  const summaries: RatingSummary[] = RATED_RATINGS.map((rating) => ({
-    rating,
-    count: preference?.counts[rating] ?? 0,
-    ratio: preference?.ratios[rating] ?? 0,
-    books: books.filter(({ preference_rating }) => preference_rating === rating),
-  }))
+  // 更新成功後、該当の1冊だけ差し替える
+  const handleUpdated = (updated_book: Bookshelf) => {
+    setBookshelves((prev) => prev.map((b) => (b.id === updated_book.id ? updated_book : b)))
+  }
+
+  // 本棚の更新(handleUpdated)に追従させるため、件数と割合はbookshelvesから算出する(APIと同じく小数第1位で四捨五入)
+  const total = bookshelves.length
+  const summaries: RatingSummary[] = RATED_RATINGS.map((rating) => {
+    const ratedBooks = bookshelves.filter(({ preference_rating }) => preference_rating === rating)
+    const count = ratedBooks.length
+    return {
+      rating,
+      count,
+      ratio: total === 0 ? 0 : Math.round((count * 1000) / total) / 10,
+      books: ratedBooks,
+    }
+  })
+
+  const unratedSummary = summaries.find(({ rating }) => rating === 'unrated')
 
   const chartItems: RatioChartItem[] = summaries.map(
     ({ rating, count, ratio, books: ratedBooks }) => ({
@@ -96,12 +115,10 @@ const PreferenceResult = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 md:ml-auto">
-              <span className="badge badge-primary badge-soft">
-                登録数 {preference?.total ?? 0}冊
-              </span>
+              <span className="badge badge-primary badge-soft">登録数 {total}冊</span>
               <span className="badge badge-ghost">
-                {PREFERENCE_RATING_LABELS.unrated} {preference?.counts.unrated ?? 0}冊 (
-                {preference?.ratios.unrated ?? 0}%)
+                {PREFERENCE_RATING_LABELS.unrated} {unratedSummary?.count ?? 0}冊 (
+                {unratedSummary?.ratio ?? 0}%)
               </span>
             </div>
           </div>
@@ -152,7 +169,15 @@ const PreferenceResult = () => {
                   ) : (
                     <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                       {ratedBooks.map((bookshelf) => (
-                        <ShelfBook key={bookshelf.id} {...bookshelf.book} />
+                        <BookshelfBook
+                          key={bookshelf.id}
+                          bookshelf={bookshelf}
+                          genreList={genreList}
+                          rowHeight={SHELF_ROW_HEIGHT}
+                          boardHeight={SHELF_BOARD_HEIGHT}
+                          onUpdated={handleUpdated}
+                          isOwner={isOwner}
+                        />
                       ))}
                     </ul>
                   )}
