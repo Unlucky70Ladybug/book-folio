@@ -1,8 +1,12 @@
-import { type DisplayBook } from './book'
+import { type Bookshelf } from './bookshelf'
 
 export type AuthorStatistics = {
   author: string
-  books: DisplayBook[]
+  bookshelves: Bookshelf[]
   books_count: number
   ratio: number
+}
+
+export type AuthorSummary = AuthorStatistics & {
+  color: string
 }

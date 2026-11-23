@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAuthorStatisticsResult } from '../_hooks/get-author-statistic'
+import { getGenres } from '../../bookshelf/_hooks/get-genres'
 import { useAuth } from '../../hooks/use-auth'
 import { useNotification } from '../../hooks/use-notification'
-import { type AuthorStatistics } from '../../../types/author-statistic'
+import { type Bookshelf } from '../../../types/bookshelf'
+import { type AuthorStatistics, type AuthorSummary } from '../../../types/author-statistic'
+import { type Genre } from '../../../types/genre'
 import { genreColor } from '../../../types/genre-statistic'
 import { RatioChart, type RatioChartItem } from '../../components/chart/ratio-chart'
 import { StatisticTabs } from '../../components/statistic-tabs'
 import { EmptyState } from '../../components/empty-state'
-import { ShelfBook } from '../../components/shelf/shelf-book'
-import { shelfStyle } from '../../components/shelf/shelf-style'
+import { BookshelfBook } from '../../bookshelf/_components/bookshelf-book'
+import { handleUpdated } from '../../bookshelf/_utils/handle-updated'
+import {
+  SHELF_BOARD_HEIGHT,
+  SHELF_ROW_HEIGHT,
+  shelfStyle,
+} from '../../components/shelf/shelf-style'
 import Spinner from '../../components/layouts/ui/spinner'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
@@ -17,15 +25,23 @@ const AuthorStatistic = () => {
   const { currentUser } = useAuth()
   const { notify } = useNotification()
   const [authorStatistics, setAuthorStatistics] = useState<AuthorStatistics[]>([])
+  const [bookshelves, setBookshelves] = useState<Bookshelf[]>([])
+  const [genreList, setGenreList] = useState<Genre[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  // この本の所有権
+  const isOwner = true
 
   useEffect(() => {
     let ignore = false
 
-    getAuthorStatisticsResult()
-      .then((authorStatisticsResult) => {
+    Promise.all([getAuthorStatisticsResult(), getGenres()])
+      .then(([authorStatisticsResult, genresResult]) => {
         if (ignore) return
         setAuthorStatistics(authorStatisticsResult)
+        // 更新(handleUpdated)で差し替える用に、本棚の一覧も持っておく
+        setBookshelves(authorStatisticsResult.flatMap((statistic) => statistic.bookshelves))
+        setGenreList(genresResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -40,20 +56,24 @@ const AuthorStatistic = () => {
     }
   }, [notify])
 
-  // 件数と割合はAPIの集計結果をそのまま使う
-  const summaries = authorStatistics.map((statistic, i) => ({
+  // 編集で著作者は変わらないため、グループ・件数・割合はAPIの集計結果をそのまま使い、本だけ最新のものに差し替える
+  const latestBookshelfById = new Map(bookshelves.map((bookshelf) => [bookshelf.id, bookshelf]))
+  const summaries: AuthorSummary[] = authorStatistics.map((statistic, i) => ({
     ...statistic,
+    bookshelves: statistic.bookshelves.map(
+      (bookshelf) => latestBookshelfById.get(bookshelf.id) ?? bookshelf,
+    ),
     color: genreColor(i),
   }))
 
   const chartItems: RatioChartItem[] = summaries.map(
-    ({ author, books_count, ratio, books, color }) => ({
+    ({ author, books_count, ratio, bookshelves, color }) => ({
       id: author,
       label: author,
       count: books_count,
       ratio,
       color,
-      titles: books.map(({ title }) => title),
+      titles: bookshelves.map(({ book }) => book.title),
     }),
   )
 
@@ -103,7 +123,7 @@ const AuthorStatistic = () => {
       ) : (
         <>
           {/* 著作者ごとの本棚 */}
-          {summaries.map(({ author, books_count, ratio, books, color }) => (
+          {summaries.map(({ author, books_count, ratio, bookshelves, color }) => (
             <section key={author} className="flex flex-col gap-3">
               <h2 className="flex items-center gap-3">
                 <span className="h-6 w-1.5 rounded-full" style={{ backgroundColor: color }} />
@@ -120,8 +140,16 @@ const AuthorStatistic = () => {
               <div className="rounded-box border-[12px] border-[#7a4b24] shadow-xl">
                 <div className="relative px-4 md:px-8" style={shelfStyle}>
                   <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                    {books.map((book) => (
-                      <ShelfBook key={book.id} {...book} />
+                    {bookshelves.map((bookshelf) => (
+                      <BookshelfBook
+                        key={bookshelf.id}
+                        bookshelf={bookshelf}
+                        genreList={genreList}
+                        rowHeight={SHELF_ROW_HEIGHT}
+                        boardHeight={SHELF_BOARD_HEIGHT}
+                        onUpdated={handleUpdated(setBookshelves)}
+                        isOwner={isOwner}
+                      />
                     ))}
                   </ul>
                 </div>
