@@ -60,8 +60,8 @@ RSpec.describe "Api::V1::AuthorStatistics", type: :request do
           expect(json['result'].map { |ratio| ratio['ratio'] }).to eq [ 50, 33.3, 16.7 ]
         end
 
-        it '著作者別の本が返ってくる' do
-          expect(json['result'].first['books'].map { |book| book['id'] }).to match_array [ book_1.id, book_2.id, book_3.id ]
+        it '著作者別の本棚が返ってくる' do
+          expect(json['result'].first['bookshelves'].map { |bookshelf| bookshelf['id'] }).to match_array [ bookshelf_1.id, bookshelf_2.id, bookshelf_3.id ]
         end
       end
 
