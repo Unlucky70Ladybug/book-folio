@@ -29,7 +29,7 @@ Rails.application.routes.draw do
         resources :posts, only: [ :index ], module: :books # Books 名前空間のコントローラを使う
       end
       resources :relationships, only: [ :index, :show, :create, :destroy ]
-      resources :timelines, only: [ :index ]
+      resources :time_lines, only: [ :index ]
     end
   end
 
