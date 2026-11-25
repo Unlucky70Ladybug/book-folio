@@ -32,6 +32,17 @@ const TimeLine = () => {
     }
   }, [notify])
 
+  // 同じユーザーの投稿すべてのフォロー状態をまとめて更新する
+  const handleFollowStatusChange = (userId: number, followStatus: boolean) => {
+    setTimeLinesBookshelf((prev) =>
+      prev.map((timeLine) =>
+        timeLine.bookshelf.user.id === userId
+          ? { ...timeLine, follow_status: followStatus }
+          : timeLine,
+      ),
+    )
+  }
+
   if (isLoading) return <Spinner message="タイムラインを読み込み中..." />
 
   return (
@@ -50,7 +61,11 @@ const TimeLine = () => {
         ) : (
           <ul className="list">
             {timeLinesBookshelf.map((timeLine) => (
-              <TimeLineBookshelf key={timeLine.bookshelf.id} timeLine={timeLine} />
+              <TimeLineBookshelf
+                key={timeLine.bookshelf.id}
+                timeLine={timeLine}
+                onFollowStatusChange={handleFollowStatusChange}
+              />
             ))}
           </ul>
         )}

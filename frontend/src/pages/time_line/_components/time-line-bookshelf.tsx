@@ -1,19 +1,48 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useNotification } from '../../hooks/use-notification'
 import {
   type TimeLinesBookshelf,
   READING_STATUS_LABELS,
   PREFERENCE_RATING_LABELS,
 } from '../../../types/bookshelf'
+import { type RelationshipStats } from '../../../types/relationship'
+import { postFollow } from '../../relationship/_hooks/post-follow'
+import { deleteFollow } from '../../relationship/_hooks/delete-follow'
+import UnFollowButton from '../../relationship/_components/unfollow'
+import FollowButton from '../../relationship/_components/follow'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
 type TimeLineBookshelfProps = {
   timeLine: TimeLinesBookshelf
+  // 同じユーザーの投稿が複数あるため、フォロー状態の更新は親でまとめて行う
+  onFollowStatusChange: (userId: number, followStatus: boolean) => void
 }
 
 // タイムラインの1件分(誰がどの本を本棚に登録したか)
-const TimeLineBookshelf = ({ timeLine }: TimeLineBookshelfProps) => {
+const TimeLineBookshelf = ({ timeLine, onFollowStatusChange }: TimeLineBookshelfProps) => {
   const { bookshelf, follow_status } = timeLine
   const { user, book, genres } = bookshelf
+  const { notify } = useNotification()
+  const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
+
+  const handleFollowToggle = async (
+    action: (id: number) => Promise<RelationshipStats>,
+    message: string,
+  ) => {
+    if (!user?.id) return
+    setIsRelationshipLoading(true)
+    try {
+      await action(user.id)
+      // 成功したらフォロー状態は現在の反対になる
+      onFollowStatusChange(user.id, !follow_status)
+      notify(message, 'success')
+    } catch {
+      notify('操作に失敗しました', 'error')
+    } finally {
+      setIsRelationshipLoading(false)
+    }
+  }
 
   return (
     <li className="list-row items-start">
@@ -32,12 +61,20 @@ const TimeLineBookshelf = ({ timeLine }: TimeLineBookshelfProps) => {
           <Link to={`/bookshelf/${user.id}`} className="link link-hover font-semibold">
             {user.name}
           </Link>
-          {follow_status === null ? (
+          {follow_status === null && (
             <span className="badge badge-sm badge-neutral">自分</span>
-          ) : (
-            follow_status && (
-              <span className="badge badge-sm badge-info badge-soft">フォロー中</span>
-            )
+          )}
+          {follow_status === false && (
+            <FollowButton
+              onClick={() => handleFollowToggle(postFollow, 'フォローしました')}
+              isLoading={isRelationshipLoading}
+            />
+          )}
+          {follow_status === true && (
+            <UnFollowButton
+              onClick={() => handleFollowToggle(deleteFollow, 'フォローを解除しました')}
+              isLoading={isRelationshipLoading}
+            />
           )}
         </div>
 
