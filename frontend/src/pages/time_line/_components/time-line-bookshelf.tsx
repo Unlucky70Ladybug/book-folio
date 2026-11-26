@@ -31,8 +31,8 @@ const TimeLineBookshelf = ({
   genreList,
   onRegistered,
 }: TimeLineBookshelfProps) => {
-  const { bookshelf, follow_status } = timeLine
-  const { user, book, genres } = bookshelf
+  const { bookshelf, user, follow_status } = timeLine
+  const { book, genres } = bookshelf
   const { notify } = useNotification()
   const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
 

@@ -36,14 +36,8 @@ export type BookshelfPost = {
 
 // タイムラインAPIの1件分
 export type TimeLinesBookshelf = {
-  bookshelf: {
-    id: number
-    reading_status: ReadingStatus
-    preference_rating: PreferenceRating
-    user: ComparisonUser
-    book: DisplayBook
-    genres: Genre[]
-  }
+  bookshelf: Bookshelf
+  user: ComparisonUser
   // 自分の本棚のときはnull
   follow_status: boolean | null
 }

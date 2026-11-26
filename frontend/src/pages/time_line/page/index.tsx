@@ -41,7 +41,7 @@ const TimeLine = () => {
   const handleFollowStatusChange = (userId: number, followStatus: boolean) => {
     setTimeLinesBookshelf((prev) =>
       prev.map((timeLine) =>
-        timeLine.bookshelf.user.id === userId
+        timeLine.user.id === userId
           ? { ...timeLine, follow_status: followStatus }
           : timeLine,
       ),
