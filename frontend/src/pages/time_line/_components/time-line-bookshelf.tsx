@@ -112,7 +112,12 @@ const TimeLineBookshelf = ({
             >
               {book.title}
             </a>
-            <p className="text-sm text-base-content/70">{book.author}</p>
+            <Link
+              to={`/search_book?type=author&keyword=${encodeURIComponent(book.author.split('/')[0].trim())}`}
+              className="link link-primary text-sm"
+            >
+              {book.author}
+            </Link>
             <div className="flex flex-wrap gap-1">
               <span className="badge badge-sm badge-primary">
                 {READING_STATUS_LABELS[bookshelf.reading_status]}
