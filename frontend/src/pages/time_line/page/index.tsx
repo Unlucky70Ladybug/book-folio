@@ -48,6 +48,15 @@ const TimeLine = () => {
     )
   }
 
+  // 本棚に登録したら最新のタイムラインを取り直す
+  const refreshTimeLine = async () => {
+    try {
+      setTimeLinesBookshelf(await getTimeLine())
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'タイムラインの取得に失敗しました', 'error')
+    }
+  }
+
   if (isLoading) return <Spinner message="タイムラインを読み込み中..." />
 
   return (
@@ -71,6 +80,7 @@ const TimeLine = () => {
                 timeLine={timeLine}
                 onFollowStatusChange={handleFollowStatusChange}
                 genreList={genreList}
+                onRegistered={refreshTimeLine}
               />
             ))}
           </ul>

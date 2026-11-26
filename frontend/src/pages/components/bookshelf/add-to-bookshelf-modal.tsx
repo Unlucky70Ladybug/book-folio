@@ -15,6 +15,8 @@ type AddToBookshelfModalProps = {
   book: RegistrableBook
   dialogRef: RefObject<HTMLDialogElement | null>
   genreList: Genre[]
+  // 登録に成功したときに呼ぶ(呼び出し元で一覧を更新したい場合に使う)
+  onRegistered?: () => void
 }
 
 // 読書状況・好み評価・コメントを入力して本棚に登録するモーダル
@@ -22,6 +24,7 @@ export default function AddToBookshelfModal({
   book,
   dialogRef,
   genreList,
+  onRegistered,
 }: AddToBookshelfModalProps) {
   const { notify } = useNotification()
   // 読書状況は必須のため、未選択(null)の間は登録できない
@@ -65,6 +68,7 @@ export default function AddToBookshelfModal({
         hasPostContent ? post : null,
       )
       notify(`「${book.title}」を本棚に登録しました`, 'success')
+      onRegistered?.()
     } catch (err) {
       notify(err instanceof Error ? err.message : '本棚への登録に失敗しました', 'error')
     } finally {

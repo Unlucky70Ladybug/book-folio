@@ -20,10 +20,17 @@ type TimeLineBookshelfProps = {
   // 同じユーザーの投稿が複数あるため、フォロー状態の更新は親でまとめて行う
   onFollowStatusChange: (userId: number, followStatus: boolean) => void
   genreList: Genre[]
+  // 本棚に登録したらタイムラインを更新する
+  onRegistered: () => void
 }
 
 // タイムラインの1件分(誰がどの本を本棚に登録したか)
-const TimeLineBookshelf = ({ timeLine, onFollowStatusChange, genreList }: TimeLineBookshelfProps) => {
+const TimeLineBookshelf = ({
+  timeLine,
+  onFollowStatusChange,
+  genreList,
+  onRegistered,
+}: TimeLineBookshelfProps) => {
   const { bookshelf, follow_status } = timeLine
   const { user, book, genres } = bookshelf
   const { notify } = useNotification()
@@ -131,6 +138,7 @@ const TimeLineBookshelf = ({ timeLine, onFollowStatusChange, genreList }: TimeLi
             image_url: book.large_image_url,
           }}
           genreList={genreList}
+          onRegistered={onRegistered}
         />
       </div>
     </li>
