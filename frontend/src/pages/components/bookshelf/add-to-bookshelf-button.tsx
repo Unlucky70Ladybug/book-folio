@@ -1,15 +1,20 @@
 import { useRef } from 'react'
-import { type ApiBook } from '../../../types/book'
+import { type RegistrableBook } from '../../../types/book'
 import { type Genre } from '../../../types/genre'
 import AddToBookshelfModal from './add-to-bookshelf-modal'
 
 type AddToBookshelfButtonProps = {
-  book: ApiBook
+  book: RegistrableBook
   genreList: Genre[]
+  onRegistered?: () => void
 }
 
 // 「本棚に登録」ボタン(押すと登録モーダルを開く)
-export default function AddToBookshelfButton({ book, genreList }: AddToBookshelfButtonProps) {
+export default function AddToBookshelfButton({
+  book,
+  genreList,
+  onRegistered,
+}: AddToBookshelfButtonProps) {
   // DOM要素を参照する
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -22,7 +27,12 @@ export default function AddToBookshelfButton({ book, genreList }: AddToBookshelf
       >
         本棚に登録
       </button>
-      <AddToBookshelfModal book={book} dialogRef={dialogRef} genreList={genreList} />
+      <AddToBookshelfModal
+        book={book}
+        dialogRef={dialogRef}
+        genreList={genreList}
+        onRegistered={onRegistered}
+      />
     </>
   )
 }

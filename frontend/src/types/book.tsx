@@ -28,3 +28,6 @@ export type DisplayBook = {
   item_url: string
   large_image_url: string
 }
+
+// 本棚への登録に必要な項目(検索結果・タイムラインのどちらからでも登録できるようにする)
+export type RegistrableBook = Pick<ApiBook, 'isbn' | 'title' | 'author' | 'item_url' | 'image_url'>

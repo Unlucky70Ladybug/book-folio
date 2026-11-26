@@ -1,4 +1,4 @@
-import { type User } from './user'
+import { type User, type ComparisonUser } from './user'
 import { type DisplayBook } from './book'
 import { type Genre } from './genre'
 import { type Post } from './post'
@@ -32,6 +32,15 @@ export type BookshelfPost = {
   genres: Genre[]
   // コメント未登録のときはnull
   post: Post | null
+}
+
+// タイムラインAPIの1件分
+export type TimeLinesBookshelf = {
+  // タイムラインでは本棚に登録した日時も表示する
+  bookshelf: Bookshelf & { created_at: string }
+  user: ComparisonUser
+  // 自分の本棚のときはnull
+  follow_status: boolean | null
 }
 
 export type ReadingStatus = 'interested' | 'reading' | 'finished'

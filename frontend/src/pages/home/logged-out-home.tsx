@@ -1,4 +1,4 @@
-import AuthActions from './_componets/auth-actions'
+import AuthActions from './_components/auth-actions'
 
 const features = [
   {

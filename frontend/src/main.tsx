@@ -20,6 +20,7 @@ import NotFound from './pages/components/layouts/NotFound'
 import GenreStatistic from './pages/genre_statistic/page'
 import AuthorStatistic from './pages/author_statistic/page'
 import BookPosts from './pages/post/page'
+import TimeLine from './pages/time_line/page'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -43,6 +44,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/bookshelf" element={<BookshelfPage />} />
                 <Route path="/bookshelf/:id" element={<OtherUserBookshelfPage />} />
                 <Route path="/books/:isbn/posts" element={<BookPosts />} />
+                <Route path="/timeline" element={<TimeLine />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
