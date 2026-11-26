@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import { type ApiBook } from '../../../types/book'
+import { type RegistrableBook } from '../../../types/book'
 import { type Genre } from '../../../types/genre'
 import AddToBookshelfModal from './add-to-bookshelf-modal'
 
 type AddToBookshelfButtonProps = {
-  book: ApiBook
+  book: RegistrableBook
   genreList: Genre[]
 }
 

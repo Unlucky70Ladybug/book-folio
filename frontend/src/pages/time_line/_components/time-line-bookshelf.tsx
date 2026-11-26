@@ -7,20 +7,23 @@ import {
   PREFERENCE_RATING_LABELS,
 } from '../../../types/bookshelf'
 import { type RelationshipStats } from '../../../types/relationship'
+import { type Genre } from '../../../types/genre'
 import { postFollow } from '../../relationship/_hooks/post-follow'
 import { deleteFollow } from '../../relationship/_hooks/delete-follow'
 import UnFollowButton from '../../relationship/_components/unfollow'
 import FollowButton from '../../relationship/_components/follow'
+import AddToBookshelfButton from '../../components/bookshelf/add-to-bookshelf-button'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
 type TimeLineBookshelfProps = {
   timeLine: TimeLinesBookshelf
   // 同じユーザーの投稿が複数あるため、フォロー状態の更新は親でまとめて行う
   onFollowStatusChange: (userId: number, followStatus: boolean) => void
+  genreList: Genre[]
 }
 
 // タイムラインの1件分(誰がどの本を本棚に登録したか)
-const TimeLineBookshelf = ({ timeLine, onFollowStatusChange }: TimeLineBookshelfProps) => {
+const TimeLineBookshelf = ({ timeLine, onFollowStatusChange, genreList }: TimeLineBookshelfProps) => {
   const { bookshelf, follow_status } = timeLine
   const { user, book, genres } = bookshelf
   const { notify } = useNotification()
@@ -118,6 +121,17 @@ const TimeLineBookshelf = ({ timeLine, onFollowStatusChange }: TimeLineBookshelf
             </div>
           </div>
         </div>
+        <AddToBookshelfButton
+          book={{
+            isbn: book.isbn,
+            title: book.title,
+            author: book.author,
+            item_url: book.item_url,
+            // 保存済みの本は書影の名前が違うため合わせる
+            image_url: book.large_image_url,
+          }}
+          genreList={genreList}
+        />
       </div>
     </li>
   )

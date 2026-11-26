@@ -1,6 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { Link } from 'react-router-dom'
-import { type ApiBook } from '../../../types/book'
+import { type RegistrableBook } from '../../../types/book'
 import { type Genre } from '../../../types/genre'
 import { type PreferenceRating, type ReadingStatus } from '../../../types/bookshelf'
 import { EMPTY_POST_DRAFT, type CreatePostParams } from '../../../types/post'
@@ -12,7 +12,7 @@ import { GenreField } from './fields/genre-field'
 import { PostField } from './fields/post-field'
 
 type AddToBookshelfModalProps = {
-  book: ApiBook
+  book: RegistrableBook
   dialogRef: RefObject<HTMLDialogElement | null>
   genreList: Genre[]
 }

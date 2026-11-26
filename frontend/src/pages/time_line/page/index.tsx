@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getTimeLine } from '../_hooks/get-time-lines'
+import { getGenres } from '../../bookshelf/_hooks/get-genres'
 import { useNotification } from '../../hooks/use-notification'
 import { type TimeLinesBookshelf } from '../../../types/bookshelf'
+import { type Genre } from '../../../types/genre'
 import { EmptyState } from '../../components/empty-state'
 import Spinner from '../../components/layouts/ui/spinner'
 import TimeLineBookshelf from '../_components/time-line-bookshelf'
@@ -10,14 +12,17 @@ import TimeLineBookshelf from '../_components/time-line-bookshelf'
 const TimeLine = () => {
   const { notify } = useNotification()
   const [timeLinesBookshelf, setTimeLinesBookshelf] = useState<TimeLinesBookshelf[]>([])
+  const [genreList, setGenreList] = useState<Genre[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     let ignore = false
 
-    getTimeLine()
-      .then((timeLines) => {
-        if (!ignore) setTimeLinesBookshelf(timeLines)
+    Promise.all([getTimeLine(), getGenres()])
+      .then(([timeLines, genresResult]) => {
+        if (ignore) return 
+        setTimeLinesBookshelf(timeLines)
+        setGenreList(genresResult)
       })
       .catch((err) => {
         if (!ignore)
@@ -65,6 +70,7 @@ const TimeLine = () => {
                 key={timeLine.bookshelf.id}
                 timeLine={timeLine}
                 onFollowStatusChange={handleFollowStatusChange}
+                genreList={genreList}
               />
             ))}
           </ul>
