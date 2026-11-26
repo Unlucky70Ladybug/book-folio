@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useNotification } from '../../hooks/use-notification'
 import {
@@ -13,6 +13,7 @@ import { deleteFollow } from '../../relationship/_hooks/delete-follow'
 import UnFollowButton from '../../relationship/_components/unfollow'
 import FollowButton from '../../relationship/_components/follow'
 import AddToBookshelfButton from '../../components/bookshelf/add-to-bookshelf-button'
+import ShowBookshelfModal from '../../bookshelf/_components/show-bookshelf'
 import defaultUserImage from '../../../assets/default_user_image.png'
 
 type TimeLineBookshelfProps = {
@@ -34,6 +35,7 @@ const TimeLineBookshelf = ({
   const { bookshelf, user, follow_status } = timeLine
   const { book, genres } = bookshelf
   const { notify } = useNotification()
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
 
   const handleFollowToggle = async (
@@ -128,18 +130,37 @@ const TimeLineBookshelf = ({
             </div>
           </div>
         </div>
-        <AddToBookshelfButton
-          book={{
-            isbn: book.isbn,
-            title: book.title,
-            author: book.author,
-            item_url: book.item_url,
-            // 保存済みの本は書影の名前が違うため合わせる
-            image_url: book.large_image_url,
-          }}
-          genreList={genreList}
-          onRegistered={onRegistered}
-        />
+        {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
+        {follow_status === null ? (
+          <>
+            <button
+              type="button"
+              className="btn btn-sm btn-ghost self-start"
+              onClick={() => dialogRef.current?.showModal()}
+            >
+              編集
+            </button>
+            <ShowBookshelfModal
+              bookshelf={bookshelf}
+              genreList={genreList}
+              dialogRef={dialogRef}
+              onUpdated={onRegistered}
+            />
+          </>
+        ) : (
+          <AddToBookshelfButton
+            book={{
+              isbn: book.isbn,
+              title: book.title,
+              author: book.author,
+              item_url: book.item_url,
+              // 保存済みの本は書影の名前が違うため合わせる
+              image_url: book.large_image_url,
+            }}
+            genreList={genreList}
+            onRegistered={onRegistered}
+          />
+        )}
       </div>
     </li>
   )
