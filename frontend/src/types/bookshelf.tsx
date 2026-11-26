@@ -36,7 +36,8 @@ export type BookshelfPost = {
 
 // タイムラインAPIの1件分
 export type TimeLinesBookshelf = {
-  bookshelf: Bookshelf
+  // タイムラインでは本棚に登録した日時も表示する
+  bookshelf: Bookshelf & { created_at: string }
   user: ComparisonUser
   // 自分の本棚のときはnull
   follow_status: boolean | null

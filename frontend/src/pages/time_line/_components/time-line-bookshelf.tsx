@@ -37,6 +37,10 @@ const TimeLineBookshelf = ({
   const { notify } = useNotification()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [isRelationshipLoading, setIsRelationshipLoading] = useState<boolean>(false)
+  // 日付が取れない・不正なときは「Invalid Date」と出さずに非表示にする
+  const createdAt = bookshelf.created_at ? new Date(bookshelf.created_at) : null
+  const createdDate =
+    createdAt && !Number.isNaN(createdAt.getTime()) ? createdAt.toLocaleDateString('ja-JP') : null
 
   const handleFollowToggle = async (
     action: (id: number) => Promise<RelationshipStats>,
@@ -88,10 +92,15 @@ const TimeLineBookshelf = ({
               isLoading={isRelationshipLoading}
             />
           )}
+          {/* 作成日は「自分」バッジまたはフォローボタンの右隣に表示する */}
+          {createdDate && (
+            <time dateTime={bookshelf.created_at} className="text-xs text-base-content/60">
+              {createdDate}
+            </time>
+          )}
         </div>
 
         <div className="flex gap-5">
-          {/* 拡大すると画像が粗くなるため、表紙は保存されている大きさのまま表示する */}
           {book.large_image_url ? (
             <figure className="shrink-0 self-start">
               <img
@@ -132,7 +141,7 @@ const TimeLineBookshelf = ({
             >
               {book.author}
             </Link>
-            {/* 感想を読書ステータスより左に表示する */}
+
             <div className="flex flex-wrap gap-1">
               {bookshelf.preference_rating !== 'unrated' && (
                 <span className="badge badge-secondary badge-soft">
@@ -145,7 +154,6 @@ const TimeLineBookshelf = ({
             </div>
 
             {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
-            {/* 「編集」と「本棚に登録」の大きさを揃えるため、同じ幅の枠に入れる */}
             <div className="mt-auto w-full pt-2 sm:w-48">
               {follow_status === null ? (
                 <>

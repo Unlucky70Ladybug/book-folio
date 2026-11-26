@@ -7,7 +7,7 @@ class Api::V1::TimeLinesController < ApplicationController
 
     timelines = bookshelves.map do |bookshelf|
       {
-        bookshelf: ActiveModelSerializers::SerializableResource.new(bookshelf, serializer: BookshelfSerializer).as_json,
+        bookshelf: ActiveModelSerializers::SerializableResource.new(bookshelf, serializer: TimeLineSerializer).as_json,
         user: ActiveModelSerializers::SerializableResource.new(bookshelf.user, serializer: UserSerializer).as_json,
         follow_status: bookshelf.user_id == current_user.id ? nil : current_user_following_ids.include?(bookshelf.user_id)
       }
