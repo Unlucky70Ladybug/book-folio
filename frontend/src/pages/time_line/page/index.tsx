@@ -73,7 +73,7 @@ const TimeLine = () => {
             description="本棚に本が登録されるとここに表示されます"
           />
         ) : (
-          <ul className="list">
+          <ul className="flex flex-col gap-4">
             {timeLinesBookshelf.map((timeLine) => (
               <TimeLineBookshelf
                 key={timeLine.bookshelf.id}

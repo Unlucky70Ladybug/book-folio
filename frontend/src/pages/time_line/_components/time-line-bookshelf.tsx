@@ -57,19 +57,19 @@ const TimeLineBookshelf = ({
   }
 
   return (
-    <li className="list-row items-start">
-      {/* アイコンからその人の本棚へ移動できるようにする */}
-      <Link to={`/bookshelf/${user.id}`} className="avatar self-start">
-        <div className="w-10 rounded-full">
-          <img
-            src={user.avatar_image?.url ?? defaultUserImage}
-            alt={`${user.name}さんのアイコン`}
-          />
-        </div>
-      </Link>
-
-      <div className="list-col-grow flex min-w-0 flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
+    // 投稿ごとの境界が分かるように枠で囲む
+    <li className="card card-border bg-base-100 mx-auto w-full max-w-2xl shadow-sm">
+      <div className="card-body gap-4">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* アイコンからその人の本棚へ移動できるようにする */}
+          <Link to={`/bookshelf/${user.id}`} className="avatar">
+            <div className="w-10 rounded-full">
+              <img
+                src={user.avatar_image?.url ?? defaultUserImage}
+                alt={`${user.name}さんのアイコン`}
+              />
+            </div>
+          </Link>
           <Link to={`/bookshelf/${user.id}`} className="link link-hover font-semibold">
             {user.name}
           </Link>
@@ -90,82 +90,96 @@ const TimeLineBookshelf = ({
           )}
         </div>
 
-        <div className="flex gap-3">
-          <figure className="flex h-[96px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-box bg-base-200">
-            {book.large_image_url ? (
+        <div className="flex gap-5">
+          {/* 拡大すると画像が粗くなるため、表紙は保存されている大きさのまま表示する */}
+          {book.large_image_url ? (
+            <figure className="shrink-0 self-start">
               <img
                 src={book.large_image_url}
                 alt={book.title}
-                className="h-full w-full object-contain"
+                className="rounded-box shadow-md"
               />
-            ) : (
-              <span className="text-xs text-base-content/50">No Image</span>
-            )}
-          </figure>
+            </figure>
+          ) : (
+            <figure className="flex h-48 w-32 shrink-0 items-center justify-center rounded-box bg-base-200">
+              <span className="text-sm text-base-content/50">No Image</span>
+            </figure>
+          )}
 
-          <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            {/* ユーザーが付けたジャンルはタイトルの上に表示する */}
+            {genres.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {genres.map((genre) => (
+                  <span key={genre.id} className="badge badge-sm badge-ghost">
+                    {genre.name}
+                  </span>
+                ))}
+              </div>
+            )}
             <a
               href={book.item_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="link link-hover line-clamp-2 font-bold"
+              className="link link-hover line-clamp-2 text-lg font-bold"
             >
               {book.title}
             </a>
+            {/* 作者名はホバーした時だけ色と下線を付ける */}
             <Link
               to={`/search_book?type=author&keyword=${encodeURIComponent(book.author.split('/')[0].trim())}`}
-              className="link link-primary text-sm"
+              className="link link-hover text-sm text-base-content/70 hover:text-primary"
             >
               {book.author}
             </Link>
+            {/* 感想を読書ステータスより左に表示する */}
             <div className="flex flex-wrap gap-1">
-              <span className="badge badge-sm badge-primary">
-                {READING_STATUS_LABELS[bookshelf.reading_status]}
-              </span>
               {bookshelf.preference_rating !== 'unrated' && (
-                <span className="badge badge-sm badge-secondary badge-soft">
+                <span className="badge badge-secondary badge-soft">
                   {PREFERENCE_RATING_LABELS[bookshelf.preference_rating]}
                 </span>
               )}
-              {genres.map((genre) => (
-                <span key={genre.id} className="badge badge-sm badge-ghost">
-                  {genre.name}
-                </span>
-              ))}
+              <span className="badge badge-primary">
+                {READING_STATUS_LABELS[bookshelf.reading_status]}
+              </span>
+            </div>
+
+            {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
+            {/* 「編集」と「本棚に登録」の大きさを揃えるため、同じ幅の枠に入れる */}
+            <div className="mt-auto w-full pt-2 sm:w-48">
+              {follow_status === null ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline w-full"
+                    onClick={() => dialogRef.current?.showModal()}
+                  >
+                    編集
+                  </button>
+                  <ShowBookshelfModal
+                    bookshelf={bookshelf}
+                    genreList={genreList}
+                    dialogRef={dialogRef}
+                    onUpdated={onRegistered}
+                  />
+                </>
+              ) : (
+                <AddToBookshelfButton
+                  book={{
+                    isbn: book.isbn,
+                    title: book.title,
+                    author: book.author,
+                    item_url: book.item_url,
+                    // 保存済みの本は書影の名前が違うため合わせる
+                    image_url: book.large_image_url,
+                  }}
+                  genreList={genreList}
+                  onRegistered={onRegistered}
+                />
+              )}
             </div>
           </div>
         </div>
-        {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
-        {follow_status === null ? (
-          <>
-            <button
-              type="button"
-              className="btn btn-sm btn-ghost self-start"
-              onClick={() => dialogRef.current?.showModal()}
-            >
-              編集
-            </button>
-            <ShowBookshelfModal
-              bookshelf={bookshelf}
-              genreList={genreList}
-              dialogRef={dialogRef}
-              onUpdated={onRegistered}
-            />
-          </>
-        ) : (
-          <AddToBookshelfButton
-            book={{
-              isbn: book.isbn,
-              title: book.title,
-              author: book.author,
-              item_url: book.item_url,
-              // 保存済みの本は書影の名前が違うため合わせる
-              image_url: book.large_image_url,
-            }}
-            genreList={genreList}
-            onRegistered={onRegistered}
-          />
-        )}
       </div>
     </li>
   )
