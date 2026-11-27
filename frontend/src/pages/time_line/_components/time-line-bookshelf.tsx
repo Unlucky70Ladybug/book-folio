@@ -155,7 +155,7 @@ const TimeLineBookshelf = ({
 
             <Link
               to={`/books/${book.isbn}/posts`}
-              className="btn btn-sm btn-ghost w-full"
+              className="btn btn-sm btn-ghost w-full sm:w-48"
             >
               コメントを見る
             </Link>
