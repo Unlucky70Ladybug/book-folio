@@ -62,10 +62,7 @@ export default function BookCard({ book, genreList }: BookCardProps) {
             </a>
           )}
           <AddToBookshelfButton book={book} genreList={genreList} />
-          <Link
-            to={`/books/${book.isbn}/posts`}
-            className="btn btn-sm btn-ghost w-full"
-          >
+          <Link to={`/books/${book.isbn}/posts`} className="btn btn-sm btn-ghost w-full">
             コメントを見る
           </Link>
         </div>

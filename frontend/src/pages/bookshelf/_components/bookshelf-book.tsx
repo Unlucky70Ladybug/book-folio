@@ -61,10 +61,7 @@ export const BookshelfBook = ({
           </button>
         ) : (
           // 他ユーザーの本棚では編集させず、この本のコメント一覧へ移動する
-          <Link
-            to={`/books/${book.isbn}/posts`}
-            className={coverClassName}
-          >
+          <Link to={`/books/${book.isbn}/posts`} className={coverClassName}>
             {cover}
           </Link>
         )}
