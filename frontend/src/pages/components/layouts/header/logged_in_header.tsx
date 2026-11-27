@@ -97,6 +97,10 @@ const LoggedInHeader = () => {
         <Link to="/preference" className="btn btn-ghost btn-sm">
           満足度
         </Link>
+
+        <Link to="/timeline" className="btn btn-ghost btn-sm">
+          タイムライン
+        </Link>
       </div>
     </header>
   )

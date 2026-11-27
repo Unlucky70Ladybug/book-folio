@@ -3,6 +3,8 @@ type PaginationProps = {
   nextPage: () => void
   prevPage: () => void
   lastPage?: boolean
+  // 総ページ数。渡すと「2 / 5」の形式で表示する
+  totalPages?: number
 }
 
 const ChevronIcon = ({ direction }: { direction: 'left' | 'right' }) => (
@@ -21,7 +23,13 @@ const ChevronIcon = ({ direction }: { direction: 'left' | 'right' }) => (
   </svg>
 )
 
-const Pagination = ({ currentPage, nextPage, prevPage, lastPage = false }: PaginationProps) => {
+const Pagination = ({
+  currentPage,
+  nextPage,
+  prevPage,
+  lastPage = false,
+  totalPages,
+}: PaginationProps) => {
   const isFirstPage = currentPage <= 1
 
   return (
@@ -37,10 +45,18 @@ const Pagination = ({ currentPage, nextPage, prevPage, lastPage = false }: Pagin
       </button>
 
       <span
-        className="flex h-10 min-w-24 items-center justify-center rounded-field border border-base-300 bg-base-100 px-4 text-sm font-medium"
+        className="flex h-10 min-w-24 items-center justify-center rounded-field border border-base-300 bg-base-100 px-4 text-sm font-medium tabular-nums"
         aria-current="page"
       >
-        {currentPage} ページ
+        {totalPages ? (
+          <>
+            <span className="text-primary">{currentPage}</span>
+            <span className="mx-1 text-base-content/40">/</span>
+            <span className="text-base-content/70">{totalPages}</span>
+          </>
+        ) : (
+          `${currentPage} ページ`
+        )}
       </span>
 
       <button

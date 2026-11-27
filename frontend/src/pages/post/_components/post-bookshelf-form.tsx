@@ -1,5 +1,5 @@
 import { useState, type RefObject } from 'react'
-import { type ApiBook } from '../../../types/book'
+import { type RegistrableBook } from '../../../types/book'
 import {
   type BookshelfPost,
   type PreferenceRating,
@@ -16,7 +16,7 @@ import { PreferenceRatingField } from '../../components/bookshelf/fields/prefere
 import { PostField } from '../../components/bookshelf/fields/post-field'
 
 type PostBookshelfFormProps = {
-  book: ApiBook
+  book: RegistrableBook
   dialogRef: RefObject<HTMLDialogElement | null>
   genreList: Genre[]
   // 本棚に未登録のときはnull

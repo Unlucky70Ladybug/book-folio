@@ -62,12 +62,7 @@ export default function BookCard({ book, genreList }: BookCardProps) {
             </a>
           )}
           <AddToBookshelfButton book={book} genreList={genreList} />
-          {/* コメント一覧ページで使うため、本の情報もstateで渡す */}
-          <Link
-            to={`/books/${book.isbn}/posts`}
-            state={{ book }}
-            className="btn btn-sm btn-ghost w-full"
-          >
+          <Link to={`/books/${book.isbn}/posts`} className="btn btn-sm btn-ghost w-full">
             コメントを見る
           </Link>
         </div>

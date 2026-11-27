@@ -2,7 +2,8 @@ class Api::V1::TimeLinesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    bookshelves = Bookshelf.preload(:user, :book, :genres).order(created_at: :desc)
+    page = params[:page] || 0
+    bookshelves = Bookshelf.preload(:user, :book, :genres, :post).order(created_at: :desc).page(page).per(10)
     current_user_following_ids = current_user.following.ids
 
     timelines = bookshelves.map do |bookshelf|
@@ -12,6 +13,6 @@ class Api::V1::TimeLinesController < ApplicationController
         follow_status: bookshelf.user_id == current_user.id ? nil : current_user_following_ids.include?(bookshelf.user_id)
       }
     end
-    render json: { result: timelines }
+    render json: { result: timelines, total_count: bookshelves.total_count }
   end
 end

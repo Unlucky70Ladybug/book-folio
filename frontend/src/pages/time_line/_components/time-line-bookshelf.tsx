@@ -77,9 +77,7 @@ const TimeLineBookshelf = ({
           <Link to={`/bookshelf/${user.id}`} className="link link-hover font-semibold">
             {user.name}
           </Link>
-          {follow_status === null && (
-            <span className="badge badge-sm badge-neutral">自分</span>
-          )}
+          {follow_status === null && <span className="badge badge-sm badge-neutral">自分</span>}
           {follow_status === false && (
             <FollowButton
               onClick={() => handleFollowToggle(postFollow, 'フォローしました')}
@@ -103,11 +101,7 @@ const TimeLineBookshelf = ({
         <div className="flex gap-5">
           {book.large_image_url ? (
             <figure className="shrink-0 self-start">
-              <img
-                src={book.large_image_url}
-                alt={book.title}
-                className="rounded-box shadow-md"
-              />
+              <img src={book.large_image_url} alt={book.title} className="rounded-box shadow-md" />
             </figure>
           ) : (
             <figure className="flex h-48 w-32 shrink-0 items-center justify-center rounded-box bg-base-200">
@@ -152,6 +146,10 @@ const TimeLineBookshelf = ({
                 {READING_STATUS_LABELS[bookshelf.reading_status]}
               </span>
             </div>
+
+            <Link to={`/books/${book.isbn}/posts`} className="btn btn-sm btn-ghost w-full sm:w-48">
+              コメントを見る
+            </Link>
 
             {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
             <div className="mt-auto w-full pt-2 sm:w-48">

@@ -1,3 +1,4 @@
+import { type DisplayBook } from './book'
 import { type ComparisonUser } from './user'
 import { type BookshelfPost } from './bookshelf'
 import { type Genre } from './genre'
@@ -22,6 +23,8 @@ export type Posts = {
 
 export type PostsResponse = {
   current_user_info: BookshelfPost | null
+  // DBに本が無いときはnull
+  book: DisplayBook | null
   posts: Posts[] | null
   post_count: number
 }
