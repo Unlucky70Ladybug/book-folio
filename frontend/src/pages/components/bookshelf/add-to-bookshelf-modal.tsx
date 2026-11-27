@@ -117,7 +117,6 @@ export default function AddToBookshelfModal({
               </figure>
               <Link
                 to={`/books/${book.isbn}/posts`}
-                state={{ book }}
                 className="btn btn-sm btn-ghost w-full"
               >
                 コメントを見る

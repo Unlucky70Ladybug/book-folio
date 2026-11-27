@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { type ApiBook } from '../../../types/book'
+import { Link, useParams } from 'react-router-dom'
+import { type RegistrableBook } from '../../../types/book'
 import { type PostsResponse } from '../../../types/post'
 import { getPostsResult } from '../_hooks/get-posts'
 import { useGenres } from '../../bookshelf/_hooks/use-genres'
@@ -14,20 +14,18 @@ import defaultUserImage from '../../../assets/default_user_image.png'
 // 本の登録フォームと、他のユーザーのコメント一覧を表示するページ
 const BookPosts = () => {
   const { notify } = useNotification()
-  const location = useLocation()
-  // URLを直接開いた場合はstateが無いのでundefinedになる
-  const book: ApiBook | undefined = location.state?.book
+  const { isbn } = useParams<{ isbn: string }>()
   const genreList = useGenres()
   const [postsResult, setPostsResult] = useState<PostsResponse | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(!!book)
+  const [isLoading, setIsLoading] = useState<boolean>(!!isbn)
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    if (!book) return
+    if (!isbn) return
 
     let ignore = false
 
-    getPostsResult(book.isbn)
+    getPostsResult(isbn)
       .then((result) => {
         if (!ignore) setPostsResult(result)
       })
@@ -42,14 +40,20 @@ const BookPosts = () => {
     return () => {
       ignore = true
     }
-  }, [book, notify])
+  }, [isbn, notify])
+
+  if (isLoading) return <Spinner message="コメントを読み込み中" />
+
+  // 登録フォームで使えるよう、書影をimage_urlに入れ替える
+  const apiBook = postsResult?.book
+  const book: RegistrableBook | null = apiBook
+    ? { ...apiBook, image_url: apiBook.large_image_url }
+    : null
 
   if (!book)
     return (
       <EmptyState title="本が見つかりません" description="検索画面から本を選び直してください" />
     )
-
-  if (isLoading) return <Spinner message="コメントを読み込み中" />
 
   const currentUserInfo = postsResult?.current_user_info ?? null
   const posts = postsResult?.posts ?? []

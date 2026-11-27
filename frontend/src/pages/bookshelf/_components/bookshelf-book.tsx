@@ -63,7 +63,6 @@ export const BookshelfBook = ({
           // 他ユーザーの本棚では編集させず、この本のコメント一覧へ移動する
           <Link
             to={`/books/${book.isbn}/posts`}
-            state={{ book: { ...book, image_url: book.large_image_url } }}
             className={coverClassName}
           >
             {cover}

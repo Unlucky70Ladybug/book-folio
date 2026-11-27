@@ -153,6 +153,13 @@ const TimeLineBookshelf = ({
               </span>
             </div>
 
+            <Link
+              to={`/books/${book.isbn}/posts`}
+              className="btn btn-sm btn-ghost w-full"
+            >
+              コメントを見る
+            </Link>
+
             {/* 自分の投稿は本棚の内容を編集し、他人の投稿は自分の本棚に登録する */}
             <div className="mt-auto w-full pt-2 sm:w-48">
               {follow_status === null ? (

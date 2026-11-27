@@ -130,7 +130,6 @@ export default function ShowBookshelfModal({
               </figure>
               <Link
                 to={`/books/${book.isbn}/posts`}
-                state={{ book: { ...book, image_url: book.large_image_url } }}
                 className="btn btn-sm btn-ghost w-full"
               >
                 コメントを見る
